@@ -1,0 +1,41 @@
+name: 'crowdin-action'
+
+description: 'This action allows you to manage and synchronize localization resources with your Crowdin project'
+
+branding:
+  icon: 'refresh-cw'
+  color: 'green'
+
+inputs:
+  upload_sources:
+    description: 'Upload sources to Crowdin'
+    default: 'true'
+    required: false
+  upload_translations:
+    description: 'Upload translations to Crowdin'
+    default: 'false'
+    required: false
+  crowdin_branch_name:
+    description: 'To upload or download files to the specified version branch'
+    required: false
+  dryrun_action:
+    description: 'Option to preview the list of managed files'
+    default: 'false'
+    required: false
+
+  download_translations:
+    description: 'Make pull request of Crowdin translations'
+    default: 'false'
+  localization_branch_name:
+    description: 'To download translations to the specified version branch'
+    default: 'l10n_crowdin_action'
+    required: false
+  create_pull_request:
+    description: 'To download translations to the specified version branch'
+    default: 'true'
+    required: false
+
+
+runs:
+  using: docker
+  image: 'Dockerfile'
