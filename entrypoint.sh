@@ -86,6 +86,10 @@ if [[ -n "$INPUT_CROWDIN_BRANCH_NAME" ]]; then
     OPTIONS="${OPTIONS} --branch=${INPUT_CROWDIN_BRANCH_NAME}"
 fi
 
+if [[ -n "$INPUT_CONFIG" ]]; then
+    OPTIONS="${OPTIONS} --config=${INPUT_CONFIG}"
+fi
+
 if [[ "$INPUT_DRYRUN_ACTION" = true ]]; then
     OPTIONS="${OPTIONS} --dryrun"
 fi
