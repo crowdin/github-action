@@ -20,7 +20,6 @@ inputs:
     required: false
   config:
     description: 'Option to specify a path to the configuration file'
-    default: 'crowdin.yml'
     required: false
   dryrun_action:
     description: 'Option to preview the list of managed files'
