@@ -54,6 +54,7 @@ In case you don’t want to download translations from Crowdin (download_transla
     upload_sources: true
     upload_translations: true
     crowdin_branch_name: l10n_branch
+    config: new-crowdin-config-location.yml
     dryrun_action: true
 
     download_translations: true
@@ -80,8 +81,8 @@ Need help working with Crowdin GitHub Action or have any questions?
 
 ## License
 <pre>
-The Crowdin GitHub Action is licensed under the MIT License. 
-See the LICENSE file distributed with this work for additional 
+The Crowdin GitHub Action is licensed under the MIT License.
+See the LICENSE file distributed with this work for additional
 information regarding copyright ownership.
 
 Except as contained in the LICENSE file, the name(s) of the above copyright
