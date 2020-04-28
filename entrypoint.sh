@@ -1,5 +1,63 @@
 #!/bin/sh
 
+init_options() {
+  OPTIONS="--no-progress";
+
+  if [[ "$INPUT_DEBUG_MODE" = true ]]; then
+    set -x;
+
+    OPTIONS="${OPTIONS} --verbose"
+  fi
+
+  if [[ -n "$INPUT_CROWDIN_BRANCH_NAME" ]]; then
+    OPTIONS="${OPTIONS} --branch=${INPUT_CROWDIN_BRANCH_NAME}"
+  fi
+
+  if [[ -n "$INPUT_IDENTITY" ]]; then
+    OPTIONS="${OPTIONS} --identity=${INPUT_IDENTITY}"
+  fi
+
+  if [[ -n "$INPUT_CONFIG" ]]; then
+    OPTIONS="${OPTIONS} --config=${INPUT_CONFIG}"
+  fi
+
+  if [[ "$INPUT_DRYRUN_ACTION" = true ]]; then
+    OPTIONS="${OPTIONS} --dryrun"
+  fi
+
+  echo ${OPTIONS};
+}
+
+init_config_options() {
+  CONFIG_OPTIONS="";
+
+  if [[ -n "$INPUT_PROJECT_ID" ]]; then
+    CONFIG_OPTIONS="${CONFIG_OPTIONS} --project-id=${INPUT_PROJECT_ID}"
+  fi
+
+  if [[ -n "$INPUT_TOKEN" ]]; then
+    CONFIG_OPTIONS="${CONFIG_OPTIONS} --token=${INPUT_TOKEN}"
+  fi
+
+  if [[ -n "$INPUT_BASE_URL" ]]; then
+    CONFIG_OPTIONS="${CONFIG_OPTIONS} --base-url=${INPUT_BASE_URL}"
+  fi
+
+  if [[ -n "$INPUT_BASE_PATH" ]]; then
+    CONFIG_OPTIONS="${CONFIG_OPTIONS} --base-path=${INPUT_BASE_PATH}"
+  fi
+
+  if [[ -n "$INPUT_SOURCE" ]]; then
+    CONFIG_OPTIONS="${CONFIG_OPTIONS} --source=${INPUT_SOURCE}"
+  fi
+
+  if [[ -n "$INPUT_TRANSLATION" ]]; then
+    CONFIG_OPTIONS="${CONFIG_OPTIONS} --translation=${INPUT_TRANSLATION}"
+  fi
+
+  echo ${CONFIG_OPTIONS};
+}
+
 upload_sources() {
   echo "UPLOAD SOURCES";
   crowdin upload sources ${CONFIG_OPTIONS} ${OPTIONS};
@@ -11,6 +69,10 @@ upload_translations() {
 }
 
 download_translations() {
+  if [[ -n "$INPUT_LANGUAGE" ]]; then
+    OPTIONS="${OPTIONS} --language=${INPUT_LANGUAGE}"
+  fi
+
   echo "DOWNLOAD TRANSLATIONS";
   crowdin download ${CONFIG_OPTIONS} ${OPTIONS};
 }
@@ -34,7 +96,7 @@ create_pull_request() {
   if [[ "${PULL_REQUESTS#*$LOCALIZATION_BRANCH}" == "$PULL_REQUESTS" ]]; then
       echo "CREATE PULL REQUEST";
 
-      DATA="{\"title\":\"${TITLE}\", \"body\":\"${BODY}\", \"base\":\"${BASE_BRANCH}\", \"head\":\"${LOCALIZATION_BRANCH}\"}";
+      DATA="{\"title\":\"${TITLE}\", \"base\":\"${BASE_BRANCH}\", \"head\":\"${LOCALIZATION_BRANCH}\"}";
       curl -sSL -H "${AUTH_HEADER}" -H "${HEADER}" -X POST --data "${DATA}" ${PULLS_URL};
     else
       echo "PULL REQUEST ALREADY EXIST";
@@ -71,28 +133,13 @@ push_to_branch() {
   fi
 }
 
+# STARTING WORK
 echo "STARTING CROWDIN ACTION";
 
 set -e;
 
-if [[ "$INPUT_DEBUG_MODE" = true ]]; then
-  set -x;
-fi
-
-CONFIG_OPTIONS="";
-OPTIONS="--no-progress";
-
-if [[ -n "$INPUT_CROWDIN_BRANCH_NAME" ]]; then
-    OPTIONS="${OPTIONS} --branch=${INPUT_CROWDIN_BRANCH_NAME}"
-fi
-
-if [[ -n "$INPUT_CONFIG" ]]; then
-    OPTIONS="${OPTIONS} --config=${INPUT_CONFIG}"
-fi
-
-if [[ "$INPUT_DRYRUN_ACTION" = true ]]; then
-    OPTIONS="${OPTIONS} --dryrun"
-fi
+OPTIONS=$( init_options );
+CONFIG_OPTIONS=$( init_config_options );
 
 if [[ "$INPUT_UPLOAD_SOURCES" = true ]]; then
   upload_sources;
@@ -101,7 +148,6 @@ fi
 if [[ "$INPUT_UPLOAD_TRANSLATIONS" = true ]]; then
   upload_translations;
 fi
-
 
 if [[ "$INPUT_DOWNLOAD_TRANSLATIONS" = true ]]; then
   [[ -z "${GITHUB_TOKEN}" ]] && {

@@ -29,7 +29,7 @@ jobs:
       uses: actions/checkout@v2
 
     - name: crowdin action
-      uses: crowdin/github-action@1.0.2
+      uses: crowdin/github-action@1.0.3
       with:
         upload_translations: true
         download_translations: true
@@ -51,15 +51,29 @@ In case you don’t want to download translations from Crowdin (download_transla
 ```yaml
 - name: crowdin action
   with:
+    # upload options
     upload_sources: true
     upload_translations: true
-    crowdin_branch_name: l10n_branch
-    config: new-crowdin-config-location.yml
-    dryrun_action: true
 
+    # download options
     download_translations: true
+    language: 'uk'
     localization_branch_name: l10n_crowdin_action
     create_pull_request: true
+
+    # global options
+    crowdin_branch_name: l10n_branch
+    identity: '/path/to/your/credentials/file'
+    config: '/path/to/your/config/file'
+    dryrun_action: true
+
+    # config options
+    project_id: ${{ secrets.CROWDIN_PROJECT_ID }}
+    token: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+    source: '/path/to/your/file'
+    translation: 'file/export/pattern'
+    base_url: 'https://crowdin.com'
+    base_path: '/project-base-path'
 ```
 
 ## Contributing

@@ -7,6 +7,7 @@ branding:
   color: 'green'
 
 inputs:
+  # upload options
   upload_sources:
     description: 'Upload sources to Crowdin'
     default: 'true'
@@ -15,8 +16,30 @@ inputs:
     description: 'Upload translations to Crowdin'
     default: 'false'
     required: false
+
+  # download options
+  download_translations:
+    description: 'Make pull request of Crowdin translations'
+    default: 'false'
+    required: false
+  language:
+    description: 'Use this option to download translations for a single specified language'
+    required: false
+  localization_branch_name:
+    description: 'To download translations to the specified version branch'
+    default: 'l10n_crowdin_action'
+    required: false
+  create_pull_request:
+    description: 'To download translations to the specified version branch'
+    default: 'true'
+    required: false
+
+  # global options
   crowdin_branch_name:
     description: 'To upload or download files to the specified version branch'
+    required: false
+  identity:
+    description: 'Option to specify a path to user-specific credentials'
     required: false
   config:
     description: 'Option to specify a path to the configuration file'
@@ -26,16 +49,24 @@ inputs:
     default: 'false'
     required: false
 
-  download_translations:
-    description: 'Make pull request of Crowdin translations'
-    default: 'false'
-  localization_branch_name:
-    description: 'To download translations to the specified version branch'
-    default: 'l10n_crowdin_action'
+  # config options
+  project_id:
+    description: 'Numerical ID of the project'
     required: false
-  create_pull_request:
-    description: 'To download translations to the specified version branch'
-    default: 'true'
+  token:
+    description: 'Personal access token required for authentication'
+    required: false
+  base_url:
+    description: 'Base URL of Crowdin server for API requests execution'
+    required: false
+  base_path:
+    description: 'Path to your project directory on a local machine'
+    required: false
+  source:
+    description: 'Path to the source files'
+    required: false
+  translation:
+    description: 'Path to the translation files'
     required: false
 
 runs:
