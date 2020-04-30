@@ -9,7 +9,7 @@
 
 
 ## Usage
-Set up a workflow in .github/workflows/crowdin.yml (or add a job to your existing workflows).
+Set up a workflow in *.github/workflows/crowdin.yml* (or add a job to your existing workflows).
 
 Read the [Configuring a workflow](https://help.github.com/en/articles/configuring-a-workflow) article for more details on how to create and set up custom workflows.
 ```yaml
@@ -40,13 +40,13 @@ jobs:
 ```
 
 ## Supported options
-The default action is to upload sources. Though, you can set different actions through the “with” options. If you don't want to upload your sources to Crowdin, just set the upload_sources option to false.
+The default action is to upload sources. Though, you can set different actions through the “with” options. If you don't want to upload your sources to Crowdin, just set the `upload_sources` option to false.
 
 By default sources and translations are being uploaded to the root of your Crowdin project. Still, if you use branches, you can set the preferred source branch.
 
-You can also specify what GitHub branch you’d like to download your translations to (default translation branch is l10n_crowdin_action).
+You can also specify what GitHub branch you’d like to download your translations to (default translation branch is `l10n_crowdin_action`).
 
-In case you don’t want to download translations from Crowdin (download_translations: false), localization_branch_name and create_pull_request options aren't required either.
+In case you don’t want to download translations from Crowdin (`download_translations: false`), `localization_branch_name` and `create_pull_request` options aren't required either.
 
 ```yaml
 - name: crowdin action
