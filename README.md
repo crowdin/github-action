@@ -68,13 +68,21 @@ In case you don’t want to download translations from Crowdin (`download_transl
     dryrun_action: true
 
     # config options
-    project_id: ${{ secrets.CROWDIN_PROJECT_ID }}
+    
+    # This is a numeric id, not to be confused with Crowdin API v1 "project identifier" string
+    # See "API v2" on https://crowdin.com/project/<your-project>/settings#api
+    project_id: ${{ secrets.CROWDIN_PROJECT_ID }} 
+
+    # A personal access token, not to be confused with Crowdin API v1 "API key"
+    # See https://crowdin.com/settings#api-key to generate a token
     token: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
     source: '/path/to/your/file'
     translation: 'file/export/pattern'
     base_url: 'https://crowdin.com'
     base_path: '/project-base-path'
 ```
+
+For more detailed descriptions of these options, see [`action.yml`](https://github.com/crowdin/github-action/blob/master/action.yml).
 
 ## Contributing
 
