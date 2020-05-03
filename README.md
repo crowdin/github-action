@@ -29,7 +29,7 @@ jobs:
       uses: actions/checkout@v2
 
     - name: crowdin action
-      uses: crowdin/github-action@1.0.3
+      uses: crowdin/github-action@1.0.4
       with:
         upload_translations: true
         download_translations: true
@@ -58,6 +58,7 @@ In case you don’t want to download translations from Crowdin (`download_transl
     # download options
     download_translations: true
     language: 'uk'
+    push_translations: true
     localization_branch_name: l10n_crowdin_action
     create_pull_request: true
 

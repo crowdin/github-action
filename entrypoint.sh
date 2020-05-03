@@ -116,8 +116,6 @@ push_to_branch() {
 
   git checkout -b ${LOCALIZATION_BRANCH};
 
-  download_translations;
-
   if [[ -n "$(git status -s)" ]]; then
       echo "PUSH TO BRANCH ${LOCALIZATION_BRANCH}";
 
@@ -155,5 +153,9 @@ if [[ "$INPUT_DOWNLOAD_TRANSLATIONS" = true ]]; then
     exit 1;
   };
 
-  push_to_branch;
+  download_translations;
+
+  if [[ "$INPUT_PUSH_TRANSLATIONS" = true ]]; then
+    push_to_branch;
+  fi
 fi
