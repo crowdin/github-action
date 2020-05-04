@@ -91,9 +91,9 @@ create_pull_request() {
   echo "CHECK IF ISSET SAME PULL REQUEST";
   DATA="{\"base\":\"${BASE_BRANCH}\", \"head\":\"${LOCALIZATION_BRANCH}\"}";
   RESPONSE=$(curl -sSL -H "${AUTH_HEADER}" -H "${HEADER}" -X GET --data "${DATA}" ${PULLS_URL});
-  PULL_REQUESTS=$(echo "${RESPONSE}" | jq --raw-output '.[] | .head.ref');
+  PULL_REQUESTS=$(echo "${RESPONSE} " | jq --raw-output '.[] | .head.ref');
 
-  if [[ "${PULL_REQUESTS#*$LOCALIZATION_BRANCH}" == "$PULL_REQUESTS" ]]; then
+  if [[ "${PULL_REQUESTS#*$LOCALIZATION_BRANCH }" == "$PULL_REQUESTS" ]]; then
       echo "CREATE PULL REQUEST";
 
       DATA="{\"title\":\"${TITLE}\", \"base\":\"${BASE_BRANCH}\", \"head\":\"${LOCALIZATION_BRANCH}\"}";
@@ -115,8 +115,6 @@ push_to_branch() {
   git config --global user.name "Crowdin Bot";
 
   git checkout -b ${LOCALIZATION_BRANCH};
-
-  download_translations;
 
   if [[ -n "$(git status -s)" ]]; then
       echo "PUSH TO BRANCH ${LOCALIZATION_BRANCH}";
@@ -155,5 +153,9 @@ if [[ "$INPUT_DOWNLOAD_TRANSLATIONS" = true ]]; then
     exit 1;
   };
 
-  push_to_branch;
+  download_translations;
+
+  if [[ "$INPUT_PUSH_TRANSLATIONS" = true ]]; then
+    push_to_branch;
+  fi
 fi

@@ -29,7 +29,7 @@ jobs:
       uses: actions/checkout@v2
 
     - name: crowdin action
-      uses: crowdin/github-action@1.0.3
+      uses: crowdin/github-action@1.0.4
       with:
         upload_translations: true
         download_translations: true
@@ -58,6 +58,7 @@ In case you don’t want to download translations from Crowdin (`download_transl
     # download options
     download_translations: true
     language: 'uk'
+    push_translations: true
     localization_branch_name: l10n_crowdin_action
     create_pull_request: true
 
@@ -68,13 +69,23 @@ In case you don’t want to download translations from Crowdin (`download_transl
     dryrun_action: true
 
     # config options
-    project_id: ${{ secrets.CROWDIN_PROJECT_ID }}
+    
+    # This is a numeric id, not to be confused with Crowdin API v1 "project identifier" string
+    # See "API v2" on https://crowdin.com/project/<your-project>/settings#api
+    project_id: ${{ secrets.CROWDIN_PROJECT_ID }} 
+
+    # A personal access token, not to be confused with Crowdin API v1 "API key"
+    # See https://crowdin.com/settings#api-key to generate a token
     token: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
     source: '/path/to/your/file'
     translation: 'file/export/pattern'
     base_url: 'https://crowdin.com'
     base_path: '/project-base-path'
 ```
+
+For more detailed descriptions of these options, see [`action.yml`](https://github.com/crowdin/github-action/blob/master/action.yml).
+
+### Crowdin configuration file
 
 If your workflow file specifies the `config` property, you'll need to add the following to your [Crowdin configuration file](https://support.crowdin.com/configuration-file/) (e.g. `crowdin.yml`):
 
