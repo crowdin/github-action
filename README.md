@@ -65,7 +65,7 @@ In case you don’t want to download translations from Crowdin (`download_transl
     # global options
     crowdin_branch_name: l10n_branch
     identity: '/path/to/your/credentials/file'
-    config: '/path/to/your/config/file'
+    config: '/path/to/your/crowdin.yml'
     dryrun_action: true
 
     # config options
@@ -84,6 +84,17 @@ In case you don’t want to download translations from Crowdin (`download_transl
 ```
 
 For more detailed descriptions of these options, see [`action.yml`](https://github.com/crowdin/github-action/blob/master/action.yml).
+
+### Crowdin configuration file
+
+If your workflow file specifies the `config` property, you'll need to add the following to your [Crowdin configuration file](https://support.crowdin.com/configuration-file/) (e.g. `crowdin.yml`):
+
+```yml
+project_id_env: CROWDIN_PROJECT_ID
+api_token_env: CROWDIN_PERSONAL_TOKEN
+```
+
+When the workflow runs, the real values of your token and project ID will be injected into the config using the secrets in the enviroment.
 
 ## Contributing
 
