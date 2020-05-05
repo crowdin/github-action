@@ -59,10 +59,17 @@ In case you don’t want to download translations from Crowdin (`download_transl
     download_translations: true
     language: 'uk'
     push_translations: true
+
+    # This is the name of the git branch that Crowdin will create when opening a pull request. 
+    # This branch does NOT need to be manually created. It will be created automatically by the action.
     localization_branch_name: l10n_crowdin_action
     create_pull_request: true
 
     # global options
+    
+    # This is the name of the top-level directory that Crowdin will use for files.
+    # Note that this is not a "branch" in the git sense, but more like a top-level directory in your Crowdin project.
+    # This branch does NOT need to be manually created. It will be created automatically by the action.
     crowdin_branch_name: l10n_branch
     identity: '/path/to/your/credentials/file'
     config: '/path/to/your/crowdin.yml'
