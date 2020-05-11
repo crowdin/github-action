@@ -101,7 +101,7 @@ project_id_env: CROWDIN_PROJECT_ID
 api_token_env: CROWDIN_PERSONAL_TOKEN
 ```
 
-When the workflow runs, the real values of your token and project ID will be injected into the config using the secrets in the enviroment.
+When the workflow runs, the real values of your token and project ID will be injected into the config using the secrets in the environment.
 
 ## Contributing
 
