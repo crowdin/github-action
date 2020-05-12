@@ -54,19 +54,22 @@ In case you don’t want to download translations from Crowdin (`download_transl
     # upload options
     upload_sources: true
     upload_translations: true
+    auto_approve_imported: true
+    import_eq_suggestions: true
+    import_duplicates: true
 
     # download options
     download_translations: true
     language: 'uk'
     push_translations: true
 
-    # This is the name of the git branch that Crowdin will create when opening a pull request. 
+    # This is the name of the git branch that Crowdin will create when opening a pull request.
     # This branch does NOT need to be manually created. It will be created automatically by the action.
     localization_branch_name: l10n_crowdin_action
     create_pull_request: true
 
     # global options
-    
+
     # This is the name of the top-level directory that Crowdin will use for files.
     # Note that this is not a "branch" in the git sense, but more like a top-level directory in your Crowdin project.
     # This branch does NOT need to be manually created. It will be created automatically by the action.
@@ -76,10 +79,10 @@ In case you don’t want to download translations from Crowdin (`download_transl
     dryrun_action: true
 
     # config options
-    
+
     # This is a numeric id, not to be confused with Crowdin API v1 "project identifier" string
     # See "API v2" on https://crowdin.com/project/<your-project>/settings#api
-    project_id: ${{ secrets.CROWDIN_PROJECT_ID }} 
+    project_id: ${{ secrets.CROWDIN_PROJECT_ID }}
 
     # A personal access token, not to be confused with Crowdin API v1 "API key"
     # See https://crowdin.com/settings#api-key to generate a token

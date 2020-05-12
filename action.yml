@@ -16,6 +16,18 @@ inputs:
     description: 'Upload translations to Crowdin'
     default: 'false'
     required: false
+  auto_approve_imported:
+    description: 'Automatically approves uploaded translations'
+    default: 'false'
+    required: false
+  import_eq_suggestions:
+    description: 'Defines whether to add translation if it is equal to source string in Crowdin project'
+    default: 'false'
+    required: false
+  import_duplicates:
+    description: 'Defines whether to add translation if there is the same translation already existing in Crowdin project'
+    default: 'false'
+    required: false
 
   # download options
   download_translations:
