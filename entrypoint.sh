@@ -64,6 +64,18 @@ upload_sources() {
 }
 
 upload_translations() {
+  if [[ "$INPUT_AUTO_APPROVE_IMPORTED" = true ]]; then
+    OPTIONS="${OPTIONS} --auto-approve-imported"
+  fi
+
+  if [[ "$INPUT_IMPORT_EQ_SUGGESTIONS" = true ]]; then
+    OPTIONS="${OPTIONS} --import-eq-suggestions"
+  fi
+
+  if [[ "$INPUT_IMPORT_DUPLICATES" = true ]]; then
+    OPTIONS="${OPTIONS} --import-duplicates"
+  fi
+
   echo "UPLOAD TRANSLATIONS";
   crowdin upload translations ${CONFIG_OPTIONS} ${OPTIONS};
 }
