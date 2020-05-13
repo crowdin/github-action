@@ -64,15 +64,15 @@ upload_sources() {
 }
 
 upload_translations() {
-  if [[ -n "$INPUT_AUTO_APPROVE_IMPORTED" ]]; then
+  if [[ "$INPUT_AUTO_APPROVE_IMPORTED" = true ]]; then
     OPTIONS="${OPTIONS} --auto-approve-imported"
   fi
 
-  if [[ -n "$INPUT_IMPORT_EQ_SUGGESTIONS" ]]; then
+  if [[ "$INPUT_IMPORT_EQ_SUGGESTIONS" = true ]]; then
     OPTIONS="${OPTIONS} --import-eq-suggestions"
   fi
 
-  if [[ -n "$INPUT_IMPORT_DUPLICATES" ]]; then
+  if [[ "$INPUT_IMPORT_DUPLICATES" = true ]]; then
     OPTIONS="${OPTIONS} --import-duplicates"
   fi
 
