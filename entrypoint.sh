@@ -109,15 +109,15 @@ create_pull_request() {
   echo "CHECK IF ISSET SAME PULL REQUEST";
   DATA="{\"base\":\"${BASE_BRANCH}\", \"head\":\"${LOCALIZATION_BRANCH}\"}";
   RESPONSE=$(curl -sSL -H "${AUTH_HEADER}" -H "${HEADER}" -X GET --data "${DATA}" ${PULLS_URL});
-  PULL_REQUESTS=$(echo "${RESPONSE} " | jq --raw-output '.[] | .head.ref');
+  PULL_REQUESTS=$(echo "${RESPONSE}" | jq --raw-output '.[] | .head.ref ');
 
-  if [[ "${PULL_REQUESTS#*$LOCALIZATION_BRANCH }" == "$PULL_REQUESTS" ]]; then
-      echo "CREATE PULL REQUEST";
+  if echo "$PULL_REQUESTS " | grep -q "$LOCALIZATION_BRANCH "; then
+    echo "PULL REQUEST ALREADY EXIST";
+  else
+    echo "CREATE PULL REQUEST";
 
-      DATA="{\"title\":\"${TITLE}\", \"base\":\"${BASE_BRANCH}\", \"head\":\"${LOCALIZATION_BRANCH}\"}";
-      curl -sSL -H "${AUTH_HEADER}" -H "${HEADER}" -X POST --data "${DATA}" ${PULLS_URL};
-    else
-      echo "PULL REQUEST ALREADY EXIST";
+    DATA="{\"title\":\"${TITLE}\", \"base\":\"${BASE_BRANCH}\", \"head\":\"${LOCALIZATION_BRANCH}\"}";
+    curl -sSL -H "${AUTH_HEADER}" -H "${HEADER}" -X POST --data "${DATA}" ${PULLS_URL};
   fi
 }
 
@@ -135,17 +135,17 @@ push_to_branch() {
   git checkout -b ${LOCALIZATION_BRANCH};
 
   if [[ -n "$(git status -s)" ]]; then
-      echo "PUSH TO BRANCH ${LOCALIZATION_BRANCH}";
+    echo "PUSH TO BRANCH ${LOCALIZATION_BRANCH}";
 
-      git add .;
-      git commit -m "${COMMIT_MESSAGE}";
-      git push --force "${REPO_URL}";
+    git add .;
+    git commit -m "${COMMIT_MESSAGE}";
+    git push --force "${REPO_URL}";
 
-      if [[ "$INPUT_CREATE_PULL_REQUEST" = true ]]; then
-        create_pull_request "${COMMIT_MESSAGE}" "${LOCALIZATION_BRANCH}";
-      fi
+    if [[ "$INPUT_CREATE_PULL_REQUEST" = true ]]; then
+      create_pull_request "${COMMIT_MESSAGE}" "${LOCALIZATION_BRANCH}";
+    fi
   else
-      echo "NOTHING TO COMMIT";
+    echo "NOTHING TO COMMIT";
   fi
 }
 
