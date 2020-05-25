@@ -7,14 +7,19 @@ branding:
   color: 'green'
 
 inputs:
-  # upload options
+  # upload sources option
   upload_sources:
     description: 'Upload sources to Crowdin'
     default: 'true'
     required: false
+
+  # upload translations options
   upload_translations:
     description: 'Upload translations to Crowdin'
     default: 'false'
+    required: false
+  upload_language:
+    description: 'Use this option to upload translations for a single specified language'
     required: false
   auto_approve_imported:
     description: 'Automatically approves uploaded translations'
@@ -29,12 +34,12 @@ inputs:
     default: 'false'
     required: false
 
-  # download options
+  # download translations options
   download_translations:
     description: 'Make pull request of Crowdin translations'
     default: 'false'
     required: false
-  language:
+  download_language:
     description: 'Use this option to download translations for a single specified language'
     required: false
   push_translations:

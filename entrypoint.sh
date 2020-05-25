@@ -64,6 +64,10 @@ upload_sources() {
 }
 
 upload_translations() {
+  if [[ -n "$INPUT_UPLOAD_LANGUAGE" ]]; then
+    OPTIONS="${OPTIONS} --language=${INPUT_UPLOAD_LANGUAGE}"
+  fi
+
   if [[ "$INPUT_AUTO_APPROVE_IMPORTED" = true ]]; then
     OPTIONS="${OPTIONS} --auto-approve-imported"
   fi
@@ -81,7 +85,9 @@ upload_translations() {
 }
 
 download_translations() {
-  if [[ -n "$INPUT_LANGUAGE" ]]; then
+  if [[ -n "$INPUT_DOWNLOAD_LANGUAGE" ]]; then
+    OPTIONS="${OPTIONS} --language=${INPUT_DOWNLOAD_LANGUAGE}"
+  elif [[ -n "$INPUT_LANGUAGE" ]]; then #back compatibility for older versions
     OPTIONS="${OPTIONS} --language=${INPUT_LANGUAGE}"
   fi
 

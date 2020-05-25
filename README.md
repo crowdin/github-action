@@ -51,16 +51,19 @@ In case you don’t want to download translations from Crowdin (`download_transl
 ```yaml
 - name: crowdin action
   with:
-    # upload options
+    # upload sources option
     upload_sources: true
+    
+    # upload translations options
     upload_translations: true
+    upload_language: 'uk'
     auto_approve_imported: true
     import_eq_suggestions: true
     import_duplicates: true
 
-    # download options
+    # download translations options
     download_translations: true
-    language: 'uk'
+    download_language: 'uk'
     push_translations: true
 
     # This is the name of the git branch that Crowdin will create when opening a pull request.
