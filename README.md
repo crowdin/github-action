@@ -64,6 +64,9 @@ In case you don’t want to download translations from Crowdin (`download_transl
     # download translations options
     download_translations: true
     download_language: 'uk'
+    skip_untranslated_strings: true
+    skip_untranslated_files: true
+    export_only_approved: true
     push_translations: true
 
     # This is the name of the git branch that Crowdin will create when opening a pull request.

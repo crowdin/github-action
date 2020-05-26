@@ -91,6 +91,18 @@ download_translations() {
     OPTIONS="${OPTIONS} --language=${INPUT_LANGUAGE}"
   fi
 
+  if [[ "$INPUT_SKIP_UNTRANSLATED_STRINGS" = true ]]; then
+    OPTIONS="${OPTIONS} --skip-untranslated-strings"
+  fi
+
+  if [[ "$INPUT_SKIP_UNTRANSLATED_FILES" = true ]]; then
+    OPTIONS="${OPTIONS} --skip-untranslated-files"
+  fi
+
+  if [[ "$INPUT_EXPORT_ONLY_APPROVED" = true ]]; then
+    OPTIONS="${OPTIONS} --export-only-approved"
+  fi
+
   echo "DOWNLOAD TRANSLATIONS";
   crowdin download ${CONFIG_OPTIONS} ${OPTIONS};
 }
