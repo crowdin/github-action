@@ -33,7 +33,7 @@ jobs:
       uses: actions/checkout@v2
 
     - name: crowdin action
-      uses: crowdin/github-action@1.0.6
+      uses: crowdin/github-action@1.0.7
       with:
         upload_translations: true
         download_translations: true

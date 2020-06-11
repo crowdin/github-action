@@ -60,7 +60,7 @@ init_config_options() {
 
 upload_sources() {
   echo "UPLOAD SOURCES";
-  crowdin upload sources ${CONFIG_OPTIONS} ${OPTIONS};
+  crowdin upload sources "${CONFIG_OPTIONS}" "${OPTIONS}";
 }
 
 upload_translations() {
@@ -81,7 +81,7 @@ upload_translations() {
   fi
 
   echo "UPLOAD TRANSLATIONS";
-  crowdin upload translations ${CONFIG_OPTIONS} ${OPTIONS};
+  crowdin upload translations "${CONFIG_OPTIONS}" "${OPTIONS}";
 }
 
 download_translations() {
@@ -104,23 +104,27 @@ download_translations() {
   fi
 
   echo "DOWNLOAD TRANSLATIONS";
-  crowdin download ${CONFIG_OPTIONS} ${OPTIONS};
+  crowdin download "${CONFIG_OPTIONS}" "${OPTIONS}";
 }
 
 create_pull_request() {
   TITLE="${1}";
 
   LOCALIZATION_BRANCH="${2}";
-  BASE_BRANCH=$(jq -r ".repository.default_branch" "$GITHUB_EVENT_PATH");
 
   AUTH_HEADER="Authorization: token ${GITHUB_TOKEN}";
   HEADER="Accept: application/vnd.github.v3+json; application/vnd.github.antiope-preview+json; application/vnd.github.shadow-cat-preview+json";
 
-  PULLS_URL="https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls";
+  REPO_URL="https://api.github.com/repos/${GITHUB_REPOSITORY}";
+  REPO_RESPONSE=$(curl -sSL -H "${AUTH_HEADER}" -H "${HEADER}" -X GET "${REPO_URL}");
+  BASE_BRANCH=$(echo "${REPO_RESPONSE}" | jq --raw-output '.default_branch');
+
+  PULLS_URL="${REPO_URL}/pulls";
 
   echo "CHECK IF ISSET SAME PULL REQUEST";
   DATA="{\"base\":\"${BASE_BRANCH}\", \"head\":\"${LOCALIZATION_BRANCH}\"}";
-  RESPONSE=$(curl -sSL -H "${AUTH_HEADER}" -H "${HEADER}" -X GET --data "${DATA}" ${PULLS_URL});
+  RESPONSE=$(curl -sSL -H "${AUTH_HEADER}" -H "${HEADER}" -X GET --data "${DATA}" "${PULLS_URL}");
+
   PULL_REQUESTS=$(echo "${RESPONSE}" | jq --raw-output '.[] | .head.ref ');
 
   if echo "$PULL_REQUESTS " | grep -q "$LOCALIZATION_BRANCH "; then
@@ -129,7 +133,7 @@ create_pull_request() {
     echo "CREATE PULL REQUEST";
 
     DATA="{\"title\":\"${TITLE}\", \"base\":\"${BASE_BRANCH}\", \"head\":\"${LOCALIZATION_BRANCH}\"}";
-    curl -sSL -H "${AUTH_HEADER}" -H "${HEADER}" -X POST --data "${DATA}" ${PULLS_URL};
+    curl -sSL -H "${AUTH_HEADER}" -H "${HEADER}" -X POST --data "${DATA}" "${PULLS_URL}";
   fi
 }
 
@@ -144,7 +148,7 @@ push_to_branch() {
   git config --global user.email "support+bot@crowdin.com";
   git config --global user.name "Crowdin Bot";
 
-  git checkout -b ${LOCALIZATION_BRANCH};
+  git checkout -b "${LOCALIZATION_BRANCH}";
 
   if [[ -n "$(git status -s)" ]]; then
     echo "PUSH TO BRANCH ${LOCALIZATION_BRANCH}";
