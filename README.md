@@ -33,7 +33,7 @@ jobs:
       uses: actions/checkout@v2
 
     - name: crowdin action
-      uses: crowdin/github-action@1.0.7
+      uses: crowdin/github-action@1.0.8
       with:
         upload_translations: true
         download_translations: true
@@ -63,7 +63,6 @@ In case you don’t want to download translations from Crowdin (`download_transl
     upload_language: 'uk'
     auto_approve_imported: true
     import_eq_suggestions: true
-    import_duplicates: true
 
     # download translations options
     download_translations: true
