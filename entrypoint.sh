@@ -76,10 +76,6 @@ upload_translations() {
     OPTIONS="${OPTIONS} --import-eq-suggestions"
   fi
 
-  if [[ "$INPUT_IMPORT_DUPLICATES" = true ]]; then
-    OPTIONS="${OPTIONS} --import-duplicates"
-  fi
-
   echo "UPLOAD TRANSLATIONS";
   crowdin upload translations "${CONFIG_OPTIONS}" "${OPTIONS}";
 }
