@@ -33,7 +33,7 @@ jobs:
       uses: actions/checkout@v2
 
     - name: crowdin action
-      uses: crowdin/github-action@1.0.8
+      uses: crowdin/github-action@1.0.9
       with:
         upload_translations: true
         download_translations: true
@@ -76,6 +76,7 @@ In case you don’t want to download translations from Crowdin (`download_transl
     # This branch does NOT need to be manually created. It will be created automatically by the action.
     localization_branch_name: l10n_crowdin_action
     create_pull_request: true
+    pull_request_labels: 'enhancement, good first issue'
 
     # global options
 
