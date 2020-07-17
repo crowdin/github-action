@@ -62,6 +62,9 @@ inputs:
     description: 'Create pull request after pushing to branch'
     default: 'true'
     required: false
+  pull_request_labels:
+    description: 'To add labels for created pull request'
+    required: false
 
   # global options
   crowdin_branch_name:

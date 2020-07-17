@@ -132,6 +132,24 @@ create_pull_request() {
     PULL_RESPONSE=$(curl -sSL -H "${AUTH_HEADER}" -H "${HEADER}" -X POST --data "${DATA}" "${PULLS_URL}")
     CREATED_PULL_URL=$(echo "${PULL_RESPONSE}" | jq '.html_url')
 
+    if [ -n "$INPUT_PULL_REQUEST_LABELS" ]; then
+      if [ "$(echo "$INPUT_PULL_REQUEST_LABELS" | jq -e . > /dev/null 2>&1; echo $?)" -eq 0 ]; then
+        echo "ADD LABELS TO PULL REQUEST"
+
+        PULL_REQUESTS_NUMBER=$(echo "${PULL_RESPONSE}" | jq '.number')
+        ISSUE_URL="${REPO_URL}/issues/${PULL_REQUESTS_NUMBER}"
+
+        DATA="{\"labels\":${INPUT_PULL_REQUEST_LABELS}}"
+        PULL_RESPONSE="${PULL_RESPONSE} $(curl -sSL -H "${AUTH_HEADER}" -H "${HEADER}" -X PATCH --data "${DATA}" "${ISSUE_URL}")"
+      else
+        echo "JSON OF pull_request_labels IS INVALID"
+      fi
+    fi
+
+    if [ "$INPUT_DEBUG_MODE" = true ]; then
+      echo "$PULL_RESPONSE"
+    fi
+
     echo "PULL REQUEST CREATED: ${CREATED_PULL_URL}"
   fi
 }
