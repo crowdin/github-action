@@ -133,16 +133,18 @@ create_pull_request() {
     CREATED_PULL_URL=$(echo "${PULL_RESPONSE}" | jq '.html_url')
 
     if [ -n "$INPUT_PULL_REQUEST_LABELS" ]; then
-      if [ "$(echo "$INPUT_PULL_REQUEST_LABELS" | jq -e . > /dev/null 2>&1; echo $?)" -eq 0 ]; then
+      PULL_REQUEST_LABELS=$(echo "[\"${INPUT_PULL_REQUEST_LABELS}\"]" | sed 's/, \|,/","/g')
+
+      if [ "$(echo "$PULL_REQUEST_LABELS" | jq -e . > /dev/null 2>&1; echo $?)" -eq 0 ]; then
         echo "ADD LABELS TO PULL REQUEST"
 
         PULL_REQUESTS_NUMBER=$(echo "${PULL_RESPONSE}" | jq '.number')
         ISSUE_URL="${REPO_URL}/issues/${PULL_REQUESTS_NUMBER}"
 
-        DATA="{\"labels\":${INPUT_PULL_REQUEST_LABELS}}"
+        DATA="{\"labels\":${PULL_REQUEST_LABELS}}"
         PULL_RESPONSE="${PULL_RESPONSE} $(curl -sSL -H "${AUTH_HEADER}" -H "${HEADER}" -X PATCH --data "${DATA}" "${ISSUE_URL}")"
       else
-        echo "JSON OF pull_request_labels IS INVALID"
+        echo "JSON OF pull_request_labels IS INVALID: ${PULL_REQUEST_LABELS}"
       fi
     fi
 
