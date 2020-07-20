@@ -71,11 +71,14 @@ In case you don’t want to download translations from Crowdin (`download_transl
     skip_untranslated_files: true
     export_only_approved: true
     push_translations: true
+    commit_message: 'New Crowdin translations by Github Action'
 
     # This is the name of the git branch that Crowdin will create when opening a pull request.
     # This branch does NOT need to be manually created. It will be created automatically by the action.
     localization_branch_name: l10n_crowdin_action
     create_pull_request: true
+    pull_request_title: 'New Crowdin translations'
+    pull_request_body: 'New Crowdin pull request with translations'
     pull_request_labels: 'enhancement, good first issue'
 
     # global options
