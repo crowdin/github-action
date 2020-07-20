@@ -104,9 +104,7 @@ download_translations() {
 }
 
 create_pull_request() {
-  TITLE="${1}"
-
-  LOCALIZATION_BRANCH="${2}"
+  LOCALIZATION_BRANCH="${1}"
 
   AUTH_HEADER="Authorization: token ${GITHUB_TOKEN}"
   HEADER="Accept: application/vnd.github.v3+json; application/vnd.github.antiope-preview+json; application/vnd.github.shadow-cat-preview+json"
@@ -128,7 +126,11 @@ create_pull_request() {
   else
     echo "CREATE PULL REQUEST"
 
-    DATA="{\"title\":\"${TITLE}\", \"base\":\"${BASE_BRANCH}\", \"head\":\"${LOCALIZATION_BRANCH}\"}"
+    if [ -n "$INPUT_PULL_REQUEST_BODY" ]; then
+      BODY=",\"body\":\"${INPUT_PULL_REQUEST_BODY}\""
+    fi
+
+    DATA="{\"title\":\"${INPUT_PULL_REQUEST_TITLE}\", \"base\":\"${BASE_BRANCH}\", \"head\":\"${LOCALIZATION_BRANCH}\" ${BODY}"
     PULL_RESPONSE=$(curl -sSL -H "${AUTH_HEADER}" -H "${HEADER}" -X POST --data "${DATA}" "${PULLS_URL}")
     CREATED_PULL_URL=$(echo "${PULL_RESPONSE}" | jq '.html_url')
 
@@ -159,8 +161,6 @@ create_pull_request() {
 push_to_branch() {
   LOCALIZATION_BRANCH=${INPUT_LOCALIZATION_BRANCH_NAME}
 
-  COMMIT_MESSAGE="New Crowdin translations by Github Action"
-
   REPO_URL="https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
 
   echo "CONFIGURATION GIT USER"
@@ -173,11 +173,11 @@ push_to_branch() {
     echo "PUSH TO BRANCH ${LOCALIZATION_BRANCH}"
 
     git add .
-    git commit -m "${COMMIT_MESSAGE}"
+    git commit -m "${INPUT_COMMIT_MESSAGE}"
     git push --force "${REPO_URL}"
 
     if [ "$INPUT_CREATE_PULL_REQUEST" = true ]; then
-      create_pull_request "${COMMIT_MESSAGE}" "${LOCALIZATION_BRANCH}"
+      create_pull_request "${LOCALIZATION_BRANCH}"
     fi
   else
     echo "NOTHING TO COMMIT"
