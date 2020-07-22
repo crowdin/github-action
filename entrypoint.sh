@@ -64,43 +64,47 @@ upload_sources() {
 }
 
 upload_translations() {
+  UPLOAD_TRANSLATIONS_OPTIONS="${OPTIONS}"
+
   if [ -n "$INPUT_UPLOAD_LANGUAGE" ]; then
-    OPTIONS="${OPTIONS} --language=${INPUT_UPLOAD_LANGUAGE}"
+    UPLOAD_TRANSLATIONS_OPTIONS="${UPLOAD_TRANSLATIONS_OPTIONS} --language=${INPUT_UPLOAD_LANGUAGE}"
   fi
 
   if [ "$INPUT_AUTO_APPROVE_IMPORTED" = true ]; then
-    OPTIONS="${OPTIONS} --auto-approve-imported"
+    UPLOAD_TRANSLATIONS_OPTIONS="${UPLOAD_TRANSLATIONS_OPTIONS} --auto-approve-imported"
   fi
 
   if [ "$INPUT_IMPORT_EQ_SUGGESTIONS" = true ]; then
-    OPTIONS="${OPTIONS} --import-eq-suggestions"
+    UPLOAD_TRANSLATIONS_OPTIONS="${UPLOAD_TRANSLATIONS_OPTIONS} --import-eq-suggestions"
   fi
 
   echo "UPLOAD TRANSLATIONS"
-  crowdin upload translations "${CONFIG_OPTIONS}" "${OPTIONS}"
+  crowdin upload translations "${CONFIG_OPTIONS}" "${UPLOAD_TRANSLATIONS_OPTIONS}"
 }
 
 download_translations() {
+  DOWNLOAD_TRANSLATIONS_OPTIONS="${OPTIONS}"
+
   if [ -n "$INPUT_DOWNLOAD_LANGUAGE" ]; then
-    OPTIONS="${OPTIONS} --language=${INPUT_DOWNLOAD_LANGUAGE}"
+    DOWNLOAD_TRANSLATIONS_OPTIONS="${DOWNLOAD_TRANSLATIONS_OPTIONS} --language=${INPUT_DOWNLOAD_LANGUAGE}"
   elif [ -n "$INPUT_LANGUAGE" ]; then #back compatibility for older versions
-    OPTIONS="${OPTIONS} --language=${INPUT_LANGUAGE}"
+    DOWNLOAD_TRANSLATIONS_OPTIONS="${DOWNLOAD_TRANSLATIONS_OPTIONS} --language=${INPUT_LANGUAGE}"
   fi
 
   if [ "$INPUT_SKIP_UNTRANSLATED_STRINGS" = true ]; then
-    OPTIONS="${OPTIONS} --skip-untranslated-strings"
+    DOWNLOAD_TRANSLATIONS_OPTIONS="${DOWNLOAD_TRANSLATIONS_OPTIONS} --skip-untranslated-strings"
   fi
 
   if [ "$INPUT_SKIP_UNTRANSLATED_FILES" = true ]; then
-    OPTIONS="${OPTIONS} --skip-untranslated-files"
+    DOWNLOAD_TRANSLATIONS_OPTIONS="${DOWNLOAD_TRANSLATIONS_OPTIONS} --skip-untranslated-files"
   fi
 
   if [ "$INPUT_EXPORT_ONLY_APPROVED" = true ]; then
-    OPTIONS="${OPTIONS} --export-only-approved"
+    DOWNLOAD_TRANSLATIONS_OPTIONS="${DOWNLOAD_TRANSLATIONS_OPTIONS} --export-only-approved"
   fi
 
   echo "DOWNLOAD TRANSLATIONS"
-  crowdin download "${CONFIG_OPTIONS}" "${OPTIONS}"
+  crowdin download "${CONFIG_OPTIONS}" "${DOWNLOAD_TRANSLATIONS_OPTIONS}"
 }
 
 create_pull_request() {
