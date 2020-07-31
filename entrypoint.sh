@@ -205,14 +205,14 @@ if [ "$INPUT_UPLOAD_TRANSLATIONS" = true ]; then
 fi
 
 if [ "$INPUT_DOWNLOAD_TRANSLATIONS" = true ]; then
-  [ -z "${GITHUB_TOKEN}" ] && {
-    echo "CAN NOT FIND 'GITHUB_TOKEN' IN ENVIRONMENT VARIABLES"
-    exit 1
-  }
-
   download_translations
 
   if [ "$INPUT_PUSH_TRANSLATIONS" = true ]; then
+    [ -z "${GITHUB_TOKEN}" ] && {
+      echo "CAN NOT FIND 'GITHUB_TOKEN' IN ENVIRONMENT VARIABLES"
+      exit 1
+    }
+
     push_to_branch
   fi
 fi
