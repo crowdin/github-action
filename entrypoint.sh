@@ -114,8 +114,12 @@ create_pull_request() {
   HEADER="Accept: application/vnd.github.v3+json; application/vnd.github.antiope-preview+json; application/vnd.github.shadow-cat-preview+json"
 
   REPO_URL="https://api.github.com/repos/${GITHUB_REPOSITORY}"
-  REPO_RESPONSE=$(curl -sSL -H "${AUTH_HEADER}" -H "${HEADER}" -X GET "${REPO_URL}")
-  BASE_BRANCH=$(echo "${REPO_RESPONSE}" | jq --raw-output '.default_branch')
+  if [ -n "$INPUT_PULL_REQUEST_BASE_BRANCH_NAME" ];then
+    BASE_BRANCH="$INPUT_PULL_REQUEST_BASE_BRANCH_NAME"
+  else
+    REPO_RESPONSE=$(curl -sSL -H "${AUTH_HEADER}" -H "${HEADER}" -X GET "${REPO_URL}")
+    BASE_BRANCH=$(echo "${REPO_RESPONSE}" | jq --raw-output '.default_branch')
+  fi
 
   PULLS_URL="${REPO_URL}/pulls"
 

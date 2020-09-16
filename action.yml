@@ -76,6 +76,9 @@ inputs:
   pull_request_labels:
     description: 'To add labels for created pull request'
     required: false
+  pull_request_base_branch_name:
+    description: 'Create pull request to specified branch instead of default one'
+    required: false
 
   # global options
   crowdin_branch_name:
