@@ -37,10 +37,12 @@ jobs:
       with:
         upload_translations: true
         download_translations: true
+        # See "API v2" on https://crowdin.com/project/<your-project>/settings#api
+        project_id: ${{ secrets.CROWDIN_PROJECT_ID }}
+        # See https://crowdin.com/settings#api-key to generate a token
+        token: ${{ secrets.CROWDIN_API_TOKEN }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
-        CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
 ```
 
 ## Supported options
