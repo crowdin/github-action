@@ -88,7 +88,7 @@ inputs:
     description: 'Option to specify a path to user-specific credentials'
     required: false
   config:
-    description: 'Option to specify a path to the configuration file'
+    description: 'Option to specify a path to the configuration file, without / at the beginning'
     required: false
   dryrun_action:
     description: 'Option to preview the list of managed files'
