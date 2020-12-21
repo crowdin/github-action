@@ -33,7 +33,7 @@ jobs:
       uses: actions/checkout@v2
 
     - name: crowdin action
-      uses: crowdin/github-action@1.0.15
+      uses: crowdin/github-action@1.0.16
       with:
         upload_translations: true
         download_translations: true
@@ -90,8 +90,8 @@ In case you don’t want to download translations from Crowdin (`download_transl
     # Note that this is not a "branch" in the git sense, but more like a top-level directory in your Crowdin project.
     # This branch does NOT need to be manually created. It will be created automatically by the action.
     crowdin_branch_name: l10n_branch
-    identity: '/path/to/your/credentials/file'
-    config: '/path/to/your/crowdin.yml'
+    identity: 'path/to/your/credentials/file'
+    config: 'path/to/your/crowdin.yml'
     dryrun_action: true
 
     # config options
@@ -103,7 +103,7 @@ In case you don’t want to download translations from Crowdin (`download_transl
     # A personal access token, not to be confused with Crowdin API v1 "API key"
     # See https://crowdin.com/settings#api-key to generate a token
     token: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
-    source: '/path/to/your/file'
+    source: 'path/to/your/file'
     translation: 'file/export/pattern'
     base_url: 'https://crowdin.com'
     base_path: '/project-base-path'
