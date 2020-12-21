@@ -1,4 +1,4 @@
-FROM crowdin/cli:3.5
+FROM crowdin/cli:3.5.0
 
 RUN apk --no-cache add curl git jq;
 
