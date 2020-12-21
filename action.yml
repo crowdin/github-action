@@ -85,7 +85,7 @@ inputs:
     description: 'Option to upload or download files to the specified version branch in your Crowdin project'
     required: false
   identity:
-    description: 'Option to specify a path to user-specific credentials'
+    description: 'Option to specify a path to user-specific credentials, without / at the beginning'
     required: false
   config:
     description: 'Option to specify a path to the configuration file, without / at the beginning'
