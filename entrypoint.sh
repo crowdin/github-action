@@ -6,7 +6,7 @@ init_options() {
   if [ "$INPUT_DEBUG_MODE" = true ]; then
     set -x
 
-    OPTIONS="${OPTIONS} --verbose"
+    OPTIONS="${OPTIONS} --verbose --debug"
   fi
 
   if [ -n "$INPUT_CROWDIN_BRANCH_NAME" ]; then
