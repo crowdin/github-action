@@ -112,15 +112,17 @@ create_pull_request() {
   HEADER="Accept: application/vnd.github.v3+json; application/vnd.github.antiope-preview+json; application/vnd.github.shadow-cat-preview+json"
 
   REPO_URL="https://api.github.com/repos/${GITHUB_REPOSITORY}"
-  if [ -n "$INPUT_PULL_REQUEST_BASE_BRANCH_NAME" ]; then
-    BASE_BRANCH="$INPUT_PULL_REQUEST_BASE_BRANCH_NAME"
-  else
-    BASE_BRANCH=$(echo "$(curl -sSL -H "${AUTH_HEADER}" -H "${HEADER}" -X GET "${REPO_URL}")" | jq --raw-output '.default_branch')
-  fi
 
   PULLS_URL="${REPO_URL}/pulls"
 
   echo "CHECK IF ISSET SAME PULL REQUEST"
+
+  if [ -n "$INPUT_PULL_REQUEST_BASE_BRANCH_NAME" ]; then
+    BASE_BRANCH="$INPUT_PULL_REQUEST_BASE_BRANCH_NAME"
+  else
+    BASE_BRANCH="${GITHUB_REF#refs/heads/}"
+  fi
+
   DATA="{\"base\":\"${BASE_BRANCH}\", \"head\":\"${LOCALIZATION_BRANCH}\"}"
 
   PULL_REQUESTS=$(echo "$(curl -sSL -H "${AUTH_HEADER}" -H "${HEADER}" -X GET --data "${DATA}" "${PULLS_URL}")" | jq --raw-output '.[] | .head.ref ')
@@ -171,6 +173,8 @@ push_to_branch() {
   git config --global user.email "support+bot@crowdin.com"
   git config --global user.name "Crowdin Bot"
 
+  git checkout "${GITHUB_REF#refs/heads/}"
+
   git checkout -b "${LOCALIZATION_BRANCH}"
 
   if [ -n "$(git status -s)" ]; then
@@ -194,7 +198,6 @@ view_debug_output() {
   fi
 }
 
-# STARTING WORK
 echo "STARTING CROWDIN ACTION"
 
 view_debug_output
