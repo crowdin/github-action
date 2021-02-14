@@ -1,7 +1,7 @@
 #!/bin/sh
 
 init_options() {
-  OPTIONS="--no-progress"
+  OPTIONS="--no-progress --no-colors"
 
   if [ "$INPUT_DEBUG_MODE" = true ]; then
     OPTIONS="${OPTIONS} --verbose --debug"
