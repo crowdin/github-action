@@ -11,65 +11,65 @@ inputs:
   upload_sources:
     description: 'Upload sources to Crowdin'
     default: 'true'
-    required: true
+    required: false
 
   # upload translations options
   upload_translations:
     description: 'Upload translations to Crowdin'
     default: 'false'
-    required: true
+    required: false
   upload_language:
     description: 'Use this option to upload translations for a single specified language'
     required: false
   auto_approve_imported:
     description: 'Automatically approves uploaded translations'
     default: 'false'
-    required: true
+    required: false
   import_eq_suggestions:
     description: 'Defines whether to add translation if it is equal to source string in Crowdin project'
     default: 'false'
-    required: true
+    required: false
 
   # download translations options
   download_translations:
     description: 'Make pull request of Crowdin translations'
     default: 'false'
-    required: true
+    required: false
   download_language:
     description: 'Use this option to download translations for a single specified language'
     required: false
   skip_untranslated_strings:
     description: 'Skip untranslated strings in exported files (does not work with .docx, .html, .md and other document files)'
     default: 'false'
-    required: true
+    required: false
   skip_untranslated_files:
     description: 'Omit downloading not fully downloaded files'
     default: 'false'
-    required: true
+    required: false
   export_only_approved:
     description: 'Include approved translations only in exported files. If not combined with --skip-untranslated-strings option, strings without approval are fulfilled with the source language'
     default: 'false'
-    required: true
+    required: false
   push_translations:
     description: 'Download translations with pushing to branch'
     default: 'true'
-    required: true
+    required: false
   commit_message:
     description: 'Commit message for download translations'
     default: 'New Crowdin translations by Github Action'
-    required: true
+    required: false
   localization_branch_name:
     description: 'To download translations to the specified version branch'
     default: 'l10n_crowdin_action'
-    required: true
+    required: false
   create_pull_request:
     description: 'Create pull request after pushing to branch'
     default: 'true'
-    required: true
+    required: false
   pull_request_title:
     description: 'The title of the new pull request'
     default: 'New Crowdin translations by Github Action'
-    required: true
+    required: false
   pull_request_body:
     description: 'The contents of the pull request'
     required: false
@@ -93,7 +93,7 @@ inputs:
   dryrun_action:
     description: 'Option to preview the list of managed files'
     default: 'false'
-    required: true
+    required: false
 
   # config options
   project_id:
