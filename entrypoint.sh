@@ -1,69 +1,11 @@
 #!/bin/sh
 
-init_options() {
-  OPTIONS="--no-progress --no-colors"
-
-  if [ "$INPUT_DEBUG_MODE" = true ]; then
-    OPTIONS="${OPTIONS} --verbose --debug"
-  fi
-
-  if [ -n "$INPUT_CROWDIN_BRANCH_NAME" ]; then
-    OPTIONS="${OPTIONS} --branch=${INPUT_CROWDIN_BRANCH_NAME}"
-  fi
-
-  if [ -n "$INPUT_IDENTITY" ]; then
-    OPTIONS="${OPTIONS} --identity=${INPUT_IDENTITY}"
-  fi
-
-  if [ -n "$INPUT_CONFIG" ]; then
-    OPTIONS="${OPTIONS} --config=${INPUT_CONFIG}"
-  fi
-
-  if [ "$INPUT_DRYRUN_ACTION" = true ]; then
-    OPTIONS="${OPTIONS} --dryrun"
-  fi
-
-  echo "${OPTIONS}"
-}
-
-init_config_options() {
-  CONFIG_OPTIONS=""
-
-  if [ -n "$INPUT_PROJECT_ID" ]; then
-    CONFIG_OPTIONS="${CONFIG_OPTIONS} --project-id=${INPUT_PROJECT_ID}"
-  fi
-
-  if [ -n "$INPUT_TOKEN" ]; then
-    CONFIG_OPTIONS="${CONFIG_OPTIONS} --token=${INPUT_TOKEN}"
-  fi
-
-  if [ -n "$INPUT_BASE_URL" ]; then
-    CONFIG_OPTIONS="${CONFIG_OPTIONS} --base-url=${INPUT_BASE_URL}"
-  fi
-
-  if [ -n "$INPUT_BASE_PATH" ]; then
-    CONFIG_OPTIONS="${CONFIG_OPTIONS} --base-path=${INPUT_BASE_PATH}"
-  fi
-
-  if [ -n "$INPUT_SOURCE" ]; then
-    CONFIG_OPTIONS="${CONFIG_OPTIONS} --source=${INPUT_SOURCE}"
-  fi
-
-  if [ -n "$INPUT_TRANSLATION" ]; then
-    CONFIG_OPTIONS="${CONFIG_OPTIONS} --translation=${INPUT_TRANSLATION}"
-  fi
-
-  echo "${CONFIG_OPTIONS}"
-}
-
 upload_sources() {
   echo "UPLOAD SOURCES"
-  crowdin upload sources "${CONFIG_OPTIONS}" "${OPTIONS}"
+  crowdin upload sources "$@"
 }
 
 upload_translations() {
-  UPLOAD_TRANSLATIONS_OPTIONS="${OPTIONS}"
-
   if [ -n "$INPUT_UPLOAD_LANGUAGE" ]; then
     UPLOAD_TRANSLATIONS_OPTIONS="${UPLOAD_TRANSLATIONS_OPTIONS} --language=${INPUT_UPLOAD_LANGUAGE}"
   fi
@@ -77,12 +19,10 @@ upload_translations() {
   fi
 
   echo "UPLOAD TRANSLATIONS"
-  crowdin upload translations "${CONFIG_OPTIONS}" "${UPLOAD_TRANSLATIONS_OPTIONS}"
+  crowdin upload translations "$@" $UPLOAD_TRANSLATIONS_OPTIONS
 }
 
 download_translations() {
-  DOWNLOAD_TRANSLATIONS_OPTIONS="${OPTIONS}"
-
   if [ -n "$INPUT_DOWNLOAD_LANGUAGE" ]; then
     DOWNLOAD_TRANSLATIONS_OPTIONS="${DOWNLOAD_TRANSLATIONS_OPTIONS} --language=${INPUT_DOWNLOAD_LANGUAGE}"
   elif [ -n "$INPUT_LANGUAGE" ]; then #back compatibility for older versions
@@ -102,7 +42,7 @@ download_translations() {
   fi
 
   echo "DOWNLOAD TRANSLATIONS"
-  crowdin download "${CONFIG_OPTIONS}" "${DOWNLOAD_TRANSLATIONS_OPTIONS}"
+  crowdin download "$@" $DOWNLOAD_TRANSLATIONS_OPTIONS
 }
 
 create_pull_request() {
@@ -208,19 +148,65 @@ view_debug_output
 
 set -e
 
-OPTIONS=$(init_options)
-CONFIG_OPTIONS=$(init_config_options)
+#SET OPTIONS
+set -- --no-progress --no-colors
 
+if [ "$INPUT_DEBUG_MODE" = true ]; then
+  set -- "$@" --verbose --debug
+fi
+
+if [ -n "$INPUT_CROWDIN_BRANCH_NAME" ]; then
+  set -- "$@" --branch="${INPUT_CROWDIN_BRANCH_NAME}"
+fi
+
+if [ -n "$INPUT_IDENTITY" ]; then
+  set -- "$@" --identity="${INPUT_IDENTITY}"
+fi
+
+if [ -n "$INPUT_CONFIG" ]; then
+  set -- "$@" --config="${INPUT_CONFIG}"
+fi
+
+if [ "$INPUT_DRYRUN_ACTION" = true ]; then
+  set -- "$@" --dryrun
+fi
+
+#SET CONFIG OPTIONS
+if [ -n "$INPUT_PROJECT_ID" ]; then
+  set -- "$@" --project-id=${INPUT_PROJECT_ID}
+fi
+
+if [ -n "$INPUT_TOKEN" ]; then
+  set -- "$@" --token="${INPUT_TOKEN}"
+fi
+
+if [ -n "$INPUT_BASE_URL" ]; then
+  set -- "$@" --base-url="${INPUT_BASE_URL}"
+fi
+
+if [ -n "$INPUT_BASE_PATH" ]; then
+  set -- "$@" --base-path="${INPUT_BASE_PATH}"
+fi
+
+if [ -n "$INPUT_SOURCE" ]; then
+  set -- "$@" --source="${INPUT_SOURCE}"
+fi
+
+if [ -n "$INPUT_TRANSLATION" ]; then
+  set -- "$@" --translation="${INPUT_TRANSLATION}"
+fi
+
+#EXECUTE COMMANDS
 if [ "$INPUT_UPLOAD_SOURCES" = true ]; then
-  upload_sources
+  upload_sources "$@"
 fi
 
 if [ "$INPUT_UPLOAD_TRANSLATIONS" = true ]; then
-  upload_translations
+  upload_translations "$@"
 fi
 
 if [ "$INPUT_DOWNLOAD_TRANSLATIONS" = true ]; then
-  download_translations
+  download_translations "$@"
 
   if [ "$INPUT_PUSH_TRANSLATIONS" = true ]; then
     [ -z "${GITHUB_TOKEN}" ] && {
