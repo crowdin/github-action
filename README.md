@@ -109,6 +109,8 @@ In case you don’t want to download translations from Crowdin (`download_transl
     base_path: '/project-base-path'
 ```
 
+**Note:** For Crowdin Enterprise `base_url` is required and should be passed in the following way: `base_url: 'https://{organization-name}.crowdin.com'`
+
 For more detailed descriptions of these options, see [`action.yml`](https://github.com/crowdin/github-action/blob/master/action.yml).
 
 ### Crowdin configuration file
