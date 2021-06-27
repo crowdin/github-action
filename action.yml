@@ -19,7 +19,7 @@ inputs:
     default: 'false'
     required: false
   upload_language:
-    description: 'Use this option to upload translations for a single specified language'
+    description: 'Use this option to upload translations for a single specified language - Case-Sensitive'
     required: false
   auto_approve_imported:
     description: 'Automatically approves uploaded translations'
