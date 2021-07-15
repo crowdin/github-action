@@ -95,6 +95,23 @@ inputs:
     default: 'false'
     required: false
 
+  # GitHub (Enterprise) configuration
+  github_base_url:
+    description: 'Option to configure the base URL of GitHub server, if using GHE.'
+    default: 'github.com'
+    required: false
+  github_api_base_url:
+    description: 'Options to configure the base URL of GitHub server for API requests, if using GHE and different from api.github_base_url.'
+    required: false
+  github_user_name:
+    description: 'Option to configure GitHub user name on commits.'
+    default: 'Crowdin Bot'
+    required: false
+  github_user_email:
+    description: 'Option to configure GitHub user email on commits.'
+    default: 'support+bot@crowdin.com'
+    required: false
+
   # config options
   project_id:
     description: 'Numerical ID of the project'

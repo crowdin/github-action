@@ -51,7 +51,11 @@ create_pull_request() {
   AUTH_HEADER="Authorization: token ${GITHUB_TOKEN}"
   HEADER="Accept: application/vnd.github.v3+json; application/vnd.github.antiope-preview+json; application/vnd.github.shadow-cat-preview+json"
 
-  REPO_URL="https://api.github.com/repos/${GITHUB_REPOSITORY}"
+  if [ -n "$INPUT_GITHUB_API_BASE_URL" ]; then
+    REPO_URL="https://${INPUT_GITHUB_API_BASE_URL}/repos/${GITHUB_REPOSITORY}"
+  else
+    REPO_URL="https://api.${INPUT_GITHUB_BASE_URL}/repos/${GITHUB_REPOSITORY}"
+  fi
 
   PULLS_URL="${REPO_URL}/pulls"
 
@@ -107,11 +111,11 @@ create_pull_request() {
 push_to_branch() {
   LOCALIZATION_BRANCH=${INPUT_LOCALIZATION_BRANCH_NAME}
 
-  REPO_URL="https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+  REPO_URL="https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@${INPUT_GITHUB_BASE_URL}/${GITHUB_REPOSITORY}.git"
 
   echo "CONFIGURATION GIT USER"
-  git config --global user.email "support+bot@crowdin.com"
-  git config --global user.name "Crowdin Bot"
+  git config --global user.email "${INPUT_GITHUB_USER_EMAIL}"
+  git config --global user.name "${INPUT_GITHUB_USER_NAME}"
 
   git checkout "${GITHUB_REF#refs/heads/}"
 
