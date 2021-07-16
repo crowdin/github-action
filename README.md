@@ -94,6 +94,13 @@ In case you don’t want to download translations from Crowdin (`download_transl
     config: 'path/to/your/crowdin.yml'
     dryrun_action: true
 
+    # GitHub (Enterprise) configuration
+
+    github_base_url: github.com
+    github_api_base_url: api.[github_base_url]
+    github_user_name: Crowdin Bot
+    github_user_email: support+bot@crowdin.com
+
     # config options
 
     # This is a numeric id, not to be confused with Crowdin API v1 "project identifier" string
