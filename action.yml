@@ -43,7 +43,7 @@ inputs:
     default: 'false'
     required: false
   skip_untranslated_files:
-    description: 'Omit downloading not fully downloaded files'
+    description: 'Omit downloading not fully translated files'
     default: 'false'
     required: false
   export_only_approved:
