@@ -111,6 +111,9 @@ inputs:
     description: 'Option to configure GitHub user email on commits.'
     default: 'support+bot@crowdin.com'
     required: false
+  gpg_private_key:
+    description: 'GPG private key in ASCII-armored format'
+    required: false
 
   # config options
   project_id:

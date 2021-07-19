@@ -150,6 +150,27 @@ view_debug_output() {
   fi
 }
 
+setup_commit_signing() {
+  echo "FOUND PRIVATE KEY, WILL SETUP GPG KEYSTORE"
+
+  echo "${INPUT_GPG_PRIVATE_KEY}" > private.key
+
+  gpg --import private.key
+
+  GPG_KEY_ID=$(gpg --list-secret-keys --keyid-format=long | grep -o "rsa\d\+\/\(\w\+\)" | head -n1 | sed "s/rsa\d\+\/\(\d\+\)/\1/")
+  GPG_KEY_OWNER_NAME=$(gpg --list-secret-keys --keyid-format=long | grep  "uid" | sed "s/.\+] \(.\+\) <\(.\+\)>/\1/")
+  GPG_KEY_OWNER_EMAIL=$(gpg --list-secret-keys --keyid-format=long | grep  "uid" | sed "s/.\+] \(.\+\) <\(.\+\)>/\2/")
+  echo "Imported key information:"
+  echo "      Key id: ${GPG_KEY_ID}"
+  echo "  Owner name: ${GPG_KEY_OWNER_NAME}"
+  echo " Owner email: ${GPG_KEY_OWNER_EMAIL}"
+
+  git config --global user.signingkey "$GPG_KEY_ID"
+  git config --global commit.gpgsign true
+
+  rm private.key
+}
+
 echo "STARTING CROWDIN ACTION"
 
 view_debug_output
@@ -221,6 +242,10 @@ if [ "$INPUT_DOWNLOAD_TRANSLATIONS" = true ]; then
       echo "CAN NOT FIND 'GITHUB_TOKEN' IN ENVIRONMENT VARIABLES"
       exit 1
     }
+
+    if [ -n "${INPUT_GPG_PRIVATE_KEY}" ]; then
+      setup_commit_signing
+    fi
 
     push_to_branch
   fi
