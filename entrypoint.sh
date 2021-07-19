@@ -128,6 +128,10 @@ push_to_branch() {
   if [ -n "$(git status -s)" ]; then
     echo "PUSH TO BRANCH ${LOCALIZATION_BRANCH}"
 
+    gpg --list-keys --keyid-format=long
+    gpg2 --list-keys --keyid-format=long
+    echo "test" | gpg2 --clearsign
+
     git add .
     git commit --no-verify -m "${INPUT_COMMIT_MESSAGE}"
     git push --no-verify --force "${REPO_URL}"
