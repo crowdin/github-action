@@ -7,10 +7,14 @@ branding:
   color: 'green'
 
 inputs:
-  # upload sources option
+  # upload sources options
   upload_sources:
     description: 'Upload sources to Crowdin'
     default: 'true'
+    required: false
+  upload_sources_args:
+    description: 'Additional arguments which will be passed to the `upload sources` cli command'
+    default: ''
     required: false
 
   # upload translations options
@@ -28,6 +32,10 @@ inputs:
   import_eq_suggestions:
     description: 'Defines whether to add translation if it is equal to source string in Crowdin project'
     default: 'false'
+    required: false
+  upload_translations_args:
+    description: 'Additional arguments which will be passed to the `upload translations` cli command'
+    default: ''
     required: false
 
   # download translations options
@@ -78,6 +86,10 @@ inputs:
     required: false
   pull_request_base_branch_name:
     description: 'Create pull request to specified branch instead of default one'
+    required: false
+  download_translations_args:
+    description: 'Additional arguments which will be passed to the `download translations` cli command'
+    default: ''
     required: false
 
   # global options
