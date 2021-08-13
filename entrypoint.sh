@@ -1,8 +1,12 @@
 #!/bin/sh
 
 upload_sources() {
+  if [ -n "$INPUT_UPLOAD_SOURCES_ARGS" ]; then
+    UPLOAD_SOURCES_OPTIONS="${UPLOAD_SOURCES_OPTIONS} ${INPUT_UPLOAD_SOURCES_ARGS}"
+  fi
+
   echo "UPLOAD SOURCES"
-  crowdin upload sources "$@"
+  crowdin upload sources "$@" $UPLOAD_SOURCES_OPTIONS
 }
 
 upload_translations() {
@@ -16,6 +20,10 @@ upload_translations() {
 
   if [ "$INPUT_IMPORT_EQ_SUGGESTIONS" = true ]; then
     UPLOAD_TRANSLATIONS_OPTIONS="${UPLOAD_TRANSLATIONS_OPTIONS} --import-eq-suggestions"
+  fi
+
+  if [ -n "$INPUT_UPLOAD_TRANSLATIONS_ARGS" ]; then
+    UPLOAD_TRANSLATIONS_OPTIONS="${UPLOAD_TRANSLATIONS_OPTIONS} ${INPUT_UPLOAD_TRANSLATIONS_ARGS}"
   fi
 
   echo "UPLOAD TRANSLATIONS"
@@ -39,6 +47,10 @@ download_translations() {
 
   if [ "$INPUT_EXPORT_ONLY_APPROVED" = true ]; then
     DOWNLOAD_TRANSLATIONS_OPTIONS="${DOWNLOAD_TRANSLATIONS_OPTIONS} --export-only-approved"
+  fi
+
+  if [ -n "$INPUT_DOWNLOAD_TRANSLATIONS_ARGS" ]; then
+    DOWNLOAD_TRANSLATIONS_OPTIONS="${DOWNLOAD_TRANSLATIONS_OPTIONS} ${INPUT_DOWNLOAD_TRANSLATIONS_ARGS}"
   fi
 
   echo "DOWNLOAD TRANSLATIONS"

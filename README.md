@@ -57,12 +57,16 @@ In case you don’t want to download translations from Crowdin (`download_transl
   with:
     # upload sources option
     upload_sources: true
+    # this can be used to pass down any supported argument of the `upload sources` cli command, e.g.
+    upload_sources_args: '--no-auto-update label=web'
 
     # upload translations options
     upload_translations: true
     upload_language: 'uk'
     auto_approve_imported: true
     import_eq_suggestions: true
+    # this can be used to pass down any supported argument of the `upload translations` cli command, e.g.
+    upload_translations_args: '--auto-approve-imported --translate-hidden'
 
     # download translations options
     download_translations: true
@@ -72,6 +76,8 @@ In case you don’t want to download translations from Crowdin (`download_transl
     export_only_approved: true
     push_translations: true
     commit_message: 'New Crowdin translations by Github Action'
+    # this can be used to pass down any supported argument of the `download translations` cli command, e.g.
+    download_translations_args: '--all --skip-untranslated-strings'
 
     # This is the name of the git branch that Crowdin will create when opening a pull request.
     # This branch does NOT need to be manually created. It will be created automatically by the action.
