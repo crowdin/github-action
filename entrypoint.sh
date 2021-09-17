@@ -1,5 +1,11 @@
 #!/bin/sh
 
+if [ "$INPUT_DEBUG_MODE" = true ]; then
+  echo '---------------------------'
+  printenv
+  echo '---------------------------'
+fi
+
 upload_sources() {
   if [ -n "$INPUT_UPLOAD_SOURCES_ARGS" ]; then
     UPLOAD_SOURCES_OPTIONS="${UPLOAD_SOURCES_OPTIONS} ${INPUT_UPLOAD_SOURCES_ARGS}"
@@ -76,7 +82,11 @@ create_pull_request() {
   if [ -n "$INPUT_PULL_REQUEST_BASE_BRANCH_NAME" ]; then
     BASE_BRANCH="$INPUT_PULL_REQUEST_BASE_BRANCH_NAME"
   else
-    BASE_BRANCH="${GITHUB_REF#refs/heads/}"
+    if [ -n "$GITHUB_HEAD_REF" ]; then
+      BASE_BRANCH=${GITHUB_HEAD_REF}
+    else
+      BASE_BRANCH=${GITHUB_REF#refs/heads/}
+    fi
   fi
 
   PULL_REQUESTS_DATA="{\"base\":\"${BASE_BRANCH}\", \"head\":\"${LOCALIZATION_BRANCH}\"}"
@@ -129,7 +139,9 @@ push_to_branch() {
   git config --global user.email "${INPUT_GITHUB_USER_EMAIL}"
   git config --global user.name "${INPUT_GITHUB_USER_NAME}"
 
-  git checkout "${GITHUB_REF#refs/heads/}"
+  if [ ${GITHUB_REF#refs/heads/} != $GITHUB_REF ]; then
+    git checkout "${BASE_REF}"
+  fi
 
   if [ -n "$(git show-ref refs/heads/${LOCALIZATION_BRANCH})" ]; then
     git checkout "${LOCALIZATION_BRANCH}"
