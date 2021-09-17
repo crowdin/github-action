@@ -179,6 +179,16 @@ setup_commit_signing() {
   rm private.key
 }
 
+get_branch_available_options() {
+  for OPTION in "$@" ; do
+    if echo "$OPTION" | egrep -vq "^(--dryrun|--branch|--source|--translation)"; then
+      AVAILABLE_OPTIONS="${AVAILABLE_OPTIONS} ${OPTION}"
+    fi
+  done
+
+  echo "$AVAILABLE_OPTIONS"
+}
+
 echo "STARTING CROWDIN ACTION"
 
 view_debug_output
@@ -234,6 +244,19 @@ if [ -n "$INPUT_TRANSLATION" ]; then
 fi
 
 #EXECUTE COMMANDS
+
+if [ -n "$INPUT_ADD_CROWDIN_BRANCH" ]; then
+  NEW_BRANCH_OPTIONS=$( get_branch_available_options "$@" )
+
+  if [ -n "$INPUT_NEW_BRANCH_PRIORITY" ]; then
+    NEW_BRANCH_OPTIONS="${NEW_BRANCH_OPTIONS} --priority=${INPUT_NEW_BRANCH_PRIORITY}"
+  fi
+
+  echo "CREATING BRANCH $INPUT_ADD_CROWDIN_BRANCH"
+
+  crowdin branch add $INPUT_ADD_CROWDIN_BRANCH $NEW_BRANCH_OPTIONS --title="${INPUT_NEW_BRANCH_TITLE}" --export-pattern="${INPUT_NEW_BRANCH_EXPORT_PATTERN}"
+fi
+
 if [ "$INPUT_UPLOAD_SOURCES" = true ]; then
   upload_sources "$@"
 fi
@@ -257,4 +280,10 @@ if [ "$INPUT_DOWNLOAD_TRANSLATIONS" = true ]; then
 
     push_to_branch
   fi
+fi
+
+if [ -n "$INPUT_DELETE_CROWDIN_BRANCH" ]; then
+  echo "REMOVING BRANCH $INPUT_DELETE_CROWDIN_BRANCH"
+
+  crowdin branch delete $INPUT_DELETE_CROWDIN_BRANCH $( get_branch_available_options "$@" )
 fi
