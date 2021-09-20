@@ -33,7 +33,7 @@ jobs:
       uses: actions/checkout@v2
 
     - name: crowdin action
-      uses: crowdin/github-action@1.3.3
+      uses: crowdin/github-action@1.4.0
       with:
         upload_translations: true
         download_translations: true
@@ -89,6 +89,17 @@ In case you don’t want to download translations from Crowdin (`download_transl
     # This is the name of the git branch to with pull request will be created.
     # If not specified default repository branch will be used.
     pull_request_base_branch_name: not_default_branch
+
+    # branch options
+    add_crowdin_branch: branch_name
+    # Title as it appears to translators
+    new_branch_title: 'development / main'
+    # Defines branch name and path in resulting translations bundle
+    new_branch_export_pattern: '/translations/%two_letters_code%/%original_file_name%'
+    # [LOW, NORMAL, HIGH]
+    new_branch_priority: 'HIGH'
+    
+    delete_crowdin_branch: branch_name
 
     # global options
 
