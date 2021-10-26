@@ -153,6 +153,12 @@ push_to_branch() {
     echo "PUSH TO BRANCH ${LOCALIZATION_BRANCH}"
 
     git add .
+
+    if [ ! -n "$(git status -s)" ]; then
+      echo "NOTHING TO COMMIT"
+      return
+    fi
+
     git commit --no-verify -m "${INPUT_COMMIT_MESSAGE}"
     git push --no-verify --force "${REPO_URL}"
 
