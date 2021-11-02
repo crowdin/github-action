@@ -149,24 +149,19 @@ push_to_branch() {
     git checkout -b "${LOCALIZATION_BRANCH}"
   fi
 
-  if [ -n "$(git status -s)" ]; then
-    echo "PUSH TO BRANCH ${LOCALIZATION_BRANCH}"
+  git add .
 
-    git add .
-
-    if [ ! -n "$(git status -s)" ]; then
-      echo "NOTHING TO COMMIT"
-      return
-    fi
-
-    git commit --no-verify -m "${INPUT_COMMIT_MESSAGE}"
-    git push --no-verify --force "${REPO_URL}"
-
-    if [ "$INPUT_CREATE_PULL_REQUEST" = true ]; then
-      create_pull_request "${LOCALIZATION_BRANCH}"
-    fi
-  else
+  if [ ! -n "$(git status -s)" ]; then
     echo "NOTHING TO COMMIT"
+    return
+  fi
+
+  echo "PUSH TO BRANCH ${LOCALIZATION_BRANCH}"
+  git commit --no-verify -m "${INPUT_COMMIT_MESSAGE}"
+  git push --no-verify --force "${REPO_URL}"
+
+  if [ "$INPUT_CREATE_PULL_REQUEST" = true ]; then
+    create_pull_request "${LOCALIZATION_BRANCH}"
   fi
 }
 
