@@ -1,4 +1,4 @@
-FROM crowdin/cli:3.7.2
+FROM crowdin/cli:3.7.3
 
 RUN apk --no-cache add curl git jq gnupg;
 
