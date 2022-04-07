@@ -43,6 +43,8 @@ jobs:
         CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
 ```
 
+:clipboard: To explore the common questions about Crowdin GitHub Action usage visit the [Wiki](https://github.com/crowdin/github-action/wiki).
+
 ## Supported options
 The default action is to upload sources. Though, you can set different actions through the “with” options. If you don't want to upload your sources to Crowdin, just set the `upload_sources` option to false.
 
