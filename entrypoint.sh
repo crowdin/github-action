@@ -204,6 +204,10 @@ get_branch_available_options() {
 
 echo "STARTING CROWDIN ACTION"
 
+cd "${GITHUB_WORKSPACE}" || exit 1
+
+git config --global --add safe.directory $GITHUB_WORKSPACE
+
 view_debug_output
 
 set -e
