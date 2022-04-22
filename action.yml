@@ -156,10 +156,10 @@ inputs:
     description: 'Base URL of Crowdin server for API requests execution'
     required: false
   base_path:
-    description: 'Path to your project directory on a local machine'
+    description: 'Path to your project directory on a local machine, without / at the beginning'
     required: false
   source:
-    description: 'Path to the source files'
+    description: 'Path to the source files, without / at the beginning'
     required: false
   translation:
     description: 'Path to the translation files'

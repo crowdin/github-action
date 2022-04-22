@@ -136,7 +136,7 @@ In case you don’t want to download translations from Crowdin (`download_transl
     source: 'path/to/your/file'
     translation: 'file/export/pattern'
     base_url: 'https://crowdin.com'
-    base_path: '/project-base-path'
+    base_path: 'project-base-path'
 ```
 
 **Note:** For Crowdin Enterprise `base_url` is required and should be passed in the following way: `base_url: 'https://{organization-name}.crowdin.com'`
