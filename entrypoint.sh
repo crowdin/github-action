@@ -147,8 +147,8 @@ push_to_branch() {
     git checkout "${LOCALIZATION_BRANCH}"
   else
     git checkout -b "${LOCALIZATION_BRANCH}"
-  fi
-
+  fi  
+  
   git add .
 
   if [ ! -n "$(git status -s)" ]; then
