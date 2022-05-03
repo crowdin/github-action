@@ -1,5 +1,11 @@
 #!/bin/sh
 
+if [ "$INPUT_DEBUG_MODE" = true ]; then
+  echo '---------------------------'
+  printenv
+  echo '---------------------------'
+fi
+
 upload_sources() {
   if [ -n "$INPUT_UPLOAD_SOURCES_ARGS" ]; then
     UPLOAD_SOURCES_OPTIONS="${UPLOAD_SOURCES_OPTIONS} ${INPUT_UPLOAD_SOURCES_ARGS}"
@@ -76,12 +82,16 @@ create_pull_request() {
   if [ -n "$INPUT_PULL_REQUEST_BASE_BRANCH_NAME" ]; then
     BASE_BRANCH="$INPUT_PULL_REQUEST_BASE_BRANCH_NAME"
   else
-    BASE_BRANCH="${GITHUB_REF#refs/heads/}"
+    if [ -n "$GITHUB_HEAD_REF" ]; then
+      BASE_BRANCH=${GITHUB_HEAD_REF}
+    else
+      BASE_BRANCH=${GITHUB_REF#refs/heads/}
+    fi
   fi
 
-  PULL_REQUESTS_DATA="{\"base\":\"${BASE_BRANCH}\", \"head\":\"${LOCALIZATION_BRANCH}\"}"
+  PULL_REQUESTS_QUERY_PARAMS="?base=${BASE_BRANCH}&head=${LOCALIZATION_BRANCH}"
 
-  PULL_REQUESTS=$(echo "$(curl -sSL -H "${AUTH_HEADER}" -H "${HEADER}" -X GET --data "${PULL_REQUESTS_DATA}" "${PULLS_URL}")" | jq --raw-output '.[] | .head.ref ')
+  PULL_REQUESTS=$(echo "$(curl -sSL -H "${AUTH_HEADER}" -H "${HEADER}" -X GET "${PULLS_URL}${PULL_REQUESTS_QUERY_PARAMS}")" | jq --raw-output '.[] | .head.ref ')
 
   if echo "$PULL_REQUESTS " | grep -q "$LOCALIZATION_BRANCH "; then
     echo "PULL REQUEST ALREADY EXIST"
@@ -129,7 +139,9 @@ push_to_branch() {
   git config --global user.email "${INPUT_GITHUB_USER_EMAIL}"
   git config --global user.name "${INPUT_GITHUB_USER_NAME}"
 
-  git checkout "${GITHUB_REF#refs/heads/}"
+  if [ ${GITHUB_REF#refs/heads/} != $GITHUB_REF ]; then
+    git checkout "${GITHUB_REF#refs/heads/}"
+  fi
 
   if [ -n "$(git show-ref refs/heads/${LOCALIZATION_BRANCH})" ]; then
     git checkout "${LOCALIZATION_BRANCH}"
@@ -180,7 +192,21 @@ setup_commit_signing() {
   rm private.key
 }
 
+get_branch_available_options() {
+  for OPTION in "$@" ; do
+    if echo "$OPTION" | egrep -vq "^(--dryrun|--branch|--source|--translation)"; then
+      AVAILABLE_OPTIONS="${AVAILABLE_OPTIONS} ${OPTION}"
+    fi
+  done
+
+  echo "$AVAILABLE_OPTIONS"
+}
+
 echo "STARTING CROWDIN ACTION"
+
+cd "${GITHUB_WORKSPACE}" || exit 1
+
+git config --global --add safe.directory $GITHUB_WORKSPACE
 
 view_debug_output
 
@@ -235,6 +261,19 @@ if [ -n "$INPUT_TRANSLATION" ]; then
 fi
 
 #EXECUTE COMMANDS
+
+if [ -n "$INPUT_ADD_CROWDIN_BRANCH" ]; then
+  NEW_BRANCH_OPTIONS=$( get_branch_available_options "$@" )
+
+  if [ -n "$INPUT_NEW_BRANCH_PRIORITY" ]; then
+    NEW_BRANCH_OPTIONS="${NEW_BRANCH_OPTIONS} --priority=${INPUT_NEW_BRANCH_PRIORITY}"
+  fi
+
+  echo "CREATING BRANCH $INPUT_ADD_CROWDIN_BRANCH"
+
+  crowdin branch add $INPUT_ADD_CROWDIN_BRANCH $NEW_BRANCH_OPTIONS --title="${INPUT_NEW_BRANCH_TITLE}" --export-pattern="${INPUT_NEW_BRANCH_EXPORT_PATTERN}"
+fi
+
 if [ "$INPUT_UPLOAD_SOURCES" = true ]; then
   upload_sources "$@"
 fi
@@ -258,4 +297,10 @@ if [ "$INPUT_DOWNLOAD_TRANSLATIONS" = true ]; then
 
     push_to_branch
   fi
+fi
+
+if [ -n "$INPUT_DELETE_CROWDIN_BRANCH" ]; then
+  echo "REMOVING BRANCH $INPUT_DELETE_CROWDIN_BRANCH"
+
+  crowdin branch delete $INPUT_DELETE_CROWDIN_BRANCH $( get_branch_available_options "$@" )
 fi

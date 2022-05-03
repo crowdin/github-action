@@ -33,7 +33,7 @@ jobs:
       uses: actions/checkout@v2
 
     - name: crowdin action
-      uses: crowdin/github-action@1.3.3
+      uses: crowdin/github-action@1.4.8
       with:
         upload_translations: true
         download_translations: true
@@ -42,6 +42,8 @@ jobs:
         CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
         CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
 ```
+
+:clipboard: To explore the common questions about Crowdin GitHub Action usage visit the [Wiki](https://github.com/crowdin/github-action/wiki).
 
 ## Supported options
 The default action is to upload sources. Though, you can set different actions through the “with” options. If you don't want to upload your sources to Crowdin, just set the `upload_sources` option to false.
@@ -90,6 +92,17 @@ In case you don’t want to download translations from Crowdin (`download_transl
     # If not specified default repository branch will be used.
     pull_request_base_branch_name: not_default_branch
 
+    # branch options
+    add_crowdin_branch: branch_name
+    # Title as it appears to translators
+    new_branch_title: 'development / main'
+    # Defines branch name and path in resulting translations bundle
+    new_branch_export_pattern: '/translations/%two_letters_code%/%original_file_name%'
+    # [LOW, NORMAL, HIGH]
+    new_branch_priority: 'HIGH'
+    
+    delete_crowdin_branch: branch_name
+
     # global options
 
     # This is the name of the top-level directory that Crowdin will use for files.
@@ -123,7 +136,7 @@ In case you don’t want to download translations from Crowdin (`download_transl
     source: 'path/to/your/file'
     translation: 'file/export/pattern'
     base_url: 'https://crowdin.com'
-    base_path: '/project-base-path'
+    base_path: 'project-base-path'
 ```
 
 **Note:** For Crowdin Enterprise `base_url` is required and should be passed in the following way: `base_url: 'https://{organization-name}.crowdin.com'`

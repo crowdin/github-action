@@ -92,6 +92,24 @@ inputs:
     default: ''
     required: false
 
+  # branch options
+  add_crowdin_branch:
+    description: 'Option to create specified version branch in your Crowdin project'
+    required: false
+  new_branch_title:
+    description: 'Use to provide more details for translators. Title is available in UI only'
+    required: false
+  new_branch_export_pattern:
+    description: 'Branch export pattern. Defines branch name and path in resulting translations bundle'
+    required: false
+  new_branch_priority:
+    description: 'Defines priority level for each branch [LOW, NORMAL, HIGH]'
+    required: false
+
+  delete_crowdin_branch:
+    description: 'Option to remove specified version branch in your Crowdin project'
+    required: false
+
   # global options
   crowdin_branch_name:
     description: 'Option to upload or download files to the specified version branch in your Crowdin project'
@@ -138,10 +156,10 @@ inputs:
     description: 'Base URL of Crowdin server for API requests execution'
     required: false
   base_path:
-    description: 'Path to your project directory on a local machine'
+    description: 'Path to your project directory on a local machine, without / at the beginning'
     required: false
   source:
-    description: 'Path to the source files'
+    description: 'Path to the source files, without / at the beginning'
     required: false
   translation:
     description: 'Path to the translation files'
