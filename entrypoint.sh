@@ -147,8 +147,8 @@ push_to_branch() {
     git checkout "${LOCALIZATION_BRANCH}"
   else
     git checkout -b "${LOCALIZATION_BRANCH}"
-  fi  
-  
+  fi
+
   git add .
 
   if [ ! -n "$(git status -s)" ]; then
@@ -294,6 +294,8 @@ if [ "$INPUT_DOWNLOAD_TRANSLATIONS" = true ]; then
     if [ -n "${INPUT_GPG_PRIVATE_KEY}" ]; then
       setup_commit_signing
     fi
+
+    git config --global --add safe.directory $GITHUB_WORKSPACE
 
     push_to_branch
   fi
