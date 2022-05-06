@@ -93,6 +93,7 @@ create_pull_request() {
 
   PULL_REQUESTS=$(echo "$(curl -sSL -H "${AUTH_HEADER}" -H "${HEADER}" -X GET "${PULLS_URL}${PULL_REQUESTS_QUERY_PARAMS}")" | jq --raw-output '.[] | .head.ref ')
 
+  # check if pull request exist
   if echo "$PULL_REQUESTS " | grep -q "$LOCALIZATION_BRANCH "; then
     echo "PULL REQUEST ALREADY EXIST"
   else
@@ -103,7 +104,7 @@ create_pull_request() {
     fi
 
     PULL_RESPONSE_DATA="{\"title\":\"${INPUT_PULL_REQUEST_TITLE}\", \"base\":\"${BASE_BRANCH}\", \"head\":\"${LOCALIZATION_BRANCH}\" ${BODY}}"
-
+    # create pull request
     PULL_RESPONSE=$(curl -sSL -H "${AUTH_HEADER}" -H "${HEADER}" -X POST --data "${PULL_RESPONSE_DATA}" "${PULLS_URL}")
 
     set +x
@@ -120,6 +121,8 @@ create_pull_request() {
         ISSUE_URL="${REPO_URL}/issues/${PULL_REQUESTS_NUMBER}"
 
         LABELS_DATA="{\"labels\":${PULL_REQUEST_LABELS}}"
+
+        # add labels to created pull request
         curl -sSL -H "${AUTH_HEADER}" -H "${HEADER}" -X PATCH --data "${LABELS_DATA}" "${ISSUE_URL}"
       else
         echo "JSON OF pull_request_labels IS INVALID: ${PULL_REQUEST_LABELS}"
@@ -147,8 +150,8 @@ push_to_branch() {
     git checkout "${LOCALIZATION_BRANCH}"
   else
     git checkout -b "${LOCALIZATION_BRANCH}"
-  fi  
-  
+  fi
+
   git add .
 
   if [ ! -n "$(git status -s)" ]; then
@@ -176,7 +179,7 @@ setup_commit_signing() {
 
   echo "${INPUT_GPG_PRIVATE_KEY}" > private.key
 
-  gpg --import private.key
+  gpg --import --batch private.key
 
   GPG_KEY_ID=$(gpg --list-secret-keys --keyid-format=long | grep -o "rsa\d\+\/\(\w\+\)" | head -n1 | sed "s/rsa\d\+\/\(\w\+\)/\1/")
   GPG_KEY_OWNER_NAME=$(gpg --list-secret-keys --keyid-format=long | grep  "uid" | sed "s/.\+] \(.\+\) <\(.\+\)>/\1/")
@@ -188,6 +191,10 @@ setup_commit_signing() {
 
   git config --global user.signingkey "$GPG_KEY_ID"
   git config --global commit.gpgsign true
+
+  export GPG_TTY=$(tty)
+  # generate sign to store passphrase in cache for "git commit"
+  echo "test" | gpg --clearsign --pinentry-mode=loopback --passphrase "${INPUT_GPG_PASSPHRASE}" > /dev/null 2>&1
 
   rm private.key
 }
@@ -291,9 +298,9 @@ if [ "$INPUT_DOWNLOAD_TRANSLATIONS" = true ]; then
       exit 1
     }
 
-    if [ -n "${INPUT_GPG_PRIVATE_KEY}" ]; then
+    [ -n "${INPUT_GPG_PRIVATE_KEY}" ] && [ -n "${INPUT_GPG_PASSPHRASE}" ] && {
       setup_commit_signing
-    fi
+    }
 
     push_to_branch
   fi
