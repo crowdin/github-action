@@ -33,7 +33,7 @@ jobs:
       uses: actions/checkout@v2
 
     - name: crowdin action
-      uses: crowdin/github-action@1.4.8
+      uses: crowdin/github-action@1.4.9
       with:
         upload_translations: true
         download_translations: true
@@ -120,9 +120,10 @@ In case you don’t want to download translations from Crowdin (`download_transl
     github_user_name: Crowdin Bot
     github_user_email: support+bot@crowdin.com
     
-    # For signed commits, add your ASCII-armored key
-    # Ensure that all emails are the same: for account profile that holds public key, the one specified during key generation, and for commit author (github_user_email parameter)
+    # For signed commits, add your ASCII-armored key and export "gpg --armor --export-secret-key GPG_KEY_ID"
+    # Ensure that all emails are the same: for account profile that holds private key, the one specified during key generation, and for commit author (github_user_email parameter)
     gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+    gpg_passphrase: ${{ secrets.GPG_PASSPHRASE }}
 
     # config options
 
