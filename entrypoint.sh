@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if [ "$INPUT_DEBUG_MODE" = true ]; then
+if [ "$INPUT_DEBUG_MODE" = true ] || [ -n "$RUNNER_DEBUG" ]; then
   echo '---------------------------'
   printenv
   echo '---------------------------'
@@ -169,7 +169,7 @@ push_to_branch() {
 }
 
 view_debug_output() {
-  if [ "$INPUT_DEBUG_MODE" = true ]; then
+  if [ "$INPUT_DEBUG_MODE" = true ] || [ -n "$RUNNER_DEBUG" ]; then
     set -x
   fi
 }
@@ -222,7 +222,7 @@ set -e
 #SET OPTIONS
 set -- --no-progress --no-colors
 
-if [ "$INPUT_DEBUG_MODE" = true ]; then
+if [ "$INPUT_DEBUG_MODE" = true ] || [ -n "$RUNNER_DEBUG" ]; then
   set -- "$@" --verbose --debug
 fi
 
