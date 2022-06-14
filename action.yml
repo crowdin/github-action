@@ -91,6 +91,10 @@ inputs:
     description: 'Additional arguments which will be passed to the `download translations` cli command'
     default: ''
     required: false
+  skip_ref_checkout:
+    description: 'Skip default git checkout on GITHUB_REF'
+    default: 'false'
+    required: false
 
   # branch options
   add_crowdin_branch:
