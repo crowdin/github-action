@@ -148,6 +148,10 @@ inputs:
   gpg_private_key:
     description: 'GPG private key in ASCII-armored format'
     required: false
+  gpg_passphrase:
+    description: 'GPG Passphrase'
+    default: ''
+    required: false
 
   # config options
   project_id:

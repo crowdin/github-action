@@ -298,7 +298,7 @@ if [ "$INPUT_DOWNLOAD_TRANSLATIONS" = true ]; then
       exit 1
     }
 
-    [ -n "${INPUT_GPG_PRIVATE_KEY}" ] && [ -n "${INPUT_GPG_PASSPHRASE}" ] && {
+    [ -n "${INPUT_GPG_PRIVATE_KEY}" ] && {
       setup_commit_signing
     }
 
