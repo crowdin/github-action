@@ -12,7 +12,7 @@ A GitHub action to manage and synchronize localization resources with your Crowd
 [![GitHub contributors](https://img.shields.io/github/contributors/crowdin/github-action?cacheSeconds=5000)](https://github.com/crowdin/github-action/graphs/contributors)
 [![GitHub](https://img.shields.io/github/license/crowdin/github-action?cacheSeconds=50000)](https://github.com/crowdin/github-action/blob/master/LICENSE)
 
-</div>  
+</div>
 
 ## What does this action do?
 - Uploads sources to Crowdin.
@@ -41,7 +41,7 @@ jobs:
       uses: actions/checkout@v3
 
     - name: crowdin action
-      uses: crowdin/github-action@1.4.11
+      uses: crowdin/github-action@1.4.12
       with:
         upload_translations: true
         download_translations: true
