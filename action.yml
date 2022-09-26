@@ -82,7 +82,7 @@ inputs:
     description: 'The contents of the pull request'
     required: false
   pull_request_assignees:
-    description: 'Add up to 10 assignees to the created pull request'
+    description: 'Add up to 10 assignees to the created pull request (separated by comma)'
     required: false
   pull_request_labels:
     description: 'To add labels for created pull request'

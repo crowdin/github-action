@@ -96,7 +96,7 @@ In case you don’t want to download translations from Crowdin (`download_transl
     pull_request_title: 'New Crowdin translations'
     pull_request_body: 'New Crowdin pull request with translations'
     pull_request_labels: 'enhancement, good first issue'
-    pull_request_assignees: 'crowdin, hubot'
+    pull_request_assignees: 'crowdin-bot'
     # This is the name of the git branch to with pull request will be created.
     # If not specified default repository branch will be used.
     pull_request_base_branch_name: not_default_branch
