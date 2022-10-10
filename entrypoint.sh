@@ -129,6 +129,23 @@ create_pull_request() {
       fi
     fi
 
+    if [ -n "$INPUT_PULL_REQUEST_ASSIGNEES" ]; then
+      PULL_REQUEST_ASSIGNEES=$(echo "[\"${INPUT_PULL_REQUEST_ASSIGNEES}\"]" | sed 's/, \|,/","/g')
+
+      if [ "$(echo "$PULL_REQUEST_ASSIGNEES" | jq -e . > /dev/null 2>&1; echo $?)" -eq 0 ]; then
+        echo "ADD ASSIGNEES TO PULL REQUEST"
+
+        ASSIGNEES_URL="${REPO_URL}/issues/${PULL_REQUESTS_NUMBER}/assignees"
+
+        ASSIGNEES_DATA="{\"assignees\":${PULL_REQUEST_ASSIGNEES}}"
+
+        # add assignees to created pull request
+        curl -sSL -H "${AUTH_HEADER}" -H "${HEADER}" -X POST --data "${ASSIGNEES_DATA}" "${ASSIGNEES_URL}"
+      else
+        echo "JSON OF pull_request_assignees IS INVALID: ${PULL_REQUEST_ASSIGNEES}"
+      fi
+    fi
+
     echo "PULL REQUEST CREATED: ${PULL_REQUESTS_URL}"
   fi
 }
