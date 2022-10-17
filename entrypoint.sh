@@ -295,7 +295,7 @@ if [ -n "$INPUT_ADD_CROWDIN_BRANCH" ]; then
 
   echo "CREATING BRANCH $INPUT_ADD_CROWDIN_BRANCH"
 
-  crowdin branch add $INPUT_ADD_CROWDIN_BRANCH $NEW_BRANCH_OPTIONS --title="${INPUT_NEW_BRANCH_TITLE}" --export-pattern="${INPUT_NEW_BRANCH_EXPORT_PATTERN}"
+  crowdin branch add "$INPUT_ADD_CROWDIN_BRANCH" $NEW_BRANCH_OPTIONS --title="${INPUT_NEW_BRANCH_TITLE}" --export-pattern="${INPUT_NEW_BRANCH_EXPORT_PATTERN}"
 fi
 
 if [ "$INPUT_UPLOAD_SOURCES" = true ]; then
@@ -326,5 +326,5 @@ fi
 if [ -n "$INPUT_DELETE_CROWDIN_BRANCH" ]; then
   echo "REMOVING BRANCH $INPUT_DELETE_CROWDIN_BRANCH"
 
-  crowdin branch delete $INPUT_DELETE_CROWDIN_BRANCH $( get_branch_available_options "$@" )
+  crowdin branch delete "$INPUT_DELETE_CROWDIN_BRANCH" $( get_branch_available_options "$@" )
 fi
