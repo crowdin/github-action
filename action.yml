@@ -84,6 +84,9 @@ inputs:
   pull_request_assignees:
     description: 'Add up to 10 assignees to the created pull request (separated by comma)'
     required: false
+  pull_request_reviewers:
+    description: 'Usernames of people from whom a review is requested for this pull request (separated by comma)'
+    required: false
   pull_request_labels:
     description: 'To add labels for created pull request'
     required: false
