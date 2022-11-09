@@ -29,7 +29,7 @@ name: Crowdin Action
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
 
 jobs:
   synchronize-with-crowdin:
