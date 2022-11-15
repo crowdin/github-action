@@ -1,10 +1,14 @@
 [<p align='center'><img src='https://support.crowdin.com/assets/logos/crowdin-dark-symbol.png' data-canonical-src='https://support.crowdin.com/assets/logos/crowdin-dark-symbol.png' width='150' height='150' align='center'/></p>](https://crowdin.com)
 
-# Github Crowdin Action [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?url=https%3A%2F%2Fgithub.com%2Fcrowdin%2Fgithub-action&text=Easily%20integrate%20the%20localization%20of%20your%20Crowdin%20project%20into%20the%20GitHub%20Actions%20workflow)&nbsp;[![GitHub Repo stars](https://img.shields.io/github/stars/crowdin/github-action?style=social&cacheSeconds=1800)](https://github.com/crowdin/github-action/stargazers)
+# GitHub Crowdin Action [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?url=https%3A%2F%2Fgithub.com%2Fcrowdin%2Fgithub-action&text=Easily%20integrate%20the%20localization%20of%20your%20Crowdin%20project%20into%20the%20GitHub%20Actions%20workflow)&nbsp;[![GitHub Repo stars](https://img.shields.io/github/stars/crowdin/github-action?style=social&cacheSeconds=1800)](https://github.com/crowdin/github-action/stargazers)
 
 A GitHub action to manage and synchronize localization resources with your Crowdin project
 
 <div align="center">
+
+[**`Examples`**](/EXAMPLES.md) |
+[**`Configuration File`**](https://developer.crowdin.com/configuration-file/) |
+[**`Wiki`**](https://github.com/crowdin/github-action/wiki)
 
 [![GitHub Used by](https://img.shields.io/static/v1?label=Used%20by&message=6k&color=brightgreen&logo=github&cacheSeconds=10000)](https://github.com/crowdin/github-action/network/dependents?package_id=UGFja2FnZS0yOTQyNTU3MzA0)
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/crowdin/github-action?cacheSeconds=5000&logo=github)](https://github.com/crowdin/github-action/releases/latest)
@@ -24,6 +28,7 @@ A GitHub action to manage and synchronize localization resources with your Crowd
 Set up a workflow in *.github/workflows/crowdin.yml* (or add a job to your existing workflows).
 
 Read the [Configuring a workflow](https://help.github.com/en/articles/configuring-a-workflow) article for more details on how to create and set up custom workflows.
+
 ```yaml
 name: Crowdin Action
 
@@ -41,7 +46,7 @@ jobs:
       uses: actions/checkout@v3
 
     - name: crowdin action
-      uses: crowdin/github-action@1.5.0
+      uses: crowdin/github-action@1
       with:
         upload_translations: true
         download_translations: true
@@ -51,12 +56,14 @@ jobs:
         CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
 ```
 
+:file_folder: For more examples see the [EXAMPLES.md](/EXAMPLES.md)
+
 :clipboard: To explore the common questions about Crowdin GitHub Action usage visit the [Wiki](https://github.com/crowdin/github-action/wiki).
 
 ## Supported options
 The default action is to upload sources. Though, you can set different actions through the “with” options. If you don't want to upload your sources to Crowdin, just set the `upload_sources` option to false.
 
-By default sources and translations are being uploaded to the root of your Crowdin project. Still, if you use branches, you can set the preferred source branch.
+By default, sources and translations are being uploaded to the root of your Crowdin project. Still, if you use branches, you can set the preferred source branch.
 
 You can also specify what GitHub branch you’d like to download your translations to (default translation branch is `l10n_crowdin_action`).
 
@@ -65,20 +72,20 @@ In case you don’t want to download translations from Crowdin (`download_transl
 ```yaml
 - name: crowdin action
   with:
-    # upload sources option
+    # Upload sources option
     upload_sources: true
-    # this can be used to pass down any supported argument of the `upload sources` cli command, e.g.
+    # This can be used to pass down any supported argument of the `upload sources` cli command, e.g.
     upload_sources_args: '--no-auto-update label=web'
 
-    # upload translations options
+    # Upload translations options
     upload_translations: true
     upload_language: 'uk'
     auto_approve_imported: true
     import_eq_suggestions: true
-    # this can be used to pass down any supported argument of the `upload translations` cli command, e.g.
+    # This can be used to pass down any supported argument of the `upload translations` cli command, e.g.
     upload_translations_args: '--auto-approve-imported --translate-hidden'
 
-    # download translations options
+    # Download translations options
     download_translations: true
     download_language: 'uk'
     skip_untranslated_strings: true
@@ -102,7 +109,8 @@ In case you don’t want to download translations from Crowdin (`download_transl
     # If not specified default repository branch will be used.
     pull_request_base_branch_name: not_default_branch
 
-    # branch options
+    # Branch options
+
     add_crowdin_branch: branch_name
     # Title as it appears to translators
     new_branch_title: 'development / main'
@@ -110,10 +118,10 @@ In case you don’t want to download translations from Crowdin (`download_transl
     new_branch_export_pattern: '/translations/%two_letters_code%/%original_file_name%'
     # [LOW, NORMAL, HIGH]
     new_branch_priority: 'HIGH'
-    
+
     delete_crowdin_branch: branch_name
 
-    # global options
+    # Global options
 
     # This is the name of the top-level directory that Crowdin will use for files.
     # Note that this is not a "branch" in the git sense, but more like a top-level directory in your Crowdin project.
@@ -124,7 +132,6 @@ In case you don’t want to download translations from Crowdin (`download_transl
     dryrun_action: true
 
     # GitHub (Enterprise) configuration
-
     github_base_url: github.com
     github_api_base_url: api.[github_base_url]
     github_user_name: Crowdin Bot
@@ -135,14 +142,12 @@ In case you don’t want to download translations from Crowdin (`download_transl
     gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
     gpg_passphrase: ${{ secrets.GPG_PASSPHRASE }}
 
-    # config options
+    # Config options
 
-    # This is a numeric id, not to be confused with Crowdin API v1 "project identifier" string
-    # See "API v2" on https://crowdin.com/project/<your-project>/settings#api
+    # The numeric project ID. Visit the Tools > API section in your Crowdin project
     project_id: ${{ secrets.CROWDIN_PROJECT_ID }}
 
-    # A personal access token, not to be confused with Crowdin API v1 "API key"
-    # See https://crowdin.com/settings#api-key to generate a token
+    # A Personal Access Token (see https://crowdin.com/settings#api-key)
     token: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
     source: 'path/to/your/file'
     translation: 'file/export/pattern'
