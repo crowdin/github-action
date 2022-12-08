@@ -36,7 +36,7 @@ jobs:
       uses: actions/checkout@v3
 
     - name: Synchronize with Crowdin
-      uses: crowdin/github-action@1.5.1
+      uses: crowdin/github-action@1.5.2
       with:
         upload_sources: true
         upload_translations: true
@@ -70,7 +70,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Synchronize with Crowdin
-        uses: crowdin/github-action@1.5.1
+        uses: crowdin/github-action@1.5.2
         with:
           upload_sources: true
           upload_translations: false
@@ -102,7 +102,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Crowdin sync
-        uses: crowdin/github-action@1.5.1
+        uses: crowdin/github-action@1.5.2
         with:
           upload_sources: true
           upload_translations: false
@@ -135,7 +135,7 @@ jobs:
       uses: actions/checkout@v3
 
     - name: Crowdin push
-      uses: crowdin/github-action@1.5.1
+      uses: crowdin/github-action@1.5.2
       with:
         upload_sources: true
         upload_translations: false
@@ -162,7 +162,7 @@ jobs:
       uses: actions/checkout@v3
 
     - name: Crowdin push
-      uses: crowdin/github-action@1.5.1
+      uses: crowdin/github-action@1.5.2
       with:
         upload_sources: true
         upload_translations: false
@@ -193,7 +193,7 @@ jobs:
       uses: actions/checkout@v3
 
     - name: Crowdin pull
-      uses: crowdin/github-action@1.5.1
+      uses: crowdin/github-action@1.5.2
       with:
         upload_sources: false
         upload_translations: false
@@ -224,7 +224,7 @@ jobs:
       uses: actions/checkout@v3
 
     - name: Synchronize with Crowdin
-      uses: crowdin/github-action@1.5.1
+      uses: crowdin/github-action@1.5.2
       with:
         upload_sources: true
         upload_translations: true
@@ -251,7 +251,7 @@ jobs:
 ...
 
 - name: Crowdin
-  uses: crowdin/github-action@1.5.1
+  uses: crowdin/github-action@1.5.2
   with:
     config: '.github/crowdin.yml'
 
@@ -282,7 +282,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Matrix
-        uses: crowdin/github-action@1.5.1
+        uses: crowdin/github-action@1.5.2
         with:
           upload_sources: false
           upload_translations: false
