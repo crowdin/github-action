@@ -46,12 +46,12 @@ jobs:
       uses: actions/checkout@v3
 
     - name: crowdin action
-      uses: crowdin/github-action@1.5.2
+      uses: crowdin/github-action@1.5.3
       with:
         upload_translations: true
         download_translations: true
       env:
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
         CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
 ```
