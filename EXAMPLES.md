@@ -36,7 +36,7 @@ jobs:
       uses: actions/checkout@v3
 
     - name: Synchronize with Crowdin
-      uses: crowdin/github-action@1.5.2
+      uses: crowdin/github-action@1.5.3
       with:
         upload_sources: true
         upload_translations: true
@@ -48,7 +48,7 @@ jobs:
         pull_request_body: 'New Crowdin pull request with translations'
         pull_request_base_branch_name: 'main'
       env:
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
         CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
 ```
@@ -70,7 +70,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Synchronize with Crowdin
-        uses: crowdin/github-action@1.5.2
+        uses: crowdin/github-action@1.5.3
         with:
           upload_sources: true
           upload_translations: false
@@ -80,9 +80,9 @@ jobs:
           skip_untranslated_strings: true
           export_only_approved: true
         env:
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-        CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
-        CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
 ```
 
 ### No-crowdin.yml configuration
@@ -102,7 +102,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Crowdin sync
-        uses: crowdin/github-action@1.5.2
+        uses: crowdin/github-action@1.5.3
         with:
           upload_sources: true
           upload_translations: false
@@ -135,7 +135,7 @@ jobs:
       uses: actions/checkout@v3
 
     - name: Crowdin push
-      uses: crowdin/github-action@1.5.2
+      uses: crowdin/github-action@1.5.3
       with:
         upload_sources: true
         upload_translations: false
@@ -162,7 +162,7 @@ jobs:
       uses: actions/checkout@v3
 
     - name: Crowdin push
-      uses: crowdin/github-action@1.5.2
+      uses: crowdin/github-action@1.5.3
       with:
         upload_sources: true
         upload_translations: false
@@ -193,7 +193,7 @@ jobs:
       uses: actions/checkout@v3
 
     - name: Crowdin pull
-      uses: crowdin/github-action@1.5.2
+      uses: crowdin/github-action@1.5.3
       with:
         upload_sources: false
         upload_translations: false
@@ -224,7 +224,7 @@ jobs:
       uses: actions/checkout@v3
 
     - name: Synchronize with Crowdin
-      uses: crowdin/github-action@1.5.2
+      uses: crowdin/github-action@1.5.3
       with:
         upload_sources: true
         upload_translations: true
@@ -240,7 +240,7 @@ jobs:
         pull_request_assignees: 'crowdin-bot'
         pull_request_reviewers: 'crowdin-reviewer'
       env:
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
         CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
 ```
@@ -251,7 +251,7 @@ jobs:
 ...
 
 - name: Crowdin
-  uses: crowdin/github-action@1.5.2
+  uses: crowdin/github-action@1.5.3
   with:
     config: '.github/crowdin.yml'
 
@@ -282,7 +282,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Matrix
-        uses: crowdin/github-action@1.5.2
+        uses: crowdin/github-action@1.5.3
         with:
           upload_sources: false
           upload_translations: false
