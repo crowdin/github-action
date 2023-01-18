@@ -10,7 +10,7 @@ A GitHub action to manage and synchronize localization resources with your Crowd
 [**`Configuration File`**](https://developer.crowdin.com/configuration-file/) |
 [**`Wiki`**](https://github.com/crowdin/github-action/wiki)
 
-[![GitHub Used by](https://img.shields.io/static/v1?label=Used%20by&message=6k&color=brightgreen&logo=github&cacheSeconds=10000)](https://github.com/crowdin/github-action/network/dependents?package_id=UGFja2FnZS0yOTQyNTU3MzA0)
+[![GitHub Used by](https://img.shields.io/static/v1?label=Used%20by&message=6.4k&color=brightgreen&logo=github&cacheSeconds=10000)](https://github.com/crowdin/github-action/network/dependents?package_id=UGFja2FnZS0yOTQyNTU3MzA0)
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/crowdin/github-action?cacheSeconds=5000&logo=github)](https://github.com/crowdin/github-action/releases/latest)
 [![GitHub Release Date](https://img.shields.io/github/release-date/crowdin/github-action?cacheSeconds=5000)](https://github.com/crowdin/github-action/releases/latest)
 [![GitHub contributors](https://img.shields.io/github/contributors/crowdin/github-action?cacheSeconds=5000)](https://github.com/crowdin/github-action/graphs/contributors)
