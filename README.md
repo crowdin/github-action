@@ -48,13 +48,24 @@ jobs:
     - name: crowdin action
       uses: crowdin/github-action@v1
       with:
+        upload_sources: true
         upload_translations: true
         download_translations: true
+        localization_branch_name: l10n_crowdin_translations
+        create_pull_request: true
+        pull_request_title: 'New Crowdin Translations'
+        pull_request_body: 'New Crowdin translations by [Crowdin GH Action](https://github.com/crowdin/github-action)'
+        pull_request_base_branch_name: 'main'
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
         CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
 ```
+
+`secrets.GH_TOKEN` - a GitHub Personal Access Token with the `repo` scope selected (the user should have write access to the repository).
+
+> **Note**
+> In case you want to use an [automatic GitHub authentication token](https://docs.github.com/en/actions/security-guides/automatic-token-authentication), you need to assign the [`write` permission to your job](https://docs.github.com/en/actions/using-jobs/assigning-permissions-to-jobs) and [allow GH Actions to create Pull Requests](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository#preventing-github-actions-from-creating-or-approving-pull-requests).
 
 :file_folder: For more examples see the [EXAMPLES.md](/EXAMPLES.md)
 
