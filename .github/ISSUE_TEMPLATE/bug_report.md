@@ -12,7 +12,7 @@ A clear and concise description of what the bug is.
 
 **To Reproduce**
 Steps to reproduce the behavior:
-1. Crowdin Github Action configuration
+1. Crowdin GitHub Action configuration
 2. `crowdin.yml` file content
 3. Information about workflow (OS, steps, etc.)
 
