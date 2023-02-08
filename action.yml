@@ -64,7 +64,7 @@ inputs:
     required: false
   commit_message:
     description: 'Commit message for download translations'
-    default: 'New Crowdin translations by Github Action'
+    default: 'New Crowdin translations by GitHub Action'
     required: false
   localization_branch_name:
     description: 'To download translations to the specified version branch'
@@ -76,7 +76,7 @@ inputs:
     required: false
   pull_request_title:
     description: 'The title of the new pull request'
-    default: 'New Crowdin translations by Github Action'
+    default: 'New Crowdin translations by GitHub Action'
     required: false
   pull_request_body:
     description: 'The contents of the pull request'

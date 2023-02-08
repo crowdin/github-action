@@ -103,7 +103,7 @@ In case you don’t want to download translations from Crowdin (`download_transl
     skip_untranslated_files: true
     export_only_approved: true
     push_translations: true
-    commit_message: 'New Crowdin translations by Github Action'
+    commit_message: 'New Crowdin translations by GitHub Action'
     # this can be used to pass down any supported argument of the `download translations` cli command, e.g.
     download_translations_args: '--all --skip-untranslated-strings'
 
@@ -186,7 +186,7 @@ When the workflow runs, the real values of your token and project ID will be inj
 If you want to contribute please read the [Contributing](/CONTRIBUTING.md) guidelines.
 
 ## Seeking Assistance
-If you find any problems or would like to suggest a feature, please feel free to file an issue on Github at [Issues Page](https://github.com/crowdin/github-action/issues).
+If you find any problems or would like to suggest a feature, please feel free to file an issue on GitHub at [Issues Page](https://github.com/crowdin/github-action/issues).
 
 Need help working with Crowdin GitHub Action or have any questions?
 [Contact Customer Success Service](https://crowdin.com/contacts).
