@@ -73,7 +73,7 @@ inputs:
     default: 'false'
     required: false
   push_translations:
-    description: 'Download translations with pushing to branch'
+    description: 'Push downloaded translations to the branch'
     default: 'true'
     required: false
   commit_message:
