@@ -40,11 +40,11 @@ inputs:
 
   # download sources options
   download_sources:
-    description: 'Make pull request of Crowdin sources'
+    description: 'Defines whether to download source files from the Crowdin project'
     default: 'false'
     required: false
   push_sources:
-    description: 'Download sources with pushing to branch'
+    description: 'Push downloaded sources to the branch'
     default: 'true'
     required: false
   download_sources_args:
@@ -54,7 +54,7 @@ inputs:
 
   # download translations options
   download_translations:
-    description: 'Make pull request of Crowdin translations'
+    description: 'Defines whether to download translation files from the Crowdin project'
     default: 'false'
     required: false
   download_language:
