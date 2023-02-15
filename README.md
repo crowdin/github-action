@@ -85,6 +85,12 @@ In case you don’t want to download translations from Crowdin (`download_transl
     # This can be used to pass down any supported argument of the `upload translations` cli command, e.g.
     upload_translations_args: '--auto-approve-imported --translate-hidden'
 
+    # Download sources options
+    download_sources: true
+    push_sources: true
+    # this can be used to pass down any supported argument of the `download sources` cli command, e.g.
+    download_sources_args: '--reviewed'
+
     # Download translations options
     download_translations: true
     download_language: 'uk'
