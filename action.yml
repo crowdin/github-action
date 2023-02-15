@@ -38,9 +38,23 @@ inputs:
     default: ''
     required: false
 
+  # download sources options
+  download_sources:
+    description: 'Defines whether to download source files from the Crowdin project'
+    default: 'false'
+    required: false
+  push_sources:
+    description: 'Push downloaded sources to the branch'
+    default: 'true'
+    required: false
+  download_sources_args:
+    description: 'Additional arguments which will be passed to the `download sources` cli command'
+    default: ''
+    required: false
+
   # download translations options
   download_translations:
-    description: 'Make pull request of Crowdin translations'
+    description: 'Defines whether to download translation files from the Crowdin project'
     default: 'false'
     required: false
   download_language:
@@ -59,7 +73,7 @@ inputs:
     default: 'false'
     required: false
   push_translations:
-    description: 'Download translations with pushing to branch'
+    description: 'Push downloaded translations to the branch'
     default: 'true'
     required: false
   commit_message:

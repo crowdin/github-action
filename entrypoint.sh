@@ -36,6 +36,15 @@ upload_translations() {
   crowdin upload translations "$@" $UPLOAD_TRANSLATIONS_OPTIONS
 }
 
+download_sources() {
+  if [ -n "$INPUT_DOWNLOAD_SOURCES_ARGS" ]; then
+    DOWNLOAD_SOURCES_OPTIONS="${DOWNLOAD_SOURCES_OPTIONS} ${INPUT_DOWNLOAD_SOURCES_ARGS}"
+  fi
+
+  echo "DOWNLOAD SOURCES"
+  crowdin download sources "$@" $DOWNLOAD_SOURCES_OPTIONS
+}
+
 download_translations() {
   if [ -n "$INPUT_DOWNLOAD_LANGUAGE" ]; then
     DOWNLOAD_TRANSLATIONS_OPTIONS="${DOWNLOAD_TRANSLATIONS_OPTIONS} --language=${INPUT_DOWNLOAD_LANGUAGE}"
@@ -64,7 +73,7 @@ download_translations() {
 }
 
 create_pull_request() {
-  LOCALIZATION_BRANCH="${1}"
+  BRANCH="${1}"
 
   AUTH_HEADER="Authorization: token ${GITHUB_TOKEN}"
   HEADER="Accept: application/vnd.github.v3+json; application/vnd.github.antiope-preview+json; application/vnd.github.shadow-cat-preview+json"
@@ -95,12 +104,12 @@ create_pull_request() {
     fi
   fi
 
-  PULL_REQUESTS_QUERY_PARAMS="?base=${BASE_BRANCH}&head=${LOCALIZATION_BRANCH}"
+  PULL_REQUESTS_QUERY_PARAMS="?base=${BASE_BRANCH}&head=${BRANCH}"
 
   PULL_REQUESTS=$(echo "$(curl -sSL -H "${AUTH_HEADER}" -H "${HEADER}" -X GET "${PULLS_URL}${PULL_REQUESTS_QUERY_PARAMS}")" | jq --raw-output '.[] | .head.ref ')
 
   # check if pull request exist
-  if echo "$PULL_REQUESTS " | grep -q "$LOCALIZATION_BRANCH "; then
+  if echo "$PULL_REQUESTS " | grep -q "$BRANCH "; then
     echo "PULL REQUEST ALREADY EXIST"
   else
     echo "CREATE PULL REQUEST"
@@ -109,7 +118,7 @@ create_pull_request() {
       BODY=",\"body\":\"${INPUT_PULL_REQUEST_BODY//$'\n'/\\n}\""
     fi
 
-    PULL_RESPONSE_DATA="{\"title\":\"${INPUT_PULL_REQUEST_TITLE}\", \"base\":\"${BASE_BRANCH}\", \"head\":\"${LOCALIZATION_BRANCH}\" ${BODY}}"
+    PULL_RESPONSE_DATA="{\"title\":\"${INPUT_PULL_REQUEST_TITLE}\", \"base\":\"${BASE_BRANCH}\", \"head\":\"${BRANCH}\" ${BODY}}"
     # create pull request
     PULL_RESPONSE=$(curl -sSL -H "${AUTH_HEADER}" -H "${HEADER}" -X POST --data "${PULL_RESPONSE_DATA}" "${PULLS_URL}")
 
@@ -172,7 +181,7 @@ create_pull_request() {
 }
 
 push_to_branch() {
-  LOCALIZATION_BRANCH=${INPUT_LOCALIZATION_BRANCH_NAME}
+  BRANCH=${INPUT_LOCALIZATION_BRANCH_NAME}
 
   REPO_URL="https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@${INPUT_GITHUB_BASE_URL}/${GITHUB_REPOSITORY}.git"
 
@@ -184,10 +193,10 @@ push_to_branch() {
     git checkout "${GITHUB_REF#refs/heads/}"
   fi
 
-  if [ -n "$(git show-ref refs/heads/${LOCALIZATION_BRANCH})" ]; then
-    git checkout "${LOCALIZATION_BRANCH}"
+  if [ -n "$(git show-ref refs/heads/${BRANCH})" ]; then
+    git checkout "${BRANCH}"
   else
-    git checkout -b "${LOCALIZATION_BRANCH}"
+    git checkout -b "${BRANCH}"
   fi
 
   git add .
@@ -197,12 +206,12 @@ push_to_branch() {
     return
   fi
 
-  echo "PUSH TO BRANCH ${LOCALIZATION_BRANCH}"
+  echo "PUSH TO BRANCH ${BRANCH}"
   git commit --no-verify -m "${INPUT_COMMIT_MESSAGE}"
   git push --no-verify --force "${REPO_URL}"
 
   if [ "$INPUT_CREATE_PULL_REQUEST" = true ]; then
-    create_pull_request "${LOCALIZATION_BRANCH}"
+    create_pull_request "${BRANCH}"
   fi
 }
 
@@ -325,6 +334,23 @@ fi
 
 if [ "$INPUT_UPLOAD_TRANSLATIONS" = true ]; then
   upload_translations "$@"
+fi
+
+if [ "$INPUT_DOWNLOAD_SOURCES" = true ]; then
+  download_sources "$@"
+
+  if [ "$INPUT_PUSH_SOURCES" = true ]; then
+    [ -z "${GITHUB_TOKEN}" ] && {
+      echo "CAN NOT FIND 'GITHUB_TOKEN' IN ENVIRONMENT VARIABLES"
+      exit 1
+    }
+
+    [ -n "${INPUT_GPG_PRIVATE_KEY}" ] && {
+      setup_commit_signing
+    }
+
+    push_to_branch
+  fi
 fi
 
 if [ "$INPUT_DOWNLOAD_TRANSLATIONS" = true ]; then
