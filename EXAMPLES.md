@@ -32,25 +32,25 @@ jobs:
   crowdin:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
 
-    - name: Synchronize with Crowdin
-      uses: crowdin/github-action@v1
-      with:
-        upload_sources: true
-        upload_translations: true
-        download_translations: true
-        localization_branch_name: l10n_crowdin_translations
+      - name: Synchronize with Crowdin
+        uses: crowdin/github-action@v1
+        with:
+          upload_sources: true
+          upload_translations: true
+          download_translations: true
+          localization_branch_name: l10n_crowdin_translations
 
-        create_pull_request: true
-        pull_request_title: 'New Crowdin translations'
-        pull_request_body: 'New Crowdin pull request with translations'
-        pull_request_base_branch_name: 'main'
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
-        CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+          create_pull_request: true
+          pull_request_title: 'New Crowdin translations'
+          pull_request_body: 'New Crowdin pull request with translations'
+          pull_request_base_branch_name: 'main'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
 ```
 
 ### Translations export options configuration
@@ -131,18 +131,18 @@ jobs:
   crowdin:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
 
-    - name: Crowdin push
-      uses: crowdin/github-action@v1
-      with:
-        upload_sources: true
-        upload_translations: false
-        download_translations: false
-      env:
-        CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
-        CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+      - name: Crowdin push
+        uses: crowdin/github-action@v1
+        with:
+          upload_sources: true
+          upload_translations: false
+          download_translations: false
+        env:
+          CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
 ```
 
 ### Upload sources to the branch in Crowdin
@@ -158,19 +158,19 @@ jobs:
   crowdin:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
 
-    - name: Crowdin push
-      uses: crowdin/github-action@v1
-      with:
-        upload_sources: true
-        upload_translations: false
-        download_translations: false
-        crowdin_branch_name: "${{ env.BRANCH_NAME }}"
-      env:
-        CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
-        CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+      - name: Crowdin push
+        uses: crowdin/github-action@v1
+        with:
+          upload_sources: true
+          upload_translations: false
+          download_translations: false
+          crowdin_branch_name: "${{ env.BRANCH_NAME }}"
+        env:
+          CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
 ```
 
 ### Download only translations without pushing to a branch
@@ -189,20 +189,20 @@ jobs:
   crowdin:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
 
-    - name: Crowdin pull
-      uses: crowdin/github-action@v1
-      with:
-        upload_sources: false
-        upload_translations: false
-        download_translations: true
-        create_pull_request: false
-        push_translations: false
-      env:
-        CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
-        CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+      - name: Crowdin pull
+        uses: crowdin/github-action@v1
+        with:
+          upload_sources: false
+          upload_translations: false
+          download_translations: true
+          create_pull_request: false
+          push_translations: false
+        env:
+          CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
 ```
 
 ### Advanced Pull Request configuration
@@ -220,29 +220,29 @@ jobs:
   crowdin:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
 
-    - name: Synchronize with Crowdin
-      uses: crowdin/github-action@v1
-      with:
-        upload_sources: true
-        upload_translations: true
-        download_translations: true
-        localization_branch_name: l10n_crowdin_translations
+      - name: Synchronize with Crowdin
+        uses: crowdin/github-action@v1
+        with:
+          upload_sources: true
+          upload_translations: true
+          download_translations: true
+          localization_branch_name: l10n_crowdin_translations
 
-        create_pull_request: true
-        pull_request_title: 'New Crowdin translations'
-        pull_request_body: 'New Crowdin pull request with translations'
-        pull_request_base_branch_name: 'main'
-  
-        pull_request_labels: 'enhancement, good first issue'
-        pull_request_assignees: 'crowdin-bot'
-        pull_request_reviewers: 'crowdin-reviewer'
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
-        CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+          create_pull_request: true
+          pull_request_title: 'New Crowdin translations'
+          pull_request_body: 'New Crowdin pull request with translations'
+          pull_request_base_branch_name: 'main'
+
+          pull_request_labels: 'enhancement, good first issue'
+          pull_request_assignees: 'crowdin-bot'
+          pull_request_reviewers: 'crowdin-reviewer'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
 ```
 
 ### Custom `crowdin.yml` file location
