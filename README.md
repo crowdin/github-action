@@ -7,6 +7,7 @@ A GitHub action to manage and synchronize localization resources with your Crowd
 <div align="center">
 
 [**`Examples`**](/EXAMPLES.md) |
+[**`How to Set Up (video)`**](https://www.youtube.com/watch?v=5b7BMuCoKGg) |
 [**`Configuration File`**](https://developer.crowdin.com/configuration-file/) |
 [**`Wiki`**](https://github.com/crowdin/github-action/wiki)
 
