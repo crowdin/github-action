@@ -16,6 +16,9 @@
   - [When a new GitHub Release is published](#when-a-new-github-release-is-published)
   - [Dealing with concurrency](#dealing-with-concurrency)
   - [Handling parallel runs](#handling-parallel-runs)
+- [Tips and tricks](#tips-and-tricks)
+  - [Checking the translation progress](#checking-the-translation-progress)
+  - [Pre-Translation](#pre-translation)
 
 ---
 
@@ -106,17 +109,16 @@ jobs:
         with:
           upload_sources: true
           upload_translations: false
-
-          # Sources pattern
-          source: src/locale/en.json
-          # Translations pattern
-          translation: src/locale/%android_code%.json
-
-          project_id: ${{ secrets.CROWDIN_PROJECT_ID }}
-          token: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+          source: src/locale/en.json                     # Sources pattern
+          translation: src/locale/%android_code%.json    # Translations pattern
+          project_id: ${{ secrets.CROWDIN_PROJECT_ID }}  # Crowdin Project ID
+          token: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}   # Crowdin Personal Access Token
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
+
+> **Note**
+> To avoid any conflicts, do not use the `crowdin.yml` file in the repository when using the above configuration approach.
 
 ### Upload sources only
 
@@ -167,16 +169,17 @@ jobs:
           upload_sources: true
           upload_translations: false
           download_translations: false
-          crowdin_branch_name: "${{ env.BRANCH_NAME }}"
+          crowdin_branch_name: ${{ env.BRANCH_NAME }}
         env:
           CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
           CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
 ```
 
+Note that the value of the `crowdin_branch_name` is `env.BRANCH_NAME` - this is the name of the current branch on which the action is running.
+
 ### Download only translations without pushing to a branch
 
-It's possible only to download the translations without immediate PR creation.
-It allows you to post-process the downloaded translations and create a PR later.
+It's possible to just download the translations without creating a PR immediately. It allows you to post-process the downloaded translations and create a PR later.
 
 ```yaml
 name: Crowdin Action
@@ -204,6 +207,8 @@ jobs:
           CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
           CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
 ```
+
+You can use the [Create Pull Request](https://github.com/marketplace/actions/create-pull-request) GitHub Action to create a PR with the downloaded translations.
 
 ### Advanced Pull Request configuration
 
@@ -247,18 +252,21 @@ jobs:
 
 ### Custom `crowdin.yml` file location
 
+By default, the Action looks for the `crowdin.yml` file in the repository root. You can specify a custom location of the configuration file:
+
 ```yaml
-...
+# ...
 
 - name: Crowdin
   uses: crowdin/github-action@v1
   with:
     config: '.github/crowdin.yml'
-
-  ...
+    #...
 ```
 
 ### Separate PRs for each target language
+
+You can use the [`matrix`](https://docs.github.com/en/actions/using-jobs/using-a-matrix-for-your-jobs) feature of GitHub Actions to create separate PRs for each target language:
 
 ```yaml
 name: Crowdin Action
@@ -296,7 +304,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
           CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
-
 ```
 
 ## Triggers
@@ -356,3 +363,60 @@ strategy:
 ```
 
 [Read more](https://github.com/crowdin/github-action/wiki/Handling-parallel-runs)
+
+## Tips and Tricks
+
+### Checking the translation progress
+
+```yaml
+name: Crowdin Action
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  crowdin:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Check translation progress
+        uses: crowdin/github-action@v1
+        with:
+          command: 'status translation'
+          command_args: '--fail-if-incomplete'
+```
+
+In the example above, the workflow will fail if the translation progress is less than 100%.
+
+Visit the [official documentation](https://crowdin.github.io/crowdin-cli/commands/crowdin-status) to learn more about the available translation status options.
+
+### Pre-Translation
+
+```yaml
+name: Crowdin Action
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  crowdin:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Pre-translate
+        uses: crowdin/github-action@v1
+        with:
+          command: 'pre-translate'
+          command_args: '--language uk --method tm'
+        env:
+          CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+```
+
+Visit the [official documentation](https://crowdin.github.io/crowdin-cli/commands/crowdin-pre-translate) to learn more about the available pre-translation options.

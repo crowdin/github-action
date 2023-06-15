@@ -11,24 +11,30 @@ A GitHub action to manage and synchronize localization resources with your Crowd
 [**`Configuration File`**](https://developer.crowdin.com/configuration-file/) |
 [**`Wiki`**](https://github.com/crowdin/github-action/wiki)
 
+[![test](https://github.com/crowdin/github-action/actions/workflows/test-action.yml/badge.svg)](https://github.com/crowdin/github-action/actions/workflows/test-action.yml)
 [![GitHub Used by](https://img.shields.io/static/v1?label=Used%20by&message=7k&color=brightgreen&logo=github&cacheSeconds=10000)](https://github.com/crowdin/github-action/network/dependents?package_id=UGFja2FnZS0yOTQyNTU3MzA0)
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/crowdin/github-action?cacheSeconds=5000&logo=github)](https://github.com/crowdin/github-action/releases/latest)
-[![GitHub Release Date](https://img.shields.io/github/release-date/crowdin/github-action?cacheSeconds=5000)](https://github.com/crowdin/github-action/releases/latest)
 [![GitHub contributors](https://img.shields.io/github/contributors/crowdin/github-action?cacheSeconds=5000)](https://github.com/crowdin/github-action/graphs/contributors)
 [![GitHub](https://img.shields.io/github/license/crowdin/github-action?cacheSeconds=50000)](https://github.com/crowdin/github-action/blob/master/LICENSE)
 
 </div>
 
 ## What does this action do?
-- Uploads sources to Crowdin.
-- Uploads translations to Crowdin.
+
+This action allows you to easily integrate and automate the localization of your Crowdin project into the GitHub Actions workflow.
+
+- Upload sources to Crowdin.
+- Upload translations to Crowdin.
 - Downloads translations from Crowdin.
+- Download sources from Crowdin.
 - Creates a PR with the translations.
+- Run any Crowdin CLI command.
 
 ## Usage
+
 Set up a workflow in *.github/workflows/crowdin.yml* (or add a job to your existing workflows).
 
-Read the [Configuring a workflow](https://help.github.com/en/articles/configuring-a-workflow) article for more details on how to create and set up custom workflows.
+Read the [Configuring a workflow](https://help.github.com/en/articles/configuring-a-workflow) article for more details on creating and setting up GitHub workflows.
 
 ```yaml
 name: Crowdin Action
@@ -67,12 +73,9 @@ jobs:
 > **Note**
 > In case you want to use an [automatic GitHub authentication token](https://docs.github.com/en/actions/security-guides/automatic-token-authentication), you need to assign the [`write` permission to your job](https://docs.github.com/en/actions/using-jobs/assigning-permissions-to-jobs) and [allow GH Actions to create Pull Requests](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository#preventing-github-actions-from-creating-or-approving-pull-requests).
 
-:file_folder: For more examples see the [EXAMPLES.md](/EXAMPLES.md)
-
-:clipboard: To explore the common questions about Crowdin GitHub Action usage visit the [Wiki](https://github.com/crowdin/github-action/wiki).
-
 ## Supported options
-The default action is to upload sources. Though, you can set different actions through the “with” options. If you don't want to upload your sources to Crowdin, just set the `upload_sources` option to false.
+
+The default action is to upload sources. However, you can set different actions using the "with" options. If you don't want to upload your sources to Crowdin, just set the `upload_sources` option to false.
 
 By default, sources and translations are being uploaded to the root of your Crowdin project. Still, if you use branches, you can set the preferred source branch.
 
@@ -82,6 +85,7 @@ In case you don’t want to download translations from Crowdin (`download_transl
 
 ```yaml
 - name: crowdin action
+  uses: crowdin/github-action@v1
   with:
     # Upload sources option
     upload_sources: true
@@ -126,18 +130,6 @@ In case you don’t want to download translations from Crowdin (`download_transl
     # If not specified default repository branch will be used.
     pull_request_base_branch_name: not_default_branch
 
-    # Branch options
-
-    add_crowdin_branch: branch_name
-    # Title as it appears to translators
-    new_branch_title: 'development / main'
-    # Defines branch name and path in resulting translations bundle
-    new_branch_export_pattern: '/translations/%two_letters_code%/%original_file_name%'
-    # [LOW, NORMAL, HIGH]
-    new_branch_priority: 'HIGH'
-
-    delete_crowdin_branch: branch_name
-
     # Global options
 
     # This is the name of the top-level directory that Crowdin will use for files.
@@ -160,21 +152,32 @@ In case you don’t want to download translations from Crowdin (`download_transl
     gpg_passphrase: ${{ secrets.GPG_PASSPHRASE }}
 
     # Config options
-
-    # The numeric project ID. Visit the Tools > API section in your Crowdin project
-    project_id: ${{ secrets.CROWDIN_PROJECT_ID }}
-
-    # A Personal Access Token (see https://crowdin.com/settings#api-key)
-    token: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+    token: ${{ secrets.CROWDIN_PERSONAL_TOKEN }} # A Personal Access Token (see https://crowdin.com/settings#api-key)
+    project_id: ${{ secrets.CROWDIN_PROJECT_ID }} # The numeric project ID. Visit the Tools > API section in your Crowdin project
     source: 'path/to/your/file'
     translation: 'file/export/pattern'
-    base_url: 'https://crowdin.com'
-    base_path: 'project-base-path'
+    base_url: 'https://api.crowdin.com'
+    base_path: 'project-base-path' # Default: '.'
 ```
 
-**Note:** For Crowdin Enterprise `base_url` is required and should be passed in the following way: `base_url: 'https://{organization-name}.crowdin.com'`
-
 For more detailed descriptions of these options, see [`action.yml`](https://github.com/crowdin/github-action/blob/master/action.yml).
+
+> **Note**
+> The `base_url` is required For Crowdin Enterprise and should be passed in the following way: `base_url: 'https://{organization-name}.api.crowdin.com'`
+
+### Crowdin CLI command
+
+You can also run any other Crowdin CLI command by specifying the `command` and `command_args` _(optional)_ options. For example:
+
+```yaml
+- name: crowdin action
+  uses: crowdin/github-action@v1
+  with:
+    command: 'pre-translate'
+    command_args: '-l uk --method tm --branch main'
+```
+
+To see the full list of available commands, visit the [official documentation](https://crowdin.github.io/crowdin-cli/).
 
 ### Crowdin configuration file
 
@@ -189,15 +192,14 @@ When the workflow runs, the real values of your token and project ID will be inj
 
 ## Contributing
 
-If you want to contribute please read the [Contributing](/CONTRIBUTING.md) guidelines.
+If you would like to contribute please read the [Contributing](/CONTRIBUTING.md) guidelines.
 
 ## Seeking Assistance
+
 If you find any problems or would like to suggest a feature, please feel free to file an issue on GitHub at [Issues Page](https://github.com/crowdin/github-action/issues).
 
-Need help working with Crowdin GitHub Action or have any questions?
-[Contact Customer Success Service](https://crowdin.com/contacts).
-
 ## License
+
 <pre>
 The Crowdin GitHub Action is licensed under the MIT License.
 See the LICENSE file distributed with this work for additional
