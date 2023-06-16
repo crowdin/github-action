@@ -314,7 +314,19 @@ if [ -n "$INPUT_TRANSLATION" ]; then
   set -- "$@" --translation="${INPUT_TRANSLATION}"
 fi
 
+if [ -n "$INPUT_COMMAND_ARGS" ]; then
+  set -- "$@" ${INPUT_COMMAND_ARGS}
+fi
+
 #EXECUTE COMMANDS
+
+if [ -n "$INPUT_COMMAND" ]; then
+  echo "RUNNING COMMAND crowdin $INPUT_COMMAND $INPUT_COMMAND_ARGS"
+  crowdin $INPUT_COMMAND $INPUT_COMMAND_ARGS
+
+  # in this case, we don't need to continue executing any further default behavior
+  exit 0
+fi
 
 if [ -n "$INPUT_ADD_CROWDIN_BRANCH" ]; then
   NEW_BRANCH_OPTIONS=$( get_branch_available_options "$@" )

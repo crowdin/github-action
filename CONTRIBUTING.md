@@ -63,7 +63,10 @@ Unsure where to begin contributing to Crowdin Action? You can start by looking t
 
 Before sending your pull requests, make sure you followed the list below:
 
-- Read this guidelines.
+- Read these guidelines.
 - Read [Code of Conduct](/CODE_OF_CONDUCT.md).
 - Ensure that your code adheres to standard conventions, as used in the rest of the project.
 - Ensure that your changes are well tested.
+
+> **Note**
+> This project uses the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) specification for commit messages and PR titles.
