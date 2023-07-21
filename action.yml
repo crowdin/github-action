@@ -102,7 +102,7 @@ inputs:
     description: 'Usernames of people from whom a review is requested for this pull request (separated by comma)'
     required: false
   pull_request_team_reviewers:
-    description: 'Team names from which a review is requested for this pull request (separated by comma)'
+    description: 'Team slugs from which a review is requested for this pull request (separated by comma)'
     required: false
   pull_request_labels:
     description: 'To add labels for created pull request'

@@ -243,7 +243,8 @@ jobs:
 
           pull_request_labels: 'enhancement, good first issue'
           pull_request_assignees: 'crowdin-bot'
-          pull_request_reviewers: 'crowdin-reviewer'
+          pull_request_reviewers: 'crowdin-user-reviewer'
+          pull_request_team_reviewers: 'crowdin-team-reviewer'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
