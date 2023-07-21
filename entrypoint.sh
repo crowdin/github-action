@@ -161,19 +161,34 @@ create_pull_request() {
       fi
     fi
 
-    if [ -n "$INPUT_PULL_REQUEST_REVIEWERS" ]; then
-      PULL_REQUEST_REVIEWERS=$(echo "[\"${INPUT_PULL_REQUEST_REVIEWERS}\"]" | sed 's/, \|,/","/g')
+    if [ -n "$INPUT_PULL_REQUEST_REVIEWERS" ] || [ -n "$INPUT_PULL_REQUEST_TEAM_REVIEWERS" ]; then
+      if [ -n "$INPUT_PULL_REQUEST_REVIEWERS" ]; then
+        PULL_REQUEST_REVIEWERS=$(echo "\"${INPUT_PULL_REQUEST_REVIEWERS}\"" | sed 's/, \|,/","/g')
 
-      if [ "$(echo "$PULL_REQUEST_REVIEWERS" | jq -e . > /dev/null 2>&1; echo $?)" -eq 0 ]; then
-        echo "ADD REVIEWERS TO PULL REQUEST"
-
-        REVIEWERS_URL="${REPO_URL}/pulls/${PULL_REQUESTS_NUMBER}/requested_reviewers"
-        REVIEWERS_DATA="{\"reviewers\":${PULL_REQUEST_REVIEWERS}}"
-
-        curl -sSL -H "${AUTH_HEADER}" -H "${HEADER}" -X POST --data "${REVIEWERS_DATA}" "${REVIEWERS_URL}"
-      else
-        echo "JSON OF pull_request_reviewers IS INVALID: ${PULL_REQUEST_REVIEWERS}"
+        if [ "$(echo "$PULL_REQUEST_REVIEWERS" | jq -e . > /dev/null 2>&1; echo $?)" -eq 0 ]; then
+          echo "ADD REVIEWERS TO PULL REQUEST"
+        else
+          echo "JSON OF pull_request_reviewers IS INVALID: ${PULL_REQUEST_REVIEWERS}"
+        fi
       fi
+
+      if [ -n "$INPUT_PULL_REQUEST_TEAM_REVIEWERS" ]; then
+        PULL_REQUEST_TEAM_REVIEWERS=$(echo "\"${INPUT_PULL_REQUEST_TEAM_REVIEWERS}\"" | sed 's/, \|,/","/g')
+
+        if [ "$(echo "$PULL_REQUEST_TEAM_REVIEWERS" | jq -e . > /dev/null 2>&1; echo $?)" -eq 0 ]; then
+          echo "ADD TEAM REVIEWERS TO PULL REQUEST"
+        else
+          echo "JSON OF pull_request_team_reviewers IS INVALID: ${PULL_REQUEST_TEAM_REVIEWERS}"
+        fi
+      fi
+
+      {
+        REVIEWERS_URL="${REPO_URL}/pulls/${PULL_REQUESTS_NUMBER}/requested_reviewers"
+        REVIEWERS_DATA="{\"reviewers\":[${PULL_REQUEST_REVIEWERS}],\"team_reviewers\":[${PULL_REQUEST_TEAM_REVIEWERS}]}"
+        curl -sSL -H "${AUTH_HEADER}" -H "${HEADER}" -X POST --data "${REVIEWERS_DATA}" "${REVIEWERS_URL}"
+      } || {
+         echo "Failed to add reviewers."
+      }
     fi
 
     echo "PULL REQUEST CREATED: ${PULL_REQUESTS_URL}"
