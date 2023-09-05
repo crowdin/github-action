@@ -127,6 +127,13 @@ create_pull_request() {
     PULL_REQUESTS_NUMBER=$(echo "${PULL_RESPONSE}" | jq '.number')
     view_debug_output
 
+    if [ "$PULL_REQUESTS_URL" = null ]; then
+      echo "FAILED TO CREATE PULL REQUEST"
+      echo "RESPONSE: ${PULL_RESPONSE}"
+
+      exit 1
+    fi
+
     if [ -n "$INPUT_PULL_REQUEST_LABELS" ]; then
       PULL_REQUEST_LABELS=$(echo "[\"${INPUT_PULL_REQUEST_LABELS}\"]" | sed 's/, \|,/","/g')
 
