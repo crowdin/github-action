@@ -109,7 +109,7 @@ create_pull_request() {
   PULL_REQUESTS=$(echo "$(curl -sSL -H "${AUTH_HEADER}" -H "${HEADER}" -X GET "${PULLS_URL}${PULL_REQUESTS_QUERY_PARAMS}")" | jq --raw-output '.[] | .head.ref ')
 
   # check if pull request exist
-  if echo "$PULL_REQUESTS " | grep -q "$BRANCH "; then
+  if echo "$PULL_REQUESTS" | grep -xq "$BRANCH"; then
     echo "PULL REQUEST ALREADY EXIST"
   else
     echo "CREATE PULL REQUEST"
