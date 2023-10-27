@@ -9,6 +9,7 @@
 - [Advanced Pull Request configuration](#advanced-pull-request-configuration)
 - [Custom `crowdin.yml` file location](#custom-crowdinyml-file-location)
 - [Separate PRs for each target language](#separate-prs-for-each-target-language)
+- [Checking out multiple branches in a single workflow](#checking-out-multiple-branches-in-a-single-workflow)
 - [Triggers](#triggers)
   - [Cron schedule](#cron-schedule)
   - [Manually](#manually)
@@ -36,7 +37,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Synchronize with Crowdin
         uses: crowdin/github-action@v1
@@ -70,7 +71,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Synchronize with Crowdin
         uses: crowdin/github-action@v1
@@ -102,7 +103,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Crowdin sync
         uses: crowdin/github-action@v1
@@ -134,7 +135,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Crowdin push
         uses: crowdin/github-action@v1
@@ -161,7 +162,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Crowdin push
         uses: crowdin/github-action@v1
@@ -193,7 +194,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Crowdin pull
         uses: crowdin/github-action@v1
@@ -226,7 +227,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Synchronize with Crowdin
         uses: crowdin/github-action@v1
@@ -288,7 +289,7 @@ jobs:
         lc: [uk, it, es, fr, de, pt-BR] # Target languages https://developer.crowdin.com/language-codes/
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Matrix
         uses: crowdin/github-action@v1
@@ -301,6 +302,48 @@ jobs:
           pull_request_base_branch_name: 'main'
           pull_request_title: New translations - ${{ matrix.lc }}
           download_language: ${{ matrix.lc }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+```
+
+### Checking out multiple branches in a single workflow
+
+If you need to checkout multiple branches in a single workflow (e.g. a matrix of feature branches), you'll need to disable the automatic checkout to the `GITHUB_REF` by using the `skip_ref_checkout` option:
+
+```yml
+name: Crowdin Action
+
+on:
+  workflow_dispatch:
+
+jobs:
+  crowdin:
+    name: Synchronize with Crowdin
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      max-parallel: 1 # Should be 1 to avoid parallel builds
+      matrix:
+        branch: ["feat/1", "feat/2", "feat/3"]
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ matrix.branch }}
+          fetch-depth: 0
+
+      - name: Synchronize with Crowdin
+        uses: crowdin/github-action@v1
+        with:
+          upload_sources: true
+          upload_translations: true
+          download_translations: true
+          localization_branch_name: l10n_crowdin_translations
+          create_pull_request: true
+          skip_ref_checkout: true # Disable 'git checkout "${GITHUB_REF#refs/heads/}"'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
@@ -381,7 +424,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Check translation progress
         uses: crowdin/github-action@v1
@@ -408,7 +451,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Pre-translate
         uses: crowdin/github-action@v1
