@@ -61,7 +61,7 @@ jobs:
         uses: crowdin/github-action@v1
         with:
           upload_sources: true
-          upload_translations: true
+          upload_translations: false
           download_translations: true
           localization_branch_name: l10n_crowdin_translations
           create_pull_request: true
@@ -96,12 +96,12 @@ In case you don’t want to download translations from Crowdin (`download_transl
     upload_sources_args: '--no-auto-update label=web'
 
     # Upload translations options
-    upload_translations: true
+    upload_translations: false
     upload_language: 'uk'
     auto_approve_imported: true
     import_eq_suggestions: true
     # This can be used to pass down any supported argument of the `upload translations` cli command, e.g.
-    upload_translations_args: '--auto-approve-imported --translate-hidden'
+    #upload_translations_args: '--auto-approve-imported --translate-hidden'
 
     # Download sources options
     download_sources: true
