@@ -118,7 +118,11 @@ create_pull_request() {
       BODY=",\"body\":\"${INPUT_PULL_REQUEST_BODY//$'\n'/\\n}\""
     fi
 
-    PULL_RESPONSE_DATA="{\"title\":\"${INPUT_PULL_REQUEST_TITLE}\", \"base\":\"${BASE_BRANCH}\", \"head\":\"${BRANCH}\" ${BODY}}"
+    PULL_RESPONSE_DATA=$(jq -n --arg pr_title "${INPUT_PULL_REQUEST_TITLE}" \
+                                --arg base_branch "${BASE_BRANCH}" \
+                                --arg branch "${BRANCH}" \
+                                --arg body "${BODY}" \
+                                "{title: \$pr_title, base: \$base_branch, head: \$branch ${BODY}}")
     # create pull request
     PULL_RESPONSE=$(curl -sSL -H "${AUTH_HEADER}" -H "${HEADER}" -X POST --data "${PULL_RESPONSE_DATA}" "${PULLS_URL}")
 
