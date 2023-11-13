@@ -89,6 +89,7 @@ create_pull_request() {
   auth_status=$(curl -sL --write-out '%{http_code}' --output /dev/null -H "${AUTH_HEADER}" -H "${HEADER}" "${PULLS_URL}")
   if [[ $auth_status -eq 403 || "$auth_status" -eq 401 ]] ; then
     echo "FAILED TO AUTHENTICATE USING 'GITHUB_TOKEN' CHECK TOKEN IS VALID"
+    echo "pull_request_created=false" >> $GITHUB_OUTPUT
     exit 1
   fi
 
@@ -111,6 +112,7 @@ create_pull_request() {
   # check if pull request exist
   if echo "$PULL_REQUESTS" | grep -xq "$BRANCH"; then
     echo "PULL REQUEST ALREADY EXIST"
+    echo "pull_request_created=false" >> $GITHUB_OUTPUT
   else
     echo "CREATE PULL REQUEST"
 
@@ -130,6 +132,12 @@ create_pull_request() {
     PULL_REQUESTS_URL=$(echo "${PULL_RESPONSE}" | jq '.html_url')
     PULL_REQUESTS_NUMBER=$(echo "${PULL_RESPONSE}" | jq '.number')
     view_debug_output
+
+    if [ -n "$PULL_REQUESTS_URL" ]; then
+      echo "pull_request_created=true" >> $GITHUB_OUTPUT
+    else
+      echo "pull_request_created=false" >> $GITHUB_OUTPUT
+    fi
 
     if [ "$PULL_REQUESTS_URL" = null ]; then
       echo "FAILED TO CREATE PULL REQUEST"
