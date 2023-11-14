@@ -207,6 +207,9 @@ inputs:
   command_args:
     description: 'Additional arguments which will be passed to the Crowdin CLI command'
     required: false
+outputs:
+  pull_request_url:
+    description: 'The URL of the pull request created by the workflow'
 
 runs:
   using: docker
