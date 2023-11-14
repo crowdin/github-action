@@ -136,7 +136,7 @@ create_pull_request() {
     if [ -n "$PULL_REQUESTS_URL" ]; then
       echo "pull_request_url=$PULL_REQUESTS_URL" >> $GITHUB_OUTPUT
     else
-      echo "pull_request_url=" >> $GITHUB_OUTPUT
+      echo "pull_request_url=''" >> $GITHUB_OUTPUT
     fi
 
     if [ "$PULL_REQUESTS_URL" = null ]; then
