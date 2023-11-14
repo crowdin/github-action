@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# Default values for action outputs
+echo "pull_request_url=''" >> $GITHUB_OUTPUT
+
 if [ "$INPUT_DEBUG_MODE" = true ] || [ -n "$RUNNER_DEBUG" ]; then
   echo '---------------------------'
   printenv
@@ -112,7 +115,6 @@ create_pull_request() {
   # check if pull request exist
   if echo "$PULL_REQUESTS" | grep -xq "$BRANCH"; then
     echo "PULL REQUEST ALREADY EXIST"
-    echo "pull_request_url=''" >> $GITHUB_OUTPUT
   else
     echo "CREATE PULL REQUEST"
 
@@ -135,8 +137,6 @@ create_pull_request() {
 
     if [ -n "$PULL_REQUESTS_URL" ]; then
       echo "pull_request_url=$PULL_REQUESTS_URL" >> $GITHUB_OUTPUT
-    else
-      echo "pull_request_url=''" >> $GITHUB_OUTPUT
     fi
 
     if [ "$PULL_REQUESTS_URL" = null ]; then
