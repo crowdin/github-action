@@ -208,8 +208,8 @@ inputs:
     description: 'Additional arguments which will be passed to the Crowdin CLI command'
     required: false
 outputs:
-  pull_request_created:
-    description: 'Whether or not a pull request was created during the action run'
+  pull_request_url:
+    description: 'The URL of the pull request created by the workflow'
 
 runs:
   using: docker

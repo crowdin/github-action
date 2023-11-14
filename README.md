@@ -195,6 +195,12 @@ api_token_env: CROWDIN_PERSONAL_TOKEN
 
 When the workflow runs, the real values of your token and project ID will be injected into the config using the secrets in the environment.
 
+## Outputs
+
+This workflow has the following outputs:
+
+- `pull_request_url`: The URL of the pull request created by the workflow
+
 ## Permissions
 
 In order to push translations and create pull requests, the Crowdin GitHub Action requires the `GITHUB_TOKEN` to have the write permission on the `content` and `pull-requests`.
