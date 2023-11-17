@@ -10,6 +10,8 @@
 - [Custom `crowdin.yml` file location](#custom-crowdinyml-file-location)
 - [Separate PRs for each target language](#separate-prs-for-each-target-language)
 - [Checking out multiple branches in a single workflow](#checking-out-multiple-branches-in-a-single-workflow)
+- [Outputs](#outputs)
+  - [`pull_request_url`](#pull_request_url)
 - [Triggers](#triggers)
   - [Cron schedule](#cron-schedule)
   - [Manually](#manually)
@@ -407,6 +409,37 @@ strategy:
 ```
 
 [Read more](https://github.com/crowdin/github-action/wiki/Handling-parallel-runs)
+
+## Outputs
+
+### `pull_request_url`
+
+There is a possibility to get the URL of the created Pull Request. You can use it in the next steps of your workflow.
+
+```yaml
+# ...
+- name: Crowdin
+  uses: crowdin/github-action@v1
+  id: crowdin-download
+  with:
+    download_translations: true
+    create_pull_request: true
+    env:
+      CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+      CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+
+- name: Enable auto-merge for the PR
+  if: steps.crowdin-download.outputs.pull_request_url
+  run: gh pr --repo $GITHUB_REPOSITORY merge ${{ steps.crowdin-download.outputs.pull_request_url }} --auto --merge
+  env:
+    GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+- name: Approve the PR
+  if: steps.crowdin-download.outputs.pull_request_url
+  run: gh pr --repo $GITHUB_REPOSITORY review ${{ steps.crowdin-download.outputs.pull_request_url }} --approve
+  env:
+    GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+```
 
 ## Tips and Tricks
 
