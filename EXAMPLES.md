@@ -6,6 +6,7 @@
 - [Upload sources only](#upload-sources-only)
 - [Upload sources to the branch in Crowdin](#upload-sources-to-the-branch-in-crowdin)
 - [Download only translations without pushing to a branch](#download-only-translations-without-pushing-to-a-branch)
+- [Download Bundle](#download-bundle)
 - [Advanced Pull Request configuration](#advanced-pull-request-configuration)
 - [Custom `crowdin.yml` file location](#custom-crowdinyml-file-location)
 - [Separate PRs for each target language](#separate-prs-for-each-target-language)
@@ -212,6 +213,44 @@ jobs:
 ```
 
 You can use the [Create Pull Request](https://github.com/marketplace/actions/create-pull-request) GitHub Action to create a PR with the downloaded translations.
+
+### Download Bundle
+
+Target file bundles or simply Bundles is the feature that allows you to export sets of strings or files in the formats you select, regardless of the original file format
+
+You can use the `download_bundle` option to download the bundle from Crowdin:
+
+```yaml
+name: Crowdin Action
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  crowdin:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Crowdin pull
+        uses: crowdin/github-action@v1
+        with:
+          download_translations: false
+          download_bundle: 1
+          create_pull_request: true
+        env:
+          CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+```
+
+> **Note**
+> If you are using a **String-based** project, you need to use this option to download translations. The default `download_translations` option does not work for this type of projects.
+
+The `download_bundle` option accepts the bundle numeric ID.
+
+Visit the [official documentation](https://support.crowdin.com/bundles/) to learn more about Bundles.
 
 ### Advanced Pull Request configuration
 

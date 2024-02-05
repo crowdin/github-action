@@ -60,6 +60,10 @@ inputs:
   download_language:
     description: 'Use this option to download translations for a single specified language'
     required: false
+  download_bundle:
+    description: 'Download bundle from Crowdin project (by ID)'
+    default: ''
+    required: false
   skip_untranslated_strings:
     description: 'Skip untranslated strings in exported files (does not work with .docx, .html, .md and other document files)'
     default: 'false'

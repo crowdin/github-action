@@ -75,6 +75,11 @@ download_translations() {
   crowdin download "$@" $DOWNLOAD_TRANSLATIONS_OPTIONS
 }
 
+download_bundle() {
+  echo "DOWNLOADING BUNDLE"
+  crowdin download bundle "$@"
+}
+
 create_pull_request() {
   BRANCH="${1}"
 
@@ -414,6 +419,23 @@ if [ "$INPUT_DOWNLOAD_TRANSLATIONS" = true ]; then
 
     push_to_branch
   fi
+fi
+
+if [ "$INPUT_DOWNLOAD_BUNDLE" ]; then
+  download_bundle "$@"
+
+  if [ "$INPUT_PUSH_TRANSLATIONS" = true ]; then
+      [ -z "${GITHUB_TOKEN}" ] && {
+        echo "CAN NOT FIND 'GITHUB_TOKEN' IN ENVIRONMENT VARIABLES"
+        exit 1
+      }
+
+      [ -n "${INPUT_GPG_PRIVATE_KEY}" ] && {
+        setup_commit_signing
+      }
+
+      push_to_branch
+    fi
 fi
 
 if [ -n "$INPUT_DELETE_CROWDIN_BRANCH" ]; then
