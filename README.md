@@ -119,6 +119,7 @@ In case you don’t want to download translations from Crowdin (`download_transl
     commit_message: 'New Crowdin translations by GitHub Action'
     # this can be used to pass down any supported argument of the `download translations` cli command, e.g.
     download_translations_args: '--all --skip-untranslated-strings'
+    download_bundle: 1 # The numeric id of the Bundle to download translations from
 
     # This is the name of the git branch that Crowdin will create when opening a pull request.
     # This branch does NOT need to be manually created. It will be created automatically by the action.

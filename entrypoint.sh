@@ -416,6 +416,25 @@ if [ "$INPUT_DOWNLOAD_TRANSLATIONS" = true ]; then
   fi
 fi
 
+if [ "$INPUT_DOWNLOAD_BUNDLE" ]; then
+  echo "DOWNLOADING BUNDLE $INPUT_DOWNLOAD_BUNDLE"
+
+  crowdin download bundle $INPUT_DOWNLOAD_BUNDLE $@
+
+  if [ "$INPUT_PUSH_TRANSLATIONS" = true ]; then
+      [ -z "${GITHUB_TOKEN}" ] && {
+        echo "CAN NOT FIND 'GITHUB_TOKEN' IN ENVIRONMENT VARIABLES"
+        exit 1
+      }
+
+      [ -n "${INPUT_GPG_PRIVATE_KEY}" ] && {
+        setup_commit_signing
+      }
+
+      push_to_branch
+    fi
+fi
+
 if [ -n "$INPUT_DELETE_CROWDIN_BRANCH" ]; then
   echo "REMOVING BRANCH $INPUT_DELETE_CROWDIN_BRANCH"
 
