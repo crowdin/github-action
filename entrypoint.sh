@@ -75,11 +75,6 @@ download_translations() {
   crowdin download "$@" $DOWNLOAD_TRANSLATIONS_OPTIONS
 }
 
-download_bundle() {
-  echo "DOWNLOADING BUNDLE"
-  crowdin download bundle "$@"
-}
-
 create_pull_request() {
   BRANCH="${1}"
 
@@ -422,7 +417,9 @@ if [ "$INPUT_DOWNLOAD_TRANSLATIONS" = true ]; then
 fi
 
 if [ "$INPUT_DOWNLOAD_BUNDLE" ]; then
-  download_bundle "$@"
+  echo "DOWNLOADING BUNDLE $INPUT_DOWNLOAD_BUNDLE"
+
+  crowdin download bundle $INPUT_DOWNLOAD_BUNDLE $@
 
   if [ "$INPUT_PUSH_TRANSLATIONS" = true ]; then
       [ -z "${GITHUB_TOKEN}" ] && {
