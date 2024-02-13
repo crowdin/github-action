@@ -2,6 +2,7 @@
 
 # Default values for action outputs
 echo "pull_request_url=" >> $GITHUB_OUTPUT
+echo "pull_request_number=" >> $GITHUB_OUTPUT
 
 if [ "$INPUT_DEBUG_MODE" = true ] || [ -n "$RUNNER_DEBUG" ]; then
   echo '---------------------------'
@@ -93,6 +94,7 @@ create_pull_request() {
   if [[ $auth_status -eq 403 || "$auth_status" -eq 401 ]] ; then
     echo "FAILED TO AUTHENTICATE USING 'GITHUB_TOKEN' CHECK TOKEN IS VALID"
     echo "pull_request_url=" >> $GITHUB_OUTPUT
+    echo "pull_request_number=" >> $GITHUB_OUTPUT
     exit 1
   fi
 
@@ -137,6 +139,10 @@ create_pull_request() {
 
     if [ -n "$PULL_REQUESTS_URL" ]; then
       echo "pull_request_url=$PULL_REQUESTS_URL" >> $GITHUB_OUTPUT
+    fi
+
+    if [ -n "$PULL_REQUESTS_NUMBER" ]; then
+      echo "pull_request_number=$PULL_REQUESTS_NUMBER" >> $GITHUB_OUTPUT
     fi
 
     if [ "$PULL_REQUESTS_URL" = null ]; then

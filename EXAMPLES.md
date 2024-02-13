@@ -12,7 +12,7 @@
 - [Separate PRs for each target language](#separate-prs-for-each-target-language)
 - [Checking out multiple branches in a single workflow](#checking-out-multiple-branches-in-a-single-workflow)
 - [Outputs](#outputs)
-  - [`pull_request_url`](#pull_request_url)
+  - [`pull_request_url`, `pull_request_number`](#pull_request_url-pull_request_number)
 - [Triggers](#triggers)
   - [Cron schedule](#cron-schedule)
   - [Manually](#manually)
@@ -451,9 +451,9 @@ strategy:
 
 ## Outputs
 
-### `pull_request_url`
+### `pull_request_url`, `pull_request_number`
 
-There is a possibility to get the URL of the created Pull Request. You can use it in the next steps of your workflow.
+There is a possibility to get the URL or number of the created Pull Request. You can use it in the next steps of your workflow.
 
 ```yaml
 # ...

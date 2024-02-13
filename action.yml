@@ -214,6 +214,8 @@ inputs:
 outputs:
   pull_request_url:
     description: 'The URL of the pull request created by the workflow'
+  pull_request_number:
+    description: 'The number of the pull request created by the workflow'
 
 runs:
   using: docker
