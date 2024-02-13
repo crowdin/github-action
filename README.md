@@ -192,6 +192,7 @@ When the workflow runs, the real values of your token and project ID will be inj
 This action has the following outputs:
 
 - `pull_request_url`: The URL of the pull request created by the workflow
+- `pull_request_number`: The number of the pull request created by the workflow
 
 ## Permissions
 
