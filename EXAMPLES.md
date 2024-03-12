@@ -23,6 +23,7 @@
 - [Tips and tricks](#tips-and-tricks)
   - [Checking the translation progress](#checking-the-translation-progress)
   - [Pre-Translation](#pre-translation)
+  - [Run test workflows on all commits of a PR](#run-test-workflows-on-all-commits-of-a-pr)
 
 ---
 
@@ -536,3 +537,18 @@ jobs:
 ```
 
 Visit the [official documentation](https://crowdin.github.io/crowdin-cli/commands/crowdin-pre-translate) to learn more about the available pre-translation options.
+
+### Run test workflows on all commits of a PR
+
+Every time the job runs and there is already a PR, all checks will be invalidated and not run again (because the action will force pushes even if the translation has not changed).
+
+(Related issues: [#34](https://github.com/crowdin/github-action/issues/34), [#142](https://github.com/crowdin/github-action/issues/142), [#221](https://github.com/crowdin/github-action/issues/221))
+
+To avoid this, add a custom PAT to the checkout action:
+
+```yaml
+- name: Checkout
+  uses: actions/checkout@v4
+  with:
+    token: ${{ secrets.GHA_CUSTOM_PAT }}
+```
