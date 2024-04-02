@@ -151,6 +151,7 @@ inputs:
     required: false
   identity:
     description: 'Option to specify a path to user-specific credentials, without / at the beginning'
+    deprecationMessage: 'This option is deprecated. Please use the environment variables instead.'
     required: false
   config:
     description: 'Option to specify a path to the configuration file, without / at the beginning'
