@@ -34,7 +34,7 @@ This action allows you to easily integrate and automate the localization of your
 - Downloads translations from Crowdin.
 - Download sources from Crowdin.
 - Creates a PR with the translations.
-- Run any Crowdin CLI command.
+- Run any [Crowdin CLI](https://crowdin.github.io/crowdin-cli/commands/crowdin) command.
 
 ## Usage
 
@@ -58,7 +58,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: crowdin action
-        uses: crowdin/github-action@v1
+        uses: crowdin/github-action@v2
         with:
           upload_sources: true
           upload_translations: false
@@ -168,24 +168,13 @@ You can also run any other Crowdin CLI command by specifying the `command` and `
 
 ```yaml
 - name: crowdin action
-  uses: crowdin/github-action@v1
+  uses: crowdin/github-action@v2
   with:
     command: 'pre-translate'
     command_args: '-l uk --method tm --branch main'
 ```
 
 To see the full list of available commands, visit the [official documentation](https://crowdin.github.io/crowdin-cli/).
-
-### Crowdin configuration file
-
-If your workflow file specifies the `config` property, you'll need to add the following to your [Crowdin configuration file](https://support.crowdin.com/configuration-file/) (e.g. `crowdin.yml`):
-
-```yml
-project_id_env: CROWDIN_PROJECT_ID
-api_token_env: CROWDIN_PERSONAL_TOKEN
-```
-
-When the workflow runs, the real values of your token and project ID will be injected into the config using the secrets in the environment.
 
 ## Outputs
 
