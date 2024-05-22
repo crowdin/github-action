@@ -17,6 +17,7 @@
   - [Cron schedule](#cron-schedule)
   - [Manually](#manually)
   - [When a localization file is updated in the specified branch](#when-a-localization-file-is-updated-in-the-specified-branch)
+  - [When a file or project is fully translated (Webhooks)](https://store.crowdin.com/github-actions-webhook)
   - [When a new GitHub Release is published](#when-a-new-github-release-is-published)
   - [Dealing with concurrency](#dealing-with-concurrency)
   - [Handling parallel runs](#handling-parallel-runs)
