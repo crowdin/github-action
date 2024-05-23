@@ -37,6 +37,10 @@ on:
   push:
     branches: [ main ]
 
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   crowdin:
     runs-on: ubuntu-latest
