@@ -49,7 +49,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Synchronize with Crowdin
-        uses: crowdin/github-action@v1
+        uses: crowdin/github-action@v2
         with:
           upload_sources: true
           upload_translations: true
@@ -83,7 +83,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Synchronize with Crowdin
-        uses: crowdin/github-action@v1
+        uses: crowdin/github-action@v2
         with:
           upload_sources: true
           upload_translations: false
@@ -115,17 +115,19 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Crowdin sync
-        uses: crowdin/github-action@v1
+        uses: crowdin/github-action@v2
         with:
           upload_sources: true
           upload_translations: false
           source: src/locale/en.json                     # Sources pattern
           translation: src/locale/%android_code%.json    # Translations pattern
-          project_id: ${{ secrets.CROWDIN_PROJECT_ID }}  # Crowdin Project ID
-          token: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}   # Crowdin Personal Access Token
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
 ```
+
+The Action/CLI will automatically detect the [environment variables](https://crowdin.github.io/crowdin-cli/configuration#environment-variables) and use them for the configuration.
 
 > **Note**
 > To avoid any conflicts, do not use the `crowdin.yml` file in the repository when using the above configuration approach.
@@ -147,7 +149,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Crowdin push
-        uses: crowdin/github-action@v1
+        uses: crowdin/github-action@v2
         with:
           upload_sources: true
           upload_translations: false
@@ -174,7 +176,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Crowdin push
-        uses: crowdin/github-action@v1
+        uses: crowdin/github-action@v2
         with:
           upload_sources: true
           upload_translations: false
@@ -206,7 +208,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Crowdin pull
-        uses: crowdin/github-action@v1
+        uses: crowdin/github-action@v2
         with:
           upload_sources: false
           upload_translations: false
@@ -241,7 +243,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Crowdin pull
-        uses: crowdin/github-action@v1
+        uses: crowdin/github-action@v2
         with:
           download_translations: false
           download_bundle: 1
@@ -277,7 +279,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Synchronize with Crowdin
-        uses: crowdin/github-action@v1
+        uses: crowdin/github-action@v2
         with:
           upload_sources: true
           upload_translations: true
@@ -307,7 +309,7 @@ By default, the Action looks for the `crowdin.yml` file in the repository root. 
 # ...
 
 - name: Crowdin
-  uses: crowdin/github-action@v1
+  uses: crowdin/github-action@v2
   with:
     config: '.github/crowdin.yml'
     #...
@@ -339,7 +341,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Matrix
-        uses: crowdin/github-action@v1
+        uses: crowdin/github-action@v2
         with:
           upload_sources: false
           upload_translations: false
@@ -383,7 +385,7 @@ jobs:
           fetch-depth: 0
 
       - name: Synchronize with Crowdin
-        uses: crowdin/github-action@v1
+        uses: crowdin/github-action@v2
         with:
           upload_sources: true
           upload_translations: true
@@ -464,7 +466,7 @@ There is a possibility to get the URL or number of the created Pull Request. You
 ```yaml
 # ...
 - name: Crowdin
-  uses: crowdin/github-action@v1
+  uses: crowdin/github-action@v2
   id: crowdin-download
   with:
     download_translations: true
@@ -505,7 +507,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Check translation progress
-        uses: crowdin/github-action@v1
+        uses: crowdin/github-action@v2
         with:
           command: 'status translation'
           command_args: '--fail-if-incomplete'
@@ -532,7 +534,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Pre-translate
-        uses: crowdin/github-action@v1
+        uses: crowdin/github-action@v2
         with:
           command: 'pre-translate'
           command_args: '--language uk --method tm'

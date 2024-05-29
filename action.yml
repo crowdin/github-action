@@ -123,35 +123,9 @@ inputs:
     default: 'false'
     required: false
 
-  # branch options
-  add_crowdin_branch:
-    description: 'Option to create specified version branch in your Crowdin project'
-    deprecationMessage: 'This option is deprecated. Please use `command: branch add name` instead.'
-    required: false
-  new_branch_title:
-    description: 'Use to provide more details for translators. Title is available in UI only'
-    deprecationMessage: 'This option is deprecated. Please use `command: branch add name` instead.'
-    required: false
-  new_branch_export_pattern:
-    description: 'Branch export pattern. Defines branch name and path in resulting translations bundle'
-    deprecationMessage: 'This option is deprecated. Please use `command: branch add name` instead.'
-    required: false
-  new_branch_priority:
-    description: 'Defines priority level for each branch [LOW, NORMAL, HIGH]'
-    deprecationMessage: 'This option is deprecated. Please use `command: branch add name` instead.'
-    required: false
-  delete_crowdin_branch:
-    description: 'Option to remove specified version branch in your Crowdin project'
-    deprecationMessage: 'This option is deprecated. Please use `command: branch delete name` instead.'
-    required: false
-
   # global options
   crowdin_branch_name:
     description: 'Option to upload or download files to the specified version branch in your Crowdin project'
-    required: false
-  identity:
-    description: 'Option to specify a path to user-specific credentials, without / at the beginning'
-    deprecationMessage: 'This option is deprecated. Please use the environment variables instead.'
     required: false
   config:
     description: 'Option to specify a path to the configuration file, without / at the beginning'
