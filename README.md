@@ -69,12 +69,17 @@ jobs:
           pull_request_body: 'New Crowdin translations by [Crowdin GH Action](https://github.com/crowdin/github-action)'
           pull_request_base_branch_name: 'main'
         env:
+          # A classic GitHub Personal Access Token with the 'repo' scope selected (the user should have write access to the repository).
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          
+          # A numeric ID, found at https://crowdin.com/project/<projectName>/tools/api
           CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+
+          # Visit https://crowdin.com/settings#api-key to create this token
           CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
 ```
 
-`secrets.GH_TOKEN` - a GitHub Personal Access Token with the `repo` scope selected (the user should have write access to the repository).
+Enter these secrets in GitHub under the repository settings -> Secrets and variables -> Actions.
 
 ## Supported options
 
