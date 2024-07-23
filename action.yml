@@ -194,4 +194,4 @@ outputs:
 
 runs:
   using: docker
-  image: 'Dockerfile'
+  image: 'docker://crowdin/cli:4.1.0'
