@@ -194,4 +194,4 @@ outputs:
 
 runs:
   using: docker
-  image: 'docker://crowdin/github-action:4.1.0'
+  image: 'docker://crowdin/cli:4.1.0'
