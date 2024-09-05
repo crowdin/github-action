@@ -230,7 +230,10 @@ push_to_branch() {
   git config --global user.name "${INPUT_GITHUB_USER_NAME}"
 
   if [ "$INPUT_SKIP_REF_CHECKOUT" != true ]; then
-    git checkout "${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}"
+    CHECKOUT=${GITHUB_HEAD_REF:-${GITHUB_REF}}
+    CHECKOUT=${CHECKOUT#refs/heads/}
+    CHECKOUT=${CHECKOUT#refs/tags/}
+    git checkout "${CHECKOUT}"
   fi
 
   if [ -n "$(git show-ref refs/heads/${BRANCH})" ]; then
