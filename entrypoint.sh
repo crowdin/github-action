@@ -229,8 +229,11 @@ push_to_branch() {
   git config --global user.email "${INPUT_GITHUB_USER_EMAIL}"
   git config --global user.name "${INPUT_GITHUB_USER_NAME}"
 
-  if [ "$INPUT_SKIP_REF_CHECKOUT" != true ] && [ ${GITHUB_REF#refs/heads/} != $GITHUB_REF ]; then
-    git checkout "${GITHUB_REF#refs/heads/}"
+  if [ "$INPUT_SKIP_REF_CHECKOUT" != true ]; then
+    CHECKOUT=${GITHUB_HEAD_REF:-${GITHUB_REF}}
+    CHECKOUT=${CHECKOUT#refs/heads/}
+    CHECKOUT=${CHECKOUT#refs/tags/}
+    git checkout "${CHECKOUT}"
   fi
 
   if [ -n "$(git show-ref refs/heads/${BRANCH})" ]; then
