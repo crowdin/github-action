@@ -42,6 +42,8 @@ Set up a workflow in *.github/workflows/crowdin.yml* (or add a job to your exist
 
 Read the [Configuring a workflow](https://help.github.com/en/articles/configuring-a-workflow) article for more details on creating and setting up GitHub workflows.
 
+### Sample workflow
+
 ```yaml
 name: Crowdin Action
 
@@ -79,7 +81,28 @@ jobs:
           CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
 ```
 
-Enter these secrets in GitHub under the repository settings -> Secrets and variables -> Actions.
+Enter the `CROWDIN_PROJECT_ID` and `CROWDIN_PERSONAL_TOKEN` secrets under the Repository settings -> Secrets and variables -> Actions > Repository secrets.
+
+### Sample `crowdin.yml` configuration file
+
+```yaml
+"project_id_env": "CROWDIN_PROJECT_ID"
+"api_token_env": "CROWDIN_PERSONAL_TOKEN"
+"base_path": "."
+
+"preserve_hierarchy": true
+
+"files": [
+  {
+    "source": "locales/en.yml",
+    "translation": "locales/%two_letters_code%.yml"
+  }
+]
+```
+
+Replace the `source` and `translation` paths with the actual paths to your source and translation files.
+
+By default, the action will look for the `crowdin.yml` file in the root of the repository. You can specify a different path using the `config` option.
 
 ## Supported options
 
