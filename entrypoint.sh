@@ -98,7 +98,7 @@ create_pull_request() {
     exit 1
   fi
 
-  echo "CHECK IF ISSET SAME PULL REQUEST"
+  echo "CHECK IF PULL REQUEST ALREADY EXIST"
 
   if [ -n "$INPUT_PULL_REQUEST_BASE_BRANCH_NAME" ]; then
     BASE_BRANCH="$INPUT_PULL_REQUEST_BASE_BRANCH_NAME"
@@ -114,7 +114,6 @@ create_pull_request() {
 
   PULL_REQUESTS=$(echo "$(curl -sSL -H "${AUTH_HEADER}" -H "${HEADER}" -X GET "${PULLS_URL}${PULL_REQUESTS_QUERY_PARAMS}")" | jq --raw-output '.[] | .head.ref ')
 
-  # check if pull request exist
   if echo "$PULL_REQUESTS" | grep -xq "$BRANCH"; then
     echo "PULL REQUEST ALREADY EXIST"
   else
@@ -225,7 +224,7 @@ push_to_branch() {
 
   REPO_URL="https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@${INPUT_GITHUB_BASE_URL}/${GITHUB_REPOSITORY}.git"
 
-  echo "CONFIGURATION GIT USER"
+  echo "CONFIGURING GIT USER"
   git config --global user.email "${INPUT_GITHUB_USER_EMAIL}"
   git config --global user.name "${INPUT_GITHUB_USER_NAME}"
 
