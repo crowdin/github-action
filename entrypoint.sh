@@ -88,6 +88,7 @@ create_pull_request() {
     REPO_URL="https://api.${INPUT_GITHUB_BASE_URL}/repos/${GITHUB_REPOSITORY}"
   fi
 
+  ORG_NAME=$(echo "${GITHUB_REPOSITORY}" | cut -d'/' -f1)
   PULLS_URL="${REPO_URL}/pulls"
 
   auth_status=$(curl -sL --write-out '%{http_code}' --output /dev/null -H "${AUTH_HEADER}" -H "${HEADER}" "${PULLS_URL}")
@@ -110,9 +111,17 @@ create_pull_request() {
     fi
   fi
 
-  PULL_REQUESTS_QUERY_PARAMS="?base=${BASE_BRANCH}&head=${BRANCH}"
+  pull_requests_response=$(curl -sSL -w "%{http_code}" -H "${AUTH_HEADER}" -H "${HEADER}" -X GET "${PULLS_URL}?base=${BASE_BRANCH}&head=${ORG_NAME}:${BRANCH}")
+  http_code="${pull_requests_response: -3}"
+  response_body="${pull_requests_response%???}"
 
-  PULL_REQUESTS=$(echo "$(curl -sSL -H "${AUTH_HEADER}" -H "${HEADER}" -X GET "${PULLS_URL}${PULL_REQUESTS_QUERY_PARAMS}")" | jq --raw-output '.[] | .head.ref ')
+  if [ "$http_code" -ne 200 ]; then
+    echo "Error: Failed to fetch pull requests. HTTP status: $http_code"
+    echo "Response: $response_body"
+    exit 1
+  fi
+
+  PULL_REQUESTS=$(echo "$response_body" | jq --raw-output '.[] | .head.ref')
 
   if echo "$PULL_REQUESTS" | grep -xq "$BRANCH"; then
     echo "PULL REQUEST ALREADY EXIST"
