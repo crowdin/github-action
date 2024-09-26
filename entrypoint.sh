@@ -166,12 +166,12 @@ create_pull_request() {
       if [ "$(echo "$PULL_REQUEST_LABELS" | jq -e . > /dev/null 2>&1; echo $?)" -eq 0 ]; then
         echo "ADD LABELS TO PULL REQUEST"
 
-        ISSUE_URL="${REPO_URL}/issues/${PULL_REQUESTS_NUMBER}"
+        PULLS_URL="${REPO_URL}/pulls/${PULL_REQUESTS_NUMBER}"
 
         LABELS_DATA="{\"labels\":${PULL_REQUEST_LABELS}}"
 
         # add labels to created pull request
-        curl -sSL -H "${AUTH_HEADER}" -H "${HEADER}" -X PATCH --data "${LABELS_DATA}" "${ISSUE_URL}"
+        curl -sSL -H "${AUTH_HEADER}" -H "${HEADER}" -X PATCH --data "${LABELS_DATA}" "${PULLS_URL}"
       else
         echo "JSON OF pull_request_labels IS INVALID: ${PULL_REQUEST_LABELS}"
       fi
@@ -183,7 +183,7 @@ create_pull_request() {
       if [ "$(echo "$PULL_REQUEST_ASSIGNEES" | jq -e . > /dev/null 2>&1; echo $?)" -eq 0 ]; then
         echo "ADD ASSIGNEES TO PULL REQUEST"
 
-        ASSIGNEES_URL="${REPO_URL}/issues/${PULL_REQUESTS_NUMBER}/assignees"
+        ASSIGNEES_URL="${REPO_URL}/pulls/${PULL_REQUESTS_NUMBER}/assignees"
 
         ASSIGNEES_DATA="{\"assignees\":${PULL_REQUEST_ASSIGNEES}}"
 
