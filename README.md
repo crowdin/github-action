@@ -110,11 +110,11 @@ By default, the action will look for the `crowdin.yml` file in the root of the r
 
 | Option                     | Description                                                                                        | Example value                |
 |----------------------------|----------------------------------------------------------------------------------------------------|------------------------------|
-| `upload_sources`           | Specifies whether or not to upload sources to Crowdin                                              | `true`                       |
-| `upload_translations`      | Specifies whether or not to upload existing translations to Crowdin                                | `false`                      |
+| `upload_sources`           | Specifies whether or not to upload sources to Crowdin                                              | `true` (default)             |
+| `upload_translations`      | Specifies whether or not to upload existing translations to Crowdin                                | `false` (default)            |
 | `upload_language`          | Upload translations for a single specified language                                                | `uk`                         |
-| `auto_approve_imported`    | Automatically approve added translations                                                           | `true`                       |
-| `import_eq_suggestions`    | Add translations even if they match the source strings                                             | `true`                       |
+| `auto_approve_imported`    | Automatically approve added translations                                                           | `false` (default)            |
+| `import_eq_suggestions`    | Add translations even if they match the source strings                                             | `false` (default)            |
 | `upload_sources_args`      | Allows passing any supported arguments of the [`upload sources`][upload-sources] command           | `--no-auto-update label=web` |
 | `upload_translations_args` | Allows passing any supported arguments of the [`upload translations`][upload-translations] command | `--translate-hidden`         |
 
@@ -122,33 +122,33 @@ By default, the action will look for the `crowdin.yml` file in the root of the r
 
 | Option                       | Description                                                                                            | Example value                       |
 |------------------------------|--------------------------------------------------------------------------------------------------------|-------------------------------------|
-| `download_sources`           | Specifies whether to download sources from Crowdin                                                     | `true`                              |
-| `download_translations`      | Specifies whether to download translations from Crowdin                                                | `true`                              |
+| `download_sources`           | Specifies whether to download sources from Crowdin                                                     | `false` (default)                   |
+| `download_translations`      | Specifies whether to download translations from Crowdin                                                | `false` (default)                   |
 | `download_bundle`            | The numeric ID of the Bundle you want to download translations from                                    | `1`                                 |
 | `download_language`          | Download translations for a single specified language                                                  | `uk`                                |
-| `skip_untranslated_strings`  | Skip untranslated strings when downloading translations                                                | `true`                              |
-| `skip_untranslated_files`    | Skip untranslated files when downloading translations                                                  | `true`                              |
-| `export_only_approved`       | Include only approved translations in exported files                                                   | `true`                              |
+| `skip_untranslated_strings`  | Skip untranslated strings when downloading translations                                                | `false` (default)                   |
+| `skip_untranslated_files`    | Skip untranslated files when downloading translations                                                  | `false` (default)                   |
+| `export_only_approved`       | Include only approved translations in exported files                                                   | `false` (default)                   |
 | `download_sources_args`      | Allows passing any supported arguments of the [`download sources`][download-sources] command           | `--reviewed`                        |
 | `download_translations_args` | Allows passing any supported arguments of the [`download translations`][download-translations] command | `--all --skip-untranslated-strings` |
 
 ### Git and Pull Request options
 
-| Option                          | Description                                                                                                  | Example value                                |
-|---------------------------------|--------------------------------------------------------------------------------------------------------------|----------------------------------------------|
-| `push_translations`             | Push downloaded translations to the branch                                                                   | `true`                                       |
-| `push_sources`                  | Push downloaded sources to the branch                                                                        | `true`                                       |
-| `localization_branch_name`      | The name of the git branch that Crowdin will create when pushing translations or sources                     | `l10n_crowdin_action`                        |
-| `commit_message`                | The commit message for the pushed changes                                                                    | `New Crowdin translations by GitHub Action`  |
-| `create_pull_request`           | Specifies whether to create a pull request with the translations                                             | `true`                                       |
-| `pull_request_title`            | The pull request title                                                                                       | `New Crowdin translations`                   |
-| `pull_request_body`             | The pull request body                                                                                        | `New Crowdin pull request with translations` |
-| `pull_request_labels`           | The pull request labels                                                                                      | `localization, l10n`                         |
-| `pull_request_assignees`        | The pull request assignees                                                                                   | `crowdin-bot`                                |
-| `pull_request_reviewers`        | The pull request reviewers                                                                                   | `user-reviewer`                              |
-| `pull_request_team_reviewers`   | The pull request team reviewers                                                                              | `team-reviewer`                              |
-| `pull_request_base_branch_name` | The git branch name to with pull request will be created. If not specified, the default branch is used       | `main`                                       |
-| `skip_ref_checkout`             | Skip the default git checkout on `GITHUB_REF` if you need to checkout multiple branches in a single workflow | `false`                                      |
+| Option                          | Description                                                                                                  | Example value                                         |
+|---------------------------------|--------------------------------------------------------------------------------------------------------------|-------------------------------------------------------|
+| `push_translations`             | Push downloaded translations to the branch                                                                   | `true` (default)                                      |
+| `push_sources`                  | Push downloaded sources to the branch                                                                        | `true` (default)                                      |
+| `localization_branch_name`      | The name of the git branch that Crowdin will create when pushing translations or sources                     | `l10n_crowdin_action` (default)                       |
+| `commit_message`                | The commit message for the pushed changes                                                                    | `New Crowdin translations by GitHub Action` (default) |
+| `create_pull_request`           | Specifies whether to create a pull request with the translations                                             | `true` (default)                                      |
+| `pull_request_title`            | The pull request title                                                                                       | `New Crowdin translations by GitHub Action` (default) |
+| `pull_request_body`             | The pull request body                                                                                        | `New Crowdin pull request with translations`          |
+| `pull_request_labels`           | The pull request labels                                                                                      | `localization, l10n`                                  |
+| `pull_request_assignees`        | The pull request assignees                                                                                   | `crowdin-bot`                                         |
+| `pull_request_reviewers`        | The pull request reviewers                                                                                   | `user-reviewer`                                       |
+| `pull_request_team_reviewers`   | The pull request team reviewers                                                                              | `team-reviewer`                                       |
+| `pull_request_base_branch_name` | The git branch name to with pull request will be created. If not specified, the default branch is used       | `main`                                                |
+| `skip_ref_checkout`             | Skip the default git checkout on `GITHUB_REF` if you need to checkout multiple branches in a single workflow | `false` (default)                                     |
 
 ### Global options
 
@@ -156,16 +156,16 @@ By default, the action will look for the `crowdin.yml` file in the root of the r
 |------------------------|--------------------------------------------------------------------------------------------|----------------------------|
 | `crowdin_branch_name`  | Option to upload or download files to the specified version branch in your Crowdin project | `l10n_branch`              |
 | `config`               | Option to specify a path to the configuration file (without `/` at the beginning)          | `path/to/your/crowdin.yml` |
-| `dryrun_action`        | Defines whether to run the action in the dry-run mode                                      | `false`                    |
+| `dryrun_action`        | Defines whether to run the action in the dry-run mode                                      | `false` (default)          |
 
 ### GitHub (Enterprise) configuration
 
 | Option                | Description                                                                                                                | Example value                       |
 |-----------------------|----------------------------------------------------------------------------------------------------------------------------|-------------------------------------|
-| `github_base_url`     | Option to configure the base URL of GitHub server, if using GitHub Enterprise                                              | `github.com`                        |
+| `github_base_url`     | Option to configure the base URL of GitHub server, if using GitHub Enterprise                                              | `github.com` (default)              |
 | `github_api_base_url` | Options to configure the base URL of GitHub server for API requests, if using GHE and different from `api.github_base_url` | `api.[github_base_url]`             |
-| `github_user_name`    | Option to configure GitHub user name on commits                                                                            | `Crowdin Bot`                       |
-| `github_user_email`   | Option to configure GitHub user email on commits                                                                           | `support+bot@crowdin.com`           |
+| `github_user_name`    | Option to configure GitHub user name on commits                                                                            | `Crowdin Bot` (default)             |
+| `github_user_email`   | Option to configure GitHub user email on commits                                                                           | `support+bot@crowdin.com` (default) |
 | `gpg_private_key`     | GPG private key in ASCII-armored format                                                                                    | `${{ secrets.GPG_PRIVATE_KEY }}`    |
 | `gpg_passphrase`      | The passphrase for the ASCII-armored key                                                                                   | `${{ secrets.GPG_PASSPHRASE }}`     |
 
