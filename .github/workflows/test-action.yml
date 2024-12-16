@@ -24,3 +24,20 @@ jobs:
         with:
           command: 'init'
           command_args: '-V'
+
+  test-macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Crowdin Action
+        uses: ./
+        with:
+          command: 'push'
+          command_args: '-h'
+
+      - name: Get CLI version
+        uses: ./
+        with:
+          command: 'init'
+          command_args: '-V'
