@@ -359,7 +359,9 @@ jobs:
 
 ### Checking out multiple branches in a single workflow
 
-If you need to checkout multiple branches in a single workflow (e.g. a matrix of feature branches), you'll need to disable the automatic checkout to the `GITHUB_REF` by using the `skip_ref_checkout` option:
+By default, the action checks out and pushes to the branch specified in the `GITHUB_REF` environment variable. This is the fully-formed ref of the branch or tag that triggered the workflow run.
+
+If you need to checkout multiple branches in a single workflow (e.g. a matrix of feature branches), or need to push your translations to a branch other than the one that triggered the workflow, you'll need to disable automatic checkout to the `GITHUB_REF` using the `skip_ref_checkout` option:
 
 ```yml
 name: Crowdin Action

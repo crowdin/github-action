@@ -6,7 +6,7 @@
   </picture>
 </p>
 
-# GitHub Crowdin Action [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?url=https%3A%2F%2Fgithub.com%2Fcrowdin%2Fgithub-action&text=Easily%20integrate%20the%20localization%20of%20your%20Crowdin%20project%20into%20the%20GitHub%20Actions%20workflow)&nbsp;[![GitHub Repo stars](https://img.shields.io/github/stars/crowdin/github-action?style=social&cacheSeconds=1800)](https://github.com/crowdin/github-action/stargazers)
+# GitHub Crowdin Action [![Share](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?url=https%3A%2F%2Fgithub.com%2Fcrowdin%2Fgithub-action&text=Easily%20integrate%20the%20localization%20of%20your%20Crowdin%20project%20into%20the%20GitHub%20Actions%20workflow)&nbsp;[![GitHub Repo stars](https://img.shields.io/github/stars/crowdin/github-action?style=social&cacheSeconds=1800)](https://github.com/crowdin/github-action/stargazers)
 
 A GitHub action to manage and synchronize localization resources with your Crowdin project
 
@@ -14,8 +14,7 @@ A GitHub action to manage and synchronize localization resources with your Crowd
 
 [**`Examples`**](/EXAMPLES.md) |
 [**`How to Set Up (video)`**](https://www.youtube.com/watch?v=5b7BMuCoKGg) |
-[**`Configuration File`**](https://developer.crowdin.com/configuration-file/) |
-[**`Wiki`**](https://github.com/crowdin/github-action/wiki)
+[**`Configuration File`**](https://developer.crowdin.com/configuration-file/)
 
 [![test](https://github.com/crowdin/github-action/actions/workflows/test-action.yml/badge.svg)](https://github.com/crowdin/github-action/actions/workflows/test-action.yml)
 [![GitHub Used by](https://img.shields.io/static/v1?label=Used%20by&message=10k&color=brightgreen&logo=github&cacheSeconds=10000)](https://github.com/crowdin/github-action/network/dependents?package_id=UGFja2FnZS0yOTQyNTU3MzA0)
@@ -81,7 +80,17 @@ jobs:
           CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
 ```
 
-Enter the `CROWDIN_PROJECT_ID` and `CROWDIN_PERSONAL_TOKEN` secrets under the Repository settings -> Secrets and variables -> Actions > Repository secrets.
+Create the `CROWDIN_PROJECT_ID` and `CROWDIN_PERSONAL_TOKEN` secrets in Repository settings -> Secrets and variables -> Actions > Repository secrets.
+
+> [!TIP]
+> When creating a personal token in Crowdin, you'll be asked to select the necessary scopes. The basic Crowdin Personal Token scopes are the following:
+>
+> - **Projects** (List, Get, Create, Edit) -> Read
+> - **Translation Status** -> Read Only
+> - **Source files & strings** -> Read and Write
+> - **Translations** -> Read and Write
+>
+> Please note that these scopes may vary depending on the actions you want to perform.
 
 ### Sample `crowdin.yml` configuration file
 
@@ -103,6 +112,9 @@ Enter the `CROWDIN_PROJECT_ID` and `CROWDIN_PERSONAL_TOKEN` secrets under the Re
 Replace the `source` and `translation` paths with the actual paths to your source and translation files.
 
 By default, the action will look for the `crowdin.yml` file in the root of the repository. You can specify a different path using the `config` option.
+
+> [!CAUTION]
+> Make sure you use environment variables and do not hardcode your Crowdin API token in the configuration file.
 
 ## Supported options
 
@@ -136,8 +148,8 @@ By default, the action will look for the `crowdin.yml` file in the root of the r
 
 | Option                          | Description                                                                                                  | Example value                                         |
 |---------------------------------|--------------------------------------------------------------------------------------------------------------|-------------------------------------------------------|
-| `push_translations`             | Push downloaded translations to the branch                                                                   | `true` (default)                                      |
-| `push_sources`                  | Push downloaded sources to the branch                                                                        | `true` (default)                                      |
+| `push_translations`             | Push downloaded translations to the localization branch                                                      | `true` (default)                                      |
+| `push_sources`                  | Push downloaded sources to the localization branch                                                           | `true` (default)                                      |
 | `localization_branch_name`      | The name of the git branch that Crowdin will create when pushing translations or sources                     | `l10n_crowdin_action` (default)                       |
 | `commit_message`                | The commit message for the pushed changes                                                                    | `New Crowdin translations by GitHub Action` (default) |
 | `create_pull_request`           | Specifies whether to create a pull request with the translations                                             | `true` (default)                                      |
@@ -169,7 +181,7 @@ By default, the action will look for the `crowdin.yml` file in the root of the r
 | `gpg_private_key`     | GPG private key in ASCII-armored format                                                                                    | `${{ secrets.GPG_PRIVATE_KEY }}`    |
 | `gpg_passphrase`      | The passphrase for the ASCII-armored key                                                                                   | `${{ secrets.GPG_PASSPHRASE }}`     |
 
-> **Note**
+> [!NOTE]
 > For signed commits, add your ASCII-armored key and export `gpg --armor --export-secret-key GPG_KEY_ID`
 >
 > Ensure that all emails are the same: for account profile that holds private key, the one specified during key generation, and for commit author (`github_user_email` parameter)
@@ -187,7 +199,7 @@ By default, the action will look for the `crowdin.yml` file in the root of the r
 
 The options above can be used in the [No-crowdin.yml configuration](EXAMPLES.md#no-crowdinyml-configuration) mode.
 
-> **Note**
+> [!NOTE]
 > The `base_url` is required For Crowdin Enterprise and should be passed in the following way: `base_url: 'https://{organization-name}.api.crowdin.com'`
 
 ### Crowdin CLI command
@@ -217,13 +229,44 @@ In order to push translations and create pull requests, the Crowdin GitHub Actio
 
 In case you want to use an [automatic GitHub authentication token](https://docs.github.com/en/actions/security-guides/automatic-token-authentication), you need to assign the [`write` permission to your job](https://docs.github.com/en/actions/using-jobs/assigning-permissions-to-jobs) and [allow GH Actions to create Pull Requests](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository#preventing-github-actions-from-creating-or-approving-pull-requests).
 
+## Migration from the native GitHub integration
+
+If you are using the [native GitHub integration](https://store.crowdin.com/github), you can easily migrate to the GitHub Action. The main difference is that the GitHub Action requires a Crowdin Personal Access Token and a numeric project ID to be specified. Follow the steps below to migrate:
+
+- If you're using a `crowdin.yml` file, you'll need to add `preserve_hierarchy: true` to keep the directory structure the same between Crowdin and GitHub (even if you weren't already using this setting in your existing OAuth integration).
+- `localization_branch_name` should be set to the existing Git branch name you're using for Crowdin PRs.
+- `crowdin_branch_name` should be set as well.
+
+For example, if you have the following configuration file:
+
+```yaml
+files:
+  - source: /**/*.xml
+    translation: /**/%two_letters_code%.xml
+```
+
+Add the credentials:
+
+```yaml
+project_id_env: CROWDIN_PROJECT_ID
+api_token_env: CROWDIN_PERSONAL_TOKEN
+
+files:
+  - source: /**/*.xml
+    translation: /**/%two_letters_code%.xml
+```
+
+Then create the secrets `CROWDIN_PROJECT_ID` and `CROWDIN_PERSONAL_TOKEN` and finally, create the workflow. See [Usage](#usage) for more details.
+
+If comparing the native GitHub integration and the GitHub Action, the GitHub Action provides more flexibility and control over the localization process.
+
 ## Contributing
 
-If you would like to contribute please read the [Contributing](/CONTRIBUTING.md) guidelines.
+If you would like to contribute, please read the [Contributing](/CONTRIBUTING.md) guidelines.
 
 ## Seeking Assistance
 
-If you find any problems or would like to suggest a feature, please feel free to file an issue on GitHub at [Issues Page](https://github.com/crowdin/github-action/issues).
+If you find any problems or would like to suggest a feature, please feel free to file an issue on GitHub at the [Issues Page](https://github.com/crowdin/github-action/issues). Please also check the [Examples](/EXAMPLES.md) page for more use cases.
 
 ## License
 
