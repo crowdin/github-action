@@ -77,9 +77,17 @@ download_translations() {
 }
 
 create_pull_request() {
-  BRANCH="${1}"
+  [ -z "${GITHUB_TOKEN}" ] && [ -z "${GITHUB_APP_TOKEN}" ] && {
+    echo "ERROR: Either 'GITHUB_TOKEN' or 'GITHUB_APP_TOKEN' must be set in the environment variables!"
+    exit 1
+  }
 
-  AUTH_HEADER="Authorization: token ${GITHUB_TOKEN}"
+  AUTH_TOKEN="${GITHUB_TOKEN}"
+  if [ -n "${GITHUB_APP_TOKEN}" ]; then
+    AUTH_TOKEN="${GITHUB_APP_TOKEN}"
+  fi
+
+  AUTH_HEADER="Authorization: token ${AUTH_TOKEN}"
   HEADER="Accept: application/vnd.github.v3+json; application/vnd.github.antiope-preview+json; application/vnd.github.shadow-cat-preview+json"
 
   if [ -n "$INPUT_GITHUB_API_BASE_URL" ]; then
@@ -93,13 +101,15 @@ create_pull_request() {
 
   auth_status=$(curl -sL --write-out '%{http_code}' --output /dev/null -H "${AUTH_HEADER}" -H "${HEADER}" "${PULLS_URL}")
   if [[ $auth_status -eq 403 || "$auth_status" -eq 401 ]] ; then
-    echo "FAILED TO AUTHENTICATE USING 'GITHUB_TOKEN' CHECK TOKEN IS VALID"
+    echo "FAILED TO AUTHENTICATE WITH GITHUB. PLEASE CHECK YOUR GITHUB TOKEN"
     echo "pull_request_url=" >> $GITHUB_OUTPUT
     echo "pull_request_number=" >> $GITHUB_OUTPUT
     exit 1
   fi
 
   echo "CHECK IF PULL REQUEST ALREADY EXIST"
+
+  BRANCH="${1}"
 
   if [ -n "$INPUT_PULL_REQUEST_BASE_BRANCH_NAME" ]; then
     BASE_BRANCH="$INPUT_PULL_REQUEST_BASE_BRANCH_NAME"
@@ -229,9 +239,18 @@ create_pull_request() {
 }
 
 push_to_branch() {
-  BRANCH=${INPUT_LOCALIZATION_BRANCH_NAME}
+  [ -z "${GITHUB_TOKEN}" ] && [ -z "${GITHUB_APP_TOKEN}" ] && {
+      echo "ERROR: Either 'GITHUB_TOKEN' or 'GITHUB_APP_TOKEN' must be set in the environment variables!"
+      exit 1
+  }
 
-  REPO_URL="https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@${INPUT_GITHUB_BASE_URL}/${GITHUB_REPOSITORY}.git"
+  AUTH_TOKEN="${GITHUB_TOKEN}"
+  if [ -n "${GITHUB_APP_TOKEN}" ]; then
+    AUTH_TOKEN="${GITHUB_APP_TOKEN}"
+  fi
+
+  BRANCH=${INPUT_LOCALIZATION_BRANCH_NAME}
+  REPO_URL="https://${GITHUB_ACTOR}:${AUTH_TOKEN}@${INPUT_GITHUB_BASE_URL}/${GITHUB_REPOSITORY}.git"
 
   echo "CONFIGURING GIT USER"
   git config --global user.email "${INPUT_GITHUB_USER_EMAIL}"
@@ -377,11 +396,6 @@ if [ "$INPUT_DOWNLOAD_SOURCES" = true ]; then
   download_sources "$@"
 
   if [ "$INPUT_PUSH_SOURCES" = true ]; then
-    [ -z "${GITHUB_TOKEN}" ] && {
-      echo "CAN NOT FIND 'GITHUB_TOKEN' IN ENVIRONMENT VARIABLES"
-      exit 1
-    }
-
     [ -n "${INPUT_GPG_PRIVATE_KEY}" ] && {
       setup_commit_signing
     }
@@ -394,11 +408,6 @@ if [ "$INPUT_DOWNLOAD_TRANSLATIONS" = true ]; then
   download_translations "$@"
 
   if [ "$INPUT_PUSH_TRANSLATIONS" = true ]; then
-    [ -z "${GITHUB_TOKEN}" ] && {
-      echo "CAN NOT FIND 'GITHUB_TOKEN' IN ENVIRONMENT VARIABLES"
-      exit 1
-    }
-
     [ -n "${INPUT_GPG_PRIVATE_KEY}" ] && {
       setup_commit_signing
     }
@@ -413,11 +422,6 @@ if [ "$INPUT_DOWNLOAD_BUNDLE" ]; then
   crowdin bundle download $INPUT_DOWNLOAD_BUNDLE $@
 
   if [ "$INPUT_PUSH_TRANSLATIONS" = true ]; then
-      [ -z "${GITHUB_TOKEN}" ] && {
-        echo "CAN NOT FIND 'GITHUB_TOKEN' IN ENVIRONMENT VARIABLES"
-        exit 1
-      }
-
       [ -n "${INPUT_GPG_PRIVATE_KEY}" ] && {
         setup_commit_signing
       }
