@@ -15,7 +15,7 @@ A GitHub action to manage and synchronize localization resources with your Crowd
 [**`Examples`**](/docs/EXAMPLES.md) |
 [**`How to Set Up (video)`**](https://www.youtube.com/watch?v=5b7BMuCoKGg) |
 [**`Configuration File`**](https://developer.crowdin.com/configuration-file/) |
-[**AI Localization**](/docs/AI.md)
+[**`AI Localization`**](/docs/AI.md)
 
 [![test](https://github.com/crowdin/github-action/actions/workflows/test-action.yml/badge.svg)](https://github.com/crowdin/github-action/actions/workflows/test-action.yml)
 [![GitHub Used by](https://img.shields.io/static/v1?label=Used%20by&message=10k&color=brightgreen&logo=github&cacheSeconds=10000)](https://github.com/crowdin/github-action/network/dependents?package_id=UGFja2FnZS0yOTQyNTU3MzA0)
