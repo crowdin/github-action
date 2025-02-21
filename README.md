@@ -12,9 +12,10 @@ A GitHub action to manage and synchronize localization resources with your Crowd
 
 <div align="center">
 
-[**`Examples`**](/EXAMPLES.md) |
+[**`Examples`**](/docs/EXAMPLES.md) |
 [**`How to Set Up (video)`**](https://www.youtube.com/watch?v=5b7BMuCoKGg) |
-[**`Configuration File`**](https://developer.crowdin.com/configuration-file/)
+[**`Configuration File`**](https://developer.crowdin.com/configuration-file/) |
+[**AI Localization**](/docs/AI.md)
 
 [![test](https://github.com/crowdin/github-action/actions/workflows/test-action.yml/badge.svg)](https://github.com/crowdin/github-action/actions/workflows/test-action.yml)
 [![GitHub Used by](https://img.shields.io/static/v1?label=Used%20by&message=10k&color=brightgreen&logo=github&cacheSeconds=10000)](https://github.com/crowdin/github-action/network/dependents?package_id=UGFja2FnZS0yOTQyNTU3MzA0)
@@ -91,6 +92,9 @@ Create the `CROWDIN_PROJECT_ID` and `CROWDIN_PERSONAL_TOKEN` secrets in Reposito
 > - **Translations** -> Read and Write
 >
 > Please note that these scopes may vary depending on the actions you want to perform.
+
+> [!NOTE]
+> For fully automated AI localization with Crowdin, check out the [AI Localization](/docs/AI.md) guide.
 
 ### Sample `crowdin.yml` configuration file
 
@@ -197,7 +201,7 @@ By default, the action will look for the `crowdin.yml` file in the root of the r
 | `base_url`      | Base URL of Crowdin server for API requests execution                    | `https://api.crowdin.com`                |
 | `base_path`     | The project base path                                                    | `.`                                      |
 
-The options above can be used in the [No-crowdin.yml configuration](EXAMPLES.md#no-crowdinyml-configuration) mode.
+The options above can be used in the [No-crowdin.yml configuration](/docs/EXAMPLES.md#no-crowdinyml-configuration) mode.
 
 > [!NOTE]
 > The `base_url` is required For Crowdin Enterprise and should be passed in the following way: `base_url: 'https://{organization-name}.api.crowdin.com'`
@@ -266,7 +270,7 @@ If you would like to contribute, please read the [Contributing](/CONTRIBUTING.md
 
 ## Seeking Assistance
 
-If you find any problems or would like to suggest a feature, please feel free to file an issue on GitHub at the [Issues Page](https://github.com/crowdin/github-action/issues). Please also check the [Examples](/EXAMPLES.md) page for more use cases.
+If you find any problems or would like to suggest a feature, please feel free to file an issue on GitHub at the [Issues Page](https://github.com/crowdin/github-action/issues). Please also check the [Examples](/docs/EXAMPLES.md) page for more use cases.
 
 ## License
 
