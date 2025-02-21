@@ -25,7 +25,7 @@
   - [Checking the translation progress](#checking-the-translation-progress)
   - [Pre-Translation](#pre-translation)
   - [Run test workflows on all commits of a PR](#run-test-workflows-on-all-commits-of-a-pr)
-
+- [Automatic AI Pre-Translation](AI.md)
 ---
 
 ### Create PR with the new translations
