@@ -170,7 +170,7 @@ By default, the action will look for the `crowdin.yml` file in the root of the r
 
 | Option                 | Description                                                                                | Example value              |
 |------------------------|--------------------------------------------------------------------------------------------|----------------------------|
-| `crowdin_branch_name`  | Option to upload or download files to the specified version branch in your Crowdin project | `l10n_branch`              |
+| `crowdin_branch_name`  | Option to upload or download files to the specified version branch in your Crowdin project | `main`                     |
 | `config`               | Option to specify a path to the configuration file (without `/` at the beginning)          | `path/to/your/crowdin.yml` |
 | `dryrun_action`        | Defines whether to run the action in the dry-run mode                                      | `false` (default)          |
 
