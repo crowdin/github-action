@@ -163,7 +163,7 @@ By default, the action will look for the `crowdin.yml` file in the root of the r
 | `pull_request_assignees`        | The pull request assignees                                                                                   | `crowdin-bot`                                         |
 | `pull_request_reviewers`        | The pull request reviewers                                                                                   | `user-reviewer`                                       |
 | `pull_request_team_reviewers`   | The pull request team reviewers                                                                              | `team-reviewer`                                       |
-| `pull_request_base_branch_name` | The git branch name to with pull request will be created. If not specified, the default branch is used       | `main`                                                |
+| `pull_request_base_branch_name` | The base branch that the pull request will target. If not specified, the default branch is used              | `main`                                                |
 | `skip_ref_checkout`             | Skip the default git checkout on `GITHUB_REF` if you need to checkout multiple branches in a single workflow | `false` (default)                                     |
 
 ### Global options
