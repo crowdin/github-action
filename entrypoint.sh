@@ -77,14 +77,14 @@ download_translations() {
 }
 
 create_pull_request() {
-  [ -z "${GITHUB_TOKEN}" ] && [ -z "${GITHUB_APP_TOKEN}" ] && {
-    echo "ERROR: Either 'GITHUB_TOKEN' or 'GITHUB_APP_TOKEN' must be set in the environment variables!"
+  [ -z "${GITHUB_TOKEN}" ] && [ -z "${GH_TOKEN}" ] && {
+    echo "ERROR: Either 'GITHUB_TOKEN' or 'GH_TOKEN' must be set in the environment variables!"
     exit 1
   }
 
   AUTH_TOKEN="${GITHUB_TOKEN}"
-  if [ -n "${GITHUB_APP_TOKEN}" ]; then
-    AUTH_TOKEN="${GITHUB_APP_TOKEN}"
+  if [ -n "${GH_TOKEN}" ]; then
+    AUTH_TOKEN="${GH_TOKEN}"
   fi
 
   AUTH_HEADER="Authorization: token ${AUTH_TOKEN}"
@@ -239,14 +239,14 @@ create_pull_request() {
 }
 
 push_to_branch() {
-  [ -z "${GITHUB_TOKEN}" ] && [ -z "${GITHUB_APP_TOKEN}" ] && {
-      echo "ERROR: Either 'GITHUB_TOKEN' or 'GITHUB_APP_TOKEN' must be set in the environment variables!"
+  [ -z "${GITHUB_TOKEN}" ] && [ -z "${GH_TOKEN}" ] && {
+      echo "ERROR: Either 'GITHUB_TOKEN' or 'GH_TOKEN' must be set in the environment variables!"
       exit 1
   }
 
   AUTH_TOKEN="${GITHUB_TOKEN}"
-  if [ -n "${GITHUB_APP_TOKEN}" ]; then
-    AUTH_TOKEN="${GITHUB_APP_TOKEN}"
+  if [ -n "${GH_TOKEN}" ]; then
+    AUTH_TOKEN="${GH_TOKEN}"
   fi
 
   BRANCH=${INPUT_LOCALIZATION_BRANCH_NAME}
