@@ -87,6 +87,9 @@ jobs:
           CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
 ```
 
+> [!TIP]
+> For more control over your workflow, see additional [Triggers](EXAMPLES.md#triggers) examples including cron schedules, manual triggers, and file-based triggers.
+
 ## Providing Context for AI
 
 Context is crucial for accurate and high-quality translations. With the enhanced context, AI produces production-quality translations that were previously only possible with human input.
@@ -144,9 +147,9 @@ Then, add the following steps to your GitHub Actions workflow to extract the con
 ```yaml
 # Upload sources step
 
-- uses: actions/setup-node@vv
+- uses: actions/setup-node@v4
   with:
-    node-version: '20'
+    node-version: '22'
 
 - name: Extract Context for AI
   run: |
@@ -186,3 +189,8 @@ Crowdin also allows you to provide screenshots to the AI to help it better under
 - [For iOS Projects](https://crowdin.github.io/mobile-sdk-ios/guides/screenshots-automation)
 
 Integrate automated screenshot generation into your CI/CD pipeline to give AI the context it needs for better translations.
+
+## See more
+
+- [Crowdin AI](https://support.crowdin.com/crowdin-ai/)
+- [Usage of AI localization with Crowdin branches](https://github.com/crowdin/github-action/discussions/280)
