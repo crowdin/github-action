@@ -111,7 +111,7 @@ create_pull_request() {
     fi
   fi
 
-  pull_requests_response=$(curl -sSL -w "%{http_code}" -H "${AUTH_HEADER}" -H "${HEADER}" -X GET "${PULLS_URL}?base=${BASE_BRANCH}&head=${ORG_NAME}:${BRANCH}")
+  pull_requests_response=$(curl -sSL -w "%{http_code}" -H "${AUTH_HEADER}" -H "${HEADER}" -X GET "${PULLS_URL}?base=${BASE_BRANCH}&head=${BRANCH}")
   http_code="${pull_requests_response: -3}"
   response_body="${pull_requests_response%???}"
 
