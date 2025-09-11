@@ -314,10 +314,6 @@ if [ "$INPUT_DEBUG_MODE" = true ] || [ -n "$RUNNER_DEBUG" ]; then
   set -- "$@" --verbose --debug
 fi
 
-if [ -n "$INPUT_CROWDIN_BRANCH_NAME" ]; then
-  set -- "$@" --branch="${INPUT_CROWDIN_BRANCH_NAME}"
-fi
-
 if [ -n "$INPUT_CONFIG" ]; then
   set -- "$@" --config="${INPUT_CONFIG}"
 fi
@@ -353,6 +349,12 @@ fi
 
 if [ -n "$INPUT_COMMAND_ARGS" ]; then
   set -- "$@" ${INPUT_COMMAND_ARGS}
+fi
+
+DOWNLOAD_BUNDLE_ARGS="$@"
+
+if [ -n "$INPUT_CROWDIN_BRANCH_NAME" ]; then
+  set -- "$@" --branch="${INPUT_CROWDIN_BRANCH_NAME}"
 fi
 
 #EXECUTE COMMANDS
@@ -410,7 +412,7 @@ fi
 if [ "$INPUT_DOWNLOAD_BUNDLE" ]; then
   echo "DOWNLOADING BUNDLE $INPUT_DOWNLOAD_BUNDLE"
 
-  crowdin bundle download $INPUT_DOWNLOAD_BUNDLE $@
+  crowdin bundle download $INPUT_DOWNLOAD_BUNDLE $DOWNLOAD_BUNDLE_ARGS
 
   if [ "$INPUT_PUSH_TRANSLATIONS" = true ]; then
       [ -z "${GITHUB_TOKEN}" ] && {
