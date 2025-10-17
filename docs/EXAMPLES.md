@@ -461,9 +461,13 @@ strategy:
 
 ## Outputs
 
-### `pull_request_url`, `pull_request_number`
+### `pull_request_url`, `pull_request_number`, `pull_request_created`
 
-There is a possibility to get the URL or number of the created Pull Request. You can use it in the next steps of your workflow.
+There is a possibility to get the URL, number, and creation status of the Pull Request. You can use it in the next steps of your workflow.
+
+- `pull_request_url`: The URL of the pull request created by the workflow
+- `pull_request_number`: The number of the pull request created by the workflow
+- `pull_request_created`: Whether a new pull request was created (`true`) or an existing one was found (`false`)
 
 ```yaml
 # ...
@@ -488,6 +492,10 @@ There is a possibility to get the URL or number of the created Pull Request. You
   run: gh pr --repo $GITHUB_REPOSITORY review ${{ steps.crowdin-download.outputs.pull_request_url }} --approve
   env:
     GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+- name: Notify about new PR
+  if: steps.crowdin-download.outputs.pull_request_created == 'true'
+  run: echo "A new pull request was created: ${{ steps.crowdin-download.outputs.pull_request_url }}"
 ```
 
 ## Tips and Tricks

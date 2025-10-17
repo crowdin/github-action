@@ -3,6 +3,7 @@
 # Default values for action outputs
 echo "pull_request_url=" >> $GITHUB_OUTPUT
 echo "pull_request_number=" >> $GITHUB_OUTPUT
+echo "pull_request_created=false" >> $GITHUB_OUTPUT
 
 if [ "$INPUT_DEBUG_MODE" = true ] || [ -n "$RUNNER_DEBUG" ]; then
   echo '---------------------------'
@@ -159,6 +160,8 @@ create_pull_request() {
 
       exit 1
     fi
+
+    echo "pull_request_created=true" >> $GITHUB_OUTPUT
 
     if [ -n "$INPUT_PULL_REQUEST_LABELS" ]; then
       PULL_REQUEST_LABELS=$(echo "[\"${INPUT_PULL_REQUEST_LABELS}\"]" | sed 's/, \|,/","/g')
