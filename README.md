@@ -226,6 +226,7 @@ This action has the following outputs:
 
 - `pull_request_url`: The URL of the pull request created by the workflow
 - `pull_request_number`: The number of the pull request created by the workflow
+- `pull_request_created`: Whether a new pull request was created (`true`) or an existing one was found (`false`)
 
 ## Permissions
 
