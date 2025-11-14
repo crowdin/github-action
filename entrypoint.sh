@@ -248,11 +248,11 @@ push_to_branch() {
   fi
 
   # Check if branch exists locally
-  if [ -n "$(git show-ref refs/heads/${BRANCH})" ]; then
+  if [ -n "$(git show-ref refs/heads/"${BRANCH}")" ]; then
     echo "CHECKING OUT LOCAL BRANCH ${BRANCH}"
     git checkout "${BRANCH}"
   # Check if branch exists on remote
-  elif [ -n "$(git ls-remote --heads origin ${BRANCH})" ]; then
+  elif [ -n "$(git ls-remote --heads origin "${BRANCH}")" ]; then
     echo "CHECKING OUT REMOTE BRANCH ${BRANCH}"
     git checkout -b "${BRANCH}" --track "origin/${BRANCH}"
   else
