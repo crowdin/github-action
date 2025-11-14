@@ -254,7 +254,15 @@ push_to_branch() {
   # Check if branch exists on remote
   elif [ -n "$(git ls-remote --heads origin "${BRANCH}")" ]; then
     echo "CHECKING OUT REMOTE BRANCH ${BRANCH}"
-    git checkout -b "${BRANCH}" --track "origin/${BRANCH}"
+    # Save current working directory state to preserve downloaded files
+    TEMP_DIR=$(mktemp -d)
+    rsync -a --exclude='.git' ./ "${TEMP_DIR}/"
+    # Fetch the remote branch and checkout
+    git fetch origin "${BRANCH}":"${BRANCH}"
+    git checkout -f "${BRANCH}"
+    # Restore downloaded files (use --checksum to detect content changes despite same size/timestamp)
+    rsync -a --checksum "${TEMP_DIR}/" ./
+    rm -rf "${TEMP_DIR}"
   else
     echo "CREATING NEW BRANCH ${BRANCH}"
     git checkout -b "${BRANCH}"
