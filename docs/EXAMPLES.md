@@ -23,6 +23,7 @@
   - [Dealing with concurrency](#dealing-with-concurrency)
   - [Handling parallel runs](#handling-parallel-runs)
 - [Tips and tricks](#tips-and-tricks)
+  - [Using GitHub App for authentication](#using-github-app-for-authentication)
   - [Checking the translation progress](#checking-the-translation-progress)
   - [Pre-Translation](#pre-translation)
   - [Run test workflows on all commits of a PR](#run-test-workflows-on-all-commits-of-a-pr)
@@ -547,6 +548,56 @@ There is a possibility to get the URL, number, and creation status of the Pull R
 ```
 
 ## Tips and Tricks
+
+### Using GitHub App for authentication
+
+Instead of using a Personal Access Token (PAT), you can authenticate using a [GitHub App](https://docs.github.com/en/apps/creating-github-apps/about-creating-github-apps/about-creating-github-apps). This provides **scoped permissions**, **automatic token rotation**, and better compliance with enterprise security policies.
+
+```yaml
+name: Crowdin Action
+
+on:
+  workflow_dispatch:
+
+jobs:
+  crowdin:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Generate GitHub App Token
+        id: generate-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ vars.CROWDIN_APP_ID }}
+          private-key: ${{ secrets.CROWDIN_APP_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
+
+      - name: Synchronize with Crowdin
+        uses: crowdin/github-action@v2
+        with:
+          upload_sources: true
+          download_translations: true
+          create_pull_request: true
+        env:
+          GH_TOKEN: ${{ steps.generate-token.outputs.token }}
+          CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+```
+
+To set this up:
+
+1. [Create a GitHub App](https://docs.github.com/en/apps/creating-github-apps/registering-a-github-app/registering-a-github-app) with **Contents** and **Pull requests** permissions (Read and Write)
+2. Install the App on your repository
+3. Store the App ID in a repository variable (`CROWDIN_APP_ID`) and the private key in a secret (`CROWDIN_APP_PRIVATE_KEY`)
+
+For more details, see [GitHub issue #270](https://github.com/crowdin/github-action/issues/270).
 
 ### Checking the translation progress
 
