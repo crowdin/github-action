@@ -247,11 +247,9 @@ push_to_branch() {
     git checkout "${CHECKOUT}"
   fi
 
-  if [ -n "$(git show-ref refs/heads/${BRANCH})" ]; then
-    git checkout "${BRANCH}"
-  else
-    git checkout -b "${BRANCH}"
-  fi
+  # Checkout localization branch, using remote state if available
+  git fetch origin "${BRANCH}" 2>/dev/null || true
+  git checkout -B "${BRANCH}" "origin/${BRANCH}" 2>/dev/null || git checkout -B "${BRANCH}"
 
   git add .
 
