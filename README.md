@@ -217,9 +217,9 @@ You can also run any other Crowdin CLI command by specifying the `command` and `
     command: 'pre-translate'
     command_args: '-l uk --method tm --branch main'
 
-  # Access the command output in subsequent steps (optional)
-  - name: Use command output
-    run: echo "${{ steps.crowdin.outputs.command_output }}"
+# Access the command output in subsequent steps (optional)
+- name: Use command output
+  run: echo "${{ steps.crowdin.outputs.command_output }}"
 ```
 
 To see the full list of available commands, visit the [official documentation](https://crowdin.github.io/crowdin-cli/).
