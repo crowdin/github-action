@@ -4,6 +4,7 @@
 echo "pull_request_url=" >> $GITHUB_OUTPUT
 echo "pull_request_number=" >> $GITHUB_OUTPUT
 echo "pull_request_created=false" >> $GITHUB_OUTPUT
+echo "command_output=" >> $GITHUB_OUTPUT
 
 if [ "$INPUT_DEBUG_MODE" = true ] || [ -n "$RUNNER_DEBUG" ]; then
   echo '---------------------------'
@@ -364,7 +365,15 @@ fi
 
 if [ -n "$INPUT_COMMAND" ]; then
   echo "RUNNING COMMAND crowdin $INPUT_COMMAND $INPUT_COMMAND_ARGS"
-  crowdin $INPUT_COMMAND $INPUT_COMMAND_ARGS
+
+  # Capture command output while still displaying it
+  CROWDIN_OUTPUT=$(crowdin $INPUT_COMMAND $INPUT_COMMAND_ARGS)
+  echo "$CROWDIN_OUTPUT"
+
+  # Write multiline output to GITHUB_OUTPUT using heredoc delimiter
+  echo "command_output<<CROWDIN_EOF" >> $GITHUB_OUTPUT
+  echo "$CROWDIN_OUTPUT" >> $GITHUB_OUTPUT
+  echo "CROWDIN_EOF" >> $GITHUB_OUTPUT
 
   # in this case, we don't need to continue executing any further default behavior
   exit 0

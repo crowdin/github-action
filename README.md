@@ -216,6 +216,10 @@ You can also run any other Crowdin CLI command by specifying the `command` and `
   with:
     command: 'pre-translate'
     command_args: '-l uk --method tm --branch main'
+
+# Access the command output in subsequent steps (optional)
+- name: Use command output
+  run: echo "${{ steps.crowdin.outputs.command_output }}"
 ```
 
 To see the full list of available commands, visit the [official documentation](https://crowdin.github.io/crowdin-cli/).
@@ -227,6 +231,7 @@ This action has the following outputs:
 - `pull_request_url`: The URL of the pull request created by the workflow
 - `pull_request_number`: The number of the pull request created by the workflow
 - `pull_request_created`: Whether a new pull request was created (`true`) or an existing one was found (`false`)
+- `command_output`: The output of the Crowdin CLI command (only available when using the `command` input)
 
 ## Permissions
 
