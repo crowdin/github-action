@@ -569,6 +569,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - name: Generate GitHub App Token
         id: generate-token
@@ -598,6 +600,9 @@ To set this up:
 3. Store the App ID in a repository variable (`CROWDIN_APP_ID`) and the private key in a secret (`CROWDIN_APP_PRIVATE_KEY`)
 
 For more details, see [GitHub issue #270](https://github.com/crowdin/github-action/issues/270).
+
+> **Note**
+> When using a GitHub App token via `GH_TOKEN`, the Checkout step must use `persist-credentials: false`. Otherwise, the default `GITHUB_TOKEN` cached in `.git/config` by `actions/checkout` takes precedence over `GH_TOKEN`, and the action will not use your App token for creating pull requests.
 
 ### Checking the translation progress
 
