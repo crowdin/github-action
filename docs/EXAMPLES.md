@@ -131,7 +131,7 @@ jobs:
 
 The Action/CLI will automatically detect the [environment variables](https://crowdin.github.io/crowdin-cli/configuration#environment-variables) and use them for the configuration.
 
-> **Note**
+> [!NOTE]
 > To avoid any conflicts, do not use the `crowdin.yml` file in the repository when using the above configuration approach.
 
 ### Upload sources only
@@ -195,7 +195,7 @@ Note that the value of the `crowdin_branch_name` is `env.BRANCH_NAME` - this is 
 
 The Crowdin CLI supports a `--cache` parameter for the `upload sources` command that stores source file checksums locally. This allows the CLI to only upload files that have changed, significantly reducing upload time for large projects.
 
-> **Note**
+> [!NOTE]
 > The cache feature is experimental. For any feedback, visit [Crowdin CLI Discussions](https://github.com/crowdin/crowdin-cli/discussions).
 
 To persist the cache between workflow runs, use the `actions/cache` action to save and restore the cache file located at `~/.crowdin/cache.json`:
@@ -302,7 +302,7 @@ jobs:
           CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
 ```
 
-> **Note**
+> [!NOTE]
 > If you are using a **String-based** project, you need to use this option to download translations. The default `download_translations` option does not work for this type of projects.
 
 The `download_bundle` option accepts the bundle numeric ID.
@@ -569,6 +569,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - name: Generate GitHub App Token
         id: generate-token
@@ -598,6 +600,9 @@ To set this up:
 3. Store the App ID in a repository variable (`CROWDIN_APP_ID`) and the private key in a secret (`CROWDIN_APP_PRIVATE_KEY`)
 
 For more details, see [GitHub issue #270](https://github.com/crowdin/github-action/issues/270).
+
+> [!NOTE]
+> When using a GitHub App token via `GH_TOKEN`, the Checkout step must use `persist-credentials: false`. Otherwise, the default `GITHUB_TOKEN` cached in `.git/config` by `actions/checkout` takes precedence over `GH_TOKEN`, and the action will not use your App token for creating pull requests.
 
 ### Checking the translation progress
 
