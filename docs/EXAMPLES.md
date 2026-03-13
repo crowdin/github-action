@@ -198,7 +198,9 @@ The Crowdin CLI supports a `--cache` parameter for the `upload sources` command 
 > [!NOTE]
 > The cache feature is experimental. For any feedback, visit [Crowdin CLI Discussions](https://github.com/crowdin/crowdin-cli/discussions).
 
-To persist the cache between workflow runs, use the `actions/cache` action to save and restore the cache file located at `~/.crowdin/cache.json`:
+The CLI writes the cache to the `.crowdin` directory in the current working directory. To persist the cache between workflow runs, restore and save this directory using `actions/cache/restore` and `actions/cache/save`.
+
+Example workflow:
 
 ```yaml
 name: Crowdin Action
@@ -214,13 +216,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Cache Crowdin source files
-        uses: actions/cache@v4
+      - name: Restore Crowdin cache
+        uses: actions/cache/restore@v4
         with:
-          path: ~/.crowdin/cache.json
-          key: ${{ runner.os }}-crowdin-cache-${{ github.ref_name }}-${{ hashFiles('**/crowdin.yml') }}
-          restore-keys: |
-            ${{ runner.os }}-crowdin-cache-${{ github.ref_name }}-
+          path: .crowdin
+          key: crowdin-${{ github.ref_name }}
+          restore-keys: crowdin-${{ github.ref_name }}-
 
       - name: Crowdin push
         uses: crowdin/github-action@v2
@@ -232,11 +233,16 @@ jobs:
         env:
           CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
           CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+
+      - name: Save Crowdin cache
+        uses: actions/cache/save@v4
+        if: always()
+        with:
+          path: .crowdin
+          key: crowdin-${{ github.ref_name }}-${{ github.run_id }}
 ```
 
-The cache key includes the current branch name and the `crowdin.yml` file hash, so each branch maintains its own cache and the cache will be invalidated when your Crowdin configuration changes. The `restore-keys` ensures that even if the exact key doesn't match (e.g., when `crowdin.yml` changes), a previous cache for the same branch will be restored, which is useful for incremental updates.
-
-Make sure to pass the `--cache` argument to the `upload_sources_args` option to use the cache.
+The restore step first tries an exact match on `crowdin-${{ github.ref_name }}` and falls back to the `restore-keys` prefix to pick up the latest run's cache. The save step always runs (even if the upload fails) and writes a new cache entry keyed with the run ID. Make sure to pass `--cache` in `upload_sources_args` so the CLI uses the cache.
 
 ### Download only translations without pushing to a branch
 
