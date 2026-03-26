@@ -168,11 +168,12 @@ By default, the action will look for the `crowdin.yml` file in the root of the r
 
 ### Global options
 
-| Option                 | Description                                                                                | Example value              |
-|------------------------|--------------------------------------------------------------------------------------------|----------------------------|
-| `crowdin_branch_name`  | Option to upload or download files to the specified version branch in your Crowdin project | `main`                     |
-| `config`               | Option to specify a path to the configuration file (without `/` at the beginning)          | `path/to/your/crowdin.yml` |
-| `dryrun_action`        | Defines whether to run the action in the dry-run mode                                      | `false` (default)          |
+| Option                 | Description                                                                                                                           | Example value              |
+|------------------------|---------------------------------------------------------------------------------------------------------------------------------------|----------------------------|
+| `crowdin_branch_name`  | Option to upload or download files to the specified version branch in your Crowdin project                                            | `main`                     |
+| `config`               | Option to specify a path to the configuration file (without `/` at the beginning)                                                     | `path/to/your/crowdin.yml` |
+| `dryrun_action`        | Defines whether to run the action in the dry-run mode                                                                                 | `false` (default)          |
+| `user`                 | Run the action as specific user, accepts `uid:gid` or `auto` to detect from workspace ownership. Leave empty to run as root (default) | `auto`                     |
 
 ### GitHub (Enterprise) configuration
 
