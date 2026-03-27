@@ -134,6 +134,10 @@ inputs:
     description: 'Option to preview the list of managed files'
     default: 'false'
     required: false
+  user:
+    description: 'Run the action as this user (uid:gid format, e.g. "1001:1001"). Use "auto" to detect from workspace ownership. Leave empty to run as root (default).'
+    required: false
+    default: ''
 
   # GitHub (Enterprise) configuration
   github_base_url:

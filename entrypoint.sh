@@ -1,5 +1,14 @@
 #!/bin/sh
 
+# Re-execute as the specified user if running as root and INPUT_USER is set
+if [ -n "$INPUT_USER" ] && [ "$(id -u)" = "0" ]; then
+  TARGET_USER="$INPUT_USER"
+  if [ "$INPUT_USER" = "auto" ]; then
+    TARGET_USER=$(stat -c '%u:%g' "${GITHUB_WORKSPACE}/.git")
+  fi
+  exec su-exec "$TARGET_USER" "$0" "$@"
+fi
+
 # Default values for action outputs
 echo "pull_request_url=" >> $GITHUB_OUTPUT
 echo "pull_request_number=" >> $GITHUB_OUTPUT
