@@ -251,6 +251,21 @@ create_pull_request() {
   fi
 }
 
+save_original_checkout_state() {
+  if git symbolic-ref -q --short HEAD >/dev/null 2>&1; then
+    ORIGINAL_CHECKOUT_VALUE=$(git symbolic-ref -q --short HEAD)
+  else
+    ORIGINAL_CHECKOUT_VALUE=$(git rev-parse --verify HEAD)
+  fi
+}
+
+restore_original_checkout_state() {
+  [ -z "${ORIGINAL_CHECKOUT_VALUE}" ] && return 0
+
+  echo "RESTORING ORIGINAL CHECKOUT: ${ORIGINAL_CHECKOUT_VALUE}"
+  git checkout "${ORIGINAL_CHECKOUT_VALUE}"
+}
+
 push_to_branch() {
   [ -z "${GITHUB_TOKEN}" ] && [ -z "${GH_TOKEN}" ] && {
       echo "ERROR: Either 'GITHUB_TOKEN' or 'GH_TOKEN' must be set in the environment variables!"
@@ -264,10 +279,13 @@ push_to_branch() {
 
   BRANCH=${INPUT_LOCALIZATION_BRANCH_NAME}
   REPO_URL="https://${GITHUB_ACTOR}:${AUTH_TOKEN}@${INPUT_GITHUB_BASE_URL}/${GITHUB_REPOSITORY}.git"
+  RESULT=0
 
   echo "CONFIGURING GIT USER"
   git config --global user.email "${INPUT_GITHUB_USER_EMAIL}"
   git config --global user.name "${INPUT_GITHUB_USER_NAME}"
+
+  save_original_checkout_state
 
   if [ "$INPUT_SKIP_REF_CHECKOUT" != true ]; then
     CHECKOUT=${GITHUB_HEAD_REF:-${GITHUB_REF}}
@@ -284,16 +302,26 @@ push_to_branch() {
 
   if [ ! -n "$(git status -s)" ]; then
     echo "NOTHING TO COMMIT"
-    return
+  else
+    echo "PUSH TO BRANCH ${BRANCH}"
+    set +e
+    git commit --no-verify -m "${INPUT_COMMIT_MESSAGE}"
+    RESULT=$?
+    if [ "${RESULT}" -eq 0 ]; then
+      git push --no-verify --force "${REPO_URL}"
+      RESULT=$?
+    fi
+    if [ "${RESULT}" -eq 0 ] && [ "$INPUT_CREATE_PULL_REQUEST" = true ]; then
+      create_pull_request "${BRANCH}"
+      RESULT=$?
+    fi
+    set -e
   fi
 
-  echo "PUSH TO BRANCH ${BRANCH}"
-  git commit --no-verify -m "${INPUT_COMMIT_MESSAGE}"
-  git push --no-verify --force "${REPO_URL}"
-
-  if [ "$INPUT_CREATE_PULL_REQUEST" = true ]; then
-    create_pull_request "${BRANCH}"
+  if ! restore_original_checkout_state && [ "${RESULT}" -eq 0 ]; then
+    RESULT=1
   fi
+  return "${RESULT}"
 }
 
 view_debug_output() {
