@@ -337,7 +337,7 @@ setup_commit_signing() {
 
   gpg --import --batch private.key
 
-  GPG_KEY_ID=$(gpg --list-secret-keys --keyid-format=long | grep -o "rsa\d\+\/\(\w\+\)" | head -n1 | sed "s/rsa\d\+\/\(\w\+\)/\1/")
+  GPG_KEY_ID=$(gpg --with-colons --list-secret-keys | awk -F: '$1 == "sec" { print $5; exit }')
   GPG_KEY_OWNER_NAME=$(gpg --list-secret-keys --keyid-format=long | grep  "uid" | sed "s/.\+] \(.\+\) <\(.\+\)>/\1/")
   GPG_KEY_OWNER_EMAIL=$(gpg --list-secret-keys --keyid-format=long | grep  "uid" | sed "s/.\+] \(.\+\) <\(.\+\)>/\2/")
   echo "Imported key information:"
