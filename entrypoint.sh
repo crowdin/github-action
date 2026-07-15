@@ -338,6 +338,11 @@ setup_commit_signing() {
   gpg --import --batch private.key
 
   GPG_KEY_ID=$(gpg --with-colons --list-secret-keys | awk -F: '$1 == "sec" { print $5; exit }')
+  if [ -z "$GPG_KEY_ID" ]; then
+    echo "ERROR: No secret GPG key was found after import"
+    rm private.key
+    exit 1
+  fi
   GPG_KEY_OWNER_NAME=$(gpg --list-secret-keys --keyid-format=long | grep  "uid" | sed "s/.\+] \(.\+\) <\(.\+\)>/\1/")
   GPG_KEY_OWNER_EMAIL=$(gpg --list-secret-keys --keyid-format=long | grep  "uid" | sed "s/.\+] \(.\+\) <\(.\+\)>/\2/")
   echo "Imported key information:"
