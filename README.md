@@ -36,6 +36,15 @@ This action allows you to easily integrate and automate the localization of your
 - Creates a PR with the translations.
 - Run any [Crowdin CLI](https://crowdin.github.io/crowdin-cli/commands/crowdin) command.
 
+> [!NOTE]
+> A **v3 pre-release** of this action is available, running on [Crowdin CLI 5](https://github.com/crowdin/crowdin-cli/releases) - a complete rewrite that starts instantly and no longer requires Java. Most workflows carry over unchanged. To try it, pin the pre-release tag:
+>
+> ```yaml
+> - uses: crowdin/github-action@v3.0.0-next.0
+> ```
+>
+> Review the [Crowdin CLI 5 breaking changes](https://github.com/crowdin/crowdin-cli/discussions/1043) before upgrading. `@v2` remains the recommended stable version.
+
 ## Usage
 
 Set up a workflow in *.github/workflows/crowdin.yml* (or add a job to your existing workflows).
