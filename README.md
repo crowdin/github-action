@@ -36,6 +36,21 @@ This action allows you to easily integrate and automate the localization of your
 - Creates a PR with the translations.
 - Run any [Crowdin CLI](https://crowdin.github.io/crowdin-cli/commands/crowdin) command.
 
+## Crowdin CLI 5
+
+> [!IMPORTANT]
+> This is a **pre-release** version of the action (`v3`) that runs on [Crowdin CLI 5](https://github.com/crowdin/crowdin-cli/releases) — a complete rewrite that starts instantly and no longer requires Java. The command tree, the `crowdin.yml` configuration file, and the exit codes stay the same, so most workflows carry over unchanged.
+>
+> If you pass custom arguments via `command`, `command_args`, or any `*_args` input, review the following breaking changes:
+>
+> - The `pre-translate` command is now `auto-translate` (no alias).
+> - `auto-translate`: the `--translate-untranslated-only` option was removed — use `--scope` instead (untranslated is the default).
+> - `--plain` was removed — use the global `--output plain` option instead.
+> - Redundant negatable flags were removed — only the form that changes the default behavior is kept (e.g. `--auto-update` was removed while `--no-auto-update` stays; `--no-auto-approve-imported`, `--no-import-eq-suggestions`, `--no-translate-hidden`, and `--no-auto-tag` were removed). The defaults are unchanged, so simply drop the removed form.
+> - `--preserve-hierarchy` was removed — set `preserve_hierarchy: true` in your configuration file instead (`--no-preserve-hierarchy` still works).
+>
+> See the [Crowdin CLI 5 release notes](https://github.com/crowdin/crowdin-cli/releases) for the full list of changes.
+
 ## Usage
 
 Set up a workflow in *.github/workflows/crowdin.yml* (or add a job to your existing workflows).
@@ -60,7 +75,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: crowdin action
-        uses: crowdin/github-action@v2
+        uses: crowdin/github-action@v3.0.0-next.0
         with:
           upload_sources: true
           upload_translations: false
@@ -213,9 +228,9 @@ You can also run any other Crowdin CLI command by specifying the `command` and `
 
 ```yaml
 - name: crowdin action
-  uses: crowdin/github-action@v2
+  uses: crowdin/github-action@v3.0.0-next.0
   with:
-    command: 'pre-translate'
+    command: 'auto-translate'
     command_args: '-l uk --method tm --branch main'
 
 # Access the command output in subsequent steps (optional)
