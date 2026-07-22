@@ -49,7 +49,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Upload Sources to Crowdin
-        uses: crowdin/github-action@v3.0.0-next.0
+        uses: crowdin/github-action@v3.0.0-next.1
         with:
           upload_sources: true
           upload_translations: false
@@ -62,7 +62,7 @@ jobs:
           CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
 
       - name: Pre-translate with AI
-        uses: crowdin/github-action@v3.0.0-next.0
+        uses: crowdin/github-action@v3.0.0-next.1
         with:
           command: 'auto-translate'
           command_args: '--method ai --ai-prompt=${{ secrets.PROMPT_ID }}'
@@ -71,7 +71,7 @@ jobs:
           CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
 
       - name: Download Translations from Crowdin
-        uses: crowdin/github-action@v3.0.0-next.0
+        uses: crowdin/github-action@v3.0.0-next.1
         with:
           upload_sources: false
           upload_translations: false

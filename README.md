@@ -75,7 +75,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: crowdin action
-        uses: crowdin/github-action@v3.0.0-next.0
+        uses: crowdin/github-action@v3.0.0-next.1
         with:
           upload_sources: true
           upload_translations: false
@@ -228,7 +228,7 @@ You can also run any other Crowdin CLI command by specifying the `command` and `
 
 ```yaml
 - name: crowdin action
-  uses: crowdin/github-action@v3.0.0-next.0
+  uses: crowdin/github-action@v3.0.0-next.1
   with:
     command: 'auto-translate'
     command_args: '-l uk --method tm --branch main'
