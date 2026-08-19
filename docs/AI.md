@@ -97,88 +97,72 @@ Context is crucial for accurate and high-quality translations. With the enhanced
 > [!IMPORTANT]
 > Experiments have shown that LLM + AI Extracted Context can improve the translation quality by up to 75% and LLM + AI Extracted Context + Screenshots + Crowdin AI Tools can improve the translation quality by up to 95%.
 
-### Harvesting Context with Crowdin Context Harvester CLI
+### Extracting Context with AI Agents
 
 To ensure that AI translations are accurate and contextually relevant, you need to provide the AI with the necessary context.
 
 Crowdin allows you to provide various levels of context to the AI, including the options available during prompt configuration (glossary terms, TM suggestions, previous and next strings, file context, screenshots, and more). It's highly recommended that you provide the AI with as much context as possible to improve the quality of the translations. 
 
-You can use the [Crowdin Context Harvester CLI](https://store.crowdin.com/crowdin-context-harvester-cli) in your CI/CD pipeline to automate the context extraction process. The Context Harvester CLI is designed to simplify the process of extracting context for Crowdin strings from your code. Using Large Language Models (LLMs), it automatically analyzes your project code to find out how each key is used. This information is extremely useful for the human linguists or AI that will be translating your project keys, and is likely to improve the quality of the translation.
+The recommended way to extract context from your codebase is to use the [Crowdin CLI context commands](https://crowdin.github.io/crowdin-cli/commands/crowdin-context) together with an AI coding agent (Claude Code, Cursor, GitHub Copilot, etc.). The agent analyzes your codebase to find out how each string is used and stores this information in Crowdin. It is extremely useful for the human linguists or AI that will be translating your project strings and is likely to improve the quality of the translation.
 
-First, install the Crowdin Context Harvester CLI and configure it with your Crowdin project:
+The workflow consists of three steps:
+
+1. **Download** the strings that are missing context to a local `crowdin-context.jsonl` file:
+
+   ```bash
+   crowdin context download --status empty
+   ```
+
+2. **Enrich** — the AI agent fills in the `ai_context` field for each string based on your codebase.
+
+3. **Upload** the enriched context back to Crowdin:
+
+   ```bash
+   crowdin context upload
+   ```
+
+To teach your AI agent this workflow, install the [Crowdin Agent Skills](https://github.com/crowdin/skills). They include the `crowdin-context-cli` skill (context commands and JSONL format) and the `context-extraction` skill (rules for writing meaningful context):
 
 ```bash
-npm i -g crowdin-context-harvester
-crowdin-context-harvester configure
+npx skills add crowdin/skills
 ```
 
-You'll be asked to enter all the necessary information, such as your Crowdin Personal Access Token, Project ID, and other details.
+Once the skills are installed, a single prompt is enough for the agent to handle all the steps autonomously:
 
-For example:
-
-```bash
-crowdin-context-harvester configure
-? What Crowdin product do you use? Crowdin.com
-? Crowdin Personal API token (with Project, AI scopes): __your_personal_token_
-? Crowdin project: Test Project
-? AI provider: Crowdin AI Provider
-? Crowdin AI provider (you should have the OpenAI provider configured in Crowdin): Open AI
-? AI model (newest models with largest context window are preferred): gpt-4
-? Model context window size in tokens: 128000
-? Model maximum output tokens count: 16384
-? Check if the code contains the key or the text of the string before sending it to the AI model 
-(recommended if you have thousands of keys to avoid chunking and improve speed).: I use keys in the code
-? Custom prompt file. "-" to read from STDIN (optional): 
-? Local files (glob pattern): **/*.*
-? Ignore local files (glob pattern). Make sure to exclude unnecessary files to avoid unnecessary AI API calls: /**/node_modules/**
-? Crowdin files (glob pattern e.g. **/*.*).: **/*.*
-? CroQL query (optional): 
-? Output: Terminal (dry run)
-
-You can now execute the harvest command by running:
-
-crowdin-context-harvester harvest --token="__your_personal_token_" --project=11111 --ai="crowdin" --crowdinAiId=2222 --model="gpt-4" --localFiles="**/*.*" --localIgnore="/**/node_modules/**" --crowdinFiles="**/*.*" --contextWindowSize="128000" --maxOutputTokens="16384" --screen="keys" --output="terminal"
+```
+Use the Crowdin CLI to download strings that are missing context, enrich them
+with precise UI placement descriptions based on our codebase, and upload the
+enriched context back to Crowdin.
 ```
 
-Once you have configured the Crowdin Context Harvester CLI, you can use the received `harvest` command to extract the context from your project files and provide it to the AI for better translations in your CI/CD pipeline.
+At any point, you can check the context coverage of your project by running `crowdin context status`.
 
-Then, add the following steps to your GitHub Actions workflow to extract the context and provide it to the AI:
+The context commands can also be executed as part of your GitHub Actions workflow using the `command` input:
 
 ```yaml
-# Upload sources step
-
-- uses: actions/setup-node@v7
+- name: Download strings missing context
+  uses: crowdin/github-action@v2
   with:
-    node-version: '22'
+    command: 'context download'
+    command_args: '--status empty'
+  env:
+    CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+    CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
 
-- name: Extract Context for AI
-  run: |
-    npm i -g crowdin-context-harvester
-    crowdin-context-harvester harvest \
-      --ai="crowdin" \
-      --crowdinAiId="${{ secrets.PROVIDER_ID }}" \
-      --model="gpt-4" \
-      --localFiles="**/*.*" \
-      --localIgnore="/**/node_modules/**" \
-      --crowdinFiles="**/*.*" \
-      --contextWindowSize="128000" \
-      --maxOutputTokens="16384" \
-      --screen="keys" \
-      --output="terminal"
+# Enrich the `crowdin-context.jsonl` file with an AI agent
+# (e.g., Claude Code GitHub Action)
 
-- name: Upload Context
-  run: |
-    crowdin-context-harvester upload \
-      --token="${{ secrets.CROWDIN_PERSONAL_TOKEN }}" \
-      --project="${{ secrets.CROWDIN_PROJECT_ID }}" \
-      --csvFile="crowdin-context.csv"
-
-# Pre-translate with AI step
-# Download translations step
+- name: Upload strings context
+  uses: crowdin/github-action@v2
+  with:
+    command: 'context upload'
+  env:
+    CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+    CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
 ```
 
-> [!CAUTION]
-> Make sure to omit the personal access token and project ID from the command line and store them in the GitHub Actions secrets. The CLI will automatically use the secrets if they are set.
+> [!TIP]
+> Read the [Automating i18n Context with AI Agents](https://crowdin.com/blog/automate-i18n-context-with-ai-agents) blog post to learn more about this workflow.
 
 ### Automated Screenshots
 
