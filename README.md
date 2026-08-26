@@ -39,7 +39,7 @@ This action allows you to easily integrate and automate the localization of your
 ## Crowdin CLI 5
 
 > [!IMPORTANT]
-> This is a **pre-release** version of the action (`v3`) that runs on [Crowdin CLI 5](https://github.com/crowdin/crowdin-cli/releases) — a complete rewrite that starts instantly and no longer requires Java. The command tree, the `crowdin.yml` configuration file, and the exit codes stay the same, so most workflows carry over unchanged.
+> The `v3` version of the action runs on [Crowdin CLI 5](https://github.com/crowdin/crowdin-cli/releases) — a complete rewrite that starts instantly and no longer requires Java. The commands, the `crowdin.yml` configuration file, and the exit codes stay the same, so most workflows carry over unchanged when upgrading from `v2`.
 >
 > If you pass custom arguments via `command`, `command_args`, or any `*_args` input, review the following breaking changes:
 >
@@ -76,7 +76,7 @@ jobs:
         uses: actions/checkout@v7
 
       - name: crowdin action
-        uses: crowdin/github-action@v3.0.0-next.3
+        uses: crowdin/github-action@v3
         with:
           upload_sources: true
           upload_translations: false
@@ -229,7 +229,7 @@ You can also run any other Crowdin CLI command by specifying the `command` and `
 
 ```yaml
 - name: crowdin action
-  uses: crowdin/github-action@v3.0.0-next.3
+  uses: crowdin/github-action@v3
   with:
     command: 'auto-translate'
     command_args: '-l uk --method tm --branch main'
