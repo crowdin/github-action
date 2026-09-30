@@ -284,6 +284,10 @@ Then create the secrets `CROWDIN_PROJECT_ID` and `CROWDIN_PERSONAL_TOKEN` and fi
 
 If comparing the native GitHub integration and the GitHub Action, the GitHub Action provides more flexibility and control over the localization process.
 
+## Acknowledging translators
+
+Use the [Crowdin Contributors](https://github.com/marketplace/actions/action-crowdin-contributors) action to generate a table of your project's top translators and proofreaders in the README. See the [example](/docs/EXAMPLES.md#acknowledging-translators) for details.
+
 ## Contributing
 
 If you would like to contribute, please read the [Contributing](/CONTRIBUTING.md) guidelines.
