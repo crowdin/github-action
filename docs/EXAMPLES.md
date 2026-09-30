@@ -27,6 +27,7 @@
   - [Checking the translation progress](#checking-the-translation-progress)
   - [Pre-Translation](#pre-translation)
   - [Run test workflows on all commits of a PR](#run-test-workflows-on-all-commits-of-a-pr)
+  - [Acknowledging translators](#acknowledging-translators)
 - [Automatic AI Pre-Translation](AI.md)
 ---
 
@@ -678,4 +679,19 @@ To avoid this, add a custom PAT to the checkout action:
   uses: actions/checkout@v7
   with:
     token: ${{ secrets.GHA_CUSTOM_PAT }}
+```
+
+### Acknowledging translators
+
+Use the [Crowdin Contributors](https://github.com/marketplace/actions/action-crowdin-contributors) action to generate a table of your project's top translators and proofreaders in the README. It uses the same Crowdin credentials:
+
+```yaml
+- name: Generate Crowdin Contributors table
+  uses: andrii-bodnar/action-crowdin-contributors@v3
+  with:
+    contributors_per_line: 8
+    max_contributors: 32
+  env:
+    CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+    CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
 ```
