@@ -253,6 +253,18 @@ In order to push translations and create pull requests, the Crowdin GitHub Actio
 
 In case you want to use an [automatic GitHub authentication token](https://docs.github.com/en/actions/security-guides/automatic-token-authentication), you need to assign the [`write` permission to your job](https://docs.github.com/en/actions/using-jobs/assigning-permissions-to-jobs) and [allow GH Actions to create Pull Requests](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository#preventing-github-actions-from-creating-or-approving-pull-requests).
 
+## Versioning
+
+`crowdin/github-action@v3` is a floating tag that always points to the latest `v3.x.y` release. To lock the action to a fixed version, pin to a release tag or a full commit SHA instead:
+
+```yaml
+uses: crowdin/github-action@v3.3.0
+# or
+uses: crowdin/github-action@9c23991700c0ec5256fd41089b9d9d7d540e424e # v3.3.0
+```
+
+Releases are published as [immutable releases](https://docs.github.com/en/code-security/concepts/supply-chain-security/immutable-releases), so a release tag cannot be moved or deleted after publication.
+
 ## Migration from the native GitHub integration
 
 If you are using the [native GitHub integration](https://store.crowdin.com/github), you can easily migrate to the GitHub Action. The main difference is that the GitHub Action requires a Crowdin Personal Access Token and a numeric project ID to be specified. Follow the steps below to migrate:
