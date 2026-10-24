@@ -49,6 +49,17 @@ This action allows you to easily integrate and automate the localization of your
 > - Redundant negatable flags were removed - only the form that changes the default behavior is kept (e.g. `--auto-update` was removed while `--no-auto-update` stays; `--no-auto-approve-imported`, `--no-import-eq-suggestions`, `--no-translate-hidden`, and `--no-auto-tag` were removed). The defaults are unchanged, so simply drop the removed form.
 >
 
+## Upgrading to v4
+
+> [!IMPORTANT]
+> Starting with `v4`, the action is a JavaScript (`node24`) action instead of a Docker container action. Inputs and outputs are unchanged, so it is a drop-in replacement for `v3`, with the following differences:
+>
+> - It runs on Linux, macOS, and Windows runners (x64 and arm64), and no longer requires Docker (e.g. on ARC runners in Kubernetes mode).
+> - Files are created by the runner user instead of `root`, so the `user` input is no longer needed and has no effect.
+> - Git and GPG are used from the runner. `git` is required; `gpg` is only required when `gpg_private_key` is set. The commit identity and signing key are passed to `git commit` directly, so the global git configuration and GPG keyring of the runner are not modified.
+> - Arguments in `command`, `command_args`, and `*_args` inputs are split like a shell would, so quoted values (e.g. `--label "my label"`) are passed as a single argument.
+> - The `pull_request_url` output no longer contains surrounding double quotes.
+
 ## Usage
 
 Set up a workflow in *.github/workflows/crowdin.yml* (or add a job to your existing workflows).
@@ -186,7 +197,16 @@ By default, the action will look for the `crowdin.yml` file in the root of the r
 | `crowdin_branch_name`  | Option to upload or download files to the specified version branch in your Crowdin project                                            | `main`                     |
 | `config`               | Option to specify a path to the configuration file (without `/` at the beginning)                                                     | `path/to/your/crowdin.yml` |
 | `dryrun_action`        | Defines whether to run the action in the dry-run mode                                                                                 | `false` (default)          |
-| `user`                 | Run the action as specific user, accepts `uid:gid` or `auto` to detect from workspace ownership. Leave empty to run as root (default) | `auto`                     |
+
+### Crowdin CLI installation
+
+The action downloads the native [Crowdin CLI](https://crowdin.github.io/crowdin-cli/) binary for the runner platform from npm (`@crowdin/cli-<platform>` packages) and caches it in the runner tool cache. Linux (x64, arm64, glibc and musl), macOS (x64, arm64), and Windows (x64) runners are supported, including self-hosted runners and Kubernetes (ARC) runners without Docker.
+
+| Option              | Description                                                                                          | Example value                                |
+|---------------------|------------------------------------------------------------------------------------------------------|----------------------------------------------|
+| `cli_version`       | Crowdin CLI version or npm dist-tag to install                                                       | `5.5.0` (default), `latest`                  |
+| `use_installed_cli` | Use the `crowdin` executable already available on `PATH` instead of downloading it                   | `false` (default)                            |
+| `npm_registry_url`  | npm registry to download the CLI from, e.g. an internal mirror for restricted networks               | `https://registry.npmjs.org` (default)       |
 
 ### GitHub (Enterprise) configuration
 
