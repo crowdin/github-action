@@ -135,9 +135,24 @@ inputs:
     default: 'false'
     required: false
   user:
-    description: 'Run the action as this user (uid:gid format, e.g. "1001:1001"). Use "auto" to detect from workspace ownership. Leave empty to run as root (default).'
+    description: 'Deprecated: has no effect. The action now runs directly on the runner as the runner user, so created files are owned by that user.'
     required: false
     default: ''
+    deprecationMessage: 'The `user` input has no effect since the action no longer runs in a Docker container. It will be removed in a future version.'
+
+  # Crowdin CLI installation
+  cli_version:
+    description: 'Crowdin CLI version (e.g. "5.5.0") or npm dist-tag (e.g. "latest") to install'
+    default: '5.5.0'
+    required: false
+  use_installed_cli:
+    description: 'Use the `crowdin` executable already available on PATH instead of downloading it'
+    default: 'false'
+    required: false
+  npm_registry_url:
+    description: 'npm registry used to download the Crowdin CLI native binary packages (e.g. an internal mirror)'
+    default: 'https://registry.npmjs.org'
+    required: false
 
   # GitHub (Enterprise) configuration
   github_base_url:
@@ -201,5 +216,5 @@ outputs:
     description: 'The output of the Crowdin CLI command when using the command input'
 
 runs:
-  using: docker
-  image: 'Dockerfile'
+  using: node24
+  main: 'dist/index.js'

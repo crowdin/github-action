@@ -12,6 +12,7 @@ on:
         type: choice
         description: The main version to update
         options:
+          - v4
           - v3
           - v2
           - v1
