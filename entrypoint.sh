@@ -307,6 +307,12 @@ push_to_branch() {
     set +e
     git commit --no-verify -m "${INPUT_COMMIT_MESSAGE}"
     RESULT=$?
+    # --no-verify skips the Git LFS pre-push hook, so upload LFS objects explicitly
+    if [ "${RESULT}" -eq 0 ] && [ -n "$(git lfs ls-files 2>/dev/null)" ]; then
+      echo "PUSH GIT LFS OBJECTS"
+      git lfs push "${REPO_URL}" "${BRANCH}"
+      RESULT=$?
+    fi
     if [ "${RESULT}" -eq 0 ]; then
       git push --no-verify --force "${REPO_URL}"
       RESULT=$?

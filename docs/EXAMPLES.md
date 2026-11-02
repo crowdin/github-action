@@ -12,6 +12,7 @@
 - [Custom `crowdin.yml` file location](#custom-crowdinyml-file-location)
 - [Separate PRs for each target language](#separate-prs-for-each-target-language)
 - [Checking out multiple branches in a single workflow](#checking-out-multiple-branches-in-a-single-workflow)
+- [Repositories with Git LFS](#repositories-with-git-lfs)
 - [Outputs](#outputs)
   - [`pull_request_url`, `pull_request_number`](#pull_request_url-pull_request_number)
 - [Triggers](#triggers)
@@ -455,6 +456,28 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
           CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+```
+
+### Repositories with Git LFS
+
+If your source or translation files are tracked with [Git LFS](https://git-lfs.com/), enable LFS in the checkout step. The action then stores the downloaded translations as LFS objects and uploads them before pushing the localization branch:
+
+```yml
+steps:
+  - uses: actions/checkout@v7
+    with:
+      lfs: true
+
+  - name: Synchronize with Crowdin
+    uses: crowdin/github-action@v3
+    with:
+      download_translations: true
+      localization_branch_name: l10n_crowdin_translations
+      create_pull_request: true
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+      CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
 ```
 
 ## Triggers
