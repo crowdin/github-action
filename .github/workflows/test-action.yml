@@ -8,8 +8,37 @@ on:
       - '*'
 
 jobs:
-  test:
+  unit:
     runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run typecheck
+
+      - run: npm test
+
+      - name: Check that dist/ is up to date
+        run: |
+          npm run build
+          if [ -n "$(git status --porcelain dist)" ]; then
+            echo "::error::dist/ is out of date. Run 'npm run build' and commit the result."
+            git --no-pager diff --stat dist
+            exit 1
+          fi
+
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, ubuntu-24.04-arm, macos-latest, macos-15-intel, windows-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
 
@@ -20,7 +49,12 @@ jobs:
           command_args: '-h'
 
       - name: Get CLI version
+        id: version
         uses: ./
         with:
           command: 'init'
           command_args: '-V'
+
+      - name: Check command output
+        shell: bash
+        run: test -n "${{ steps.version.outputs.command_output }}"

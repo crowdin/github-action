@@ -68,5 +68,16 @@ Before sending your pull requests, make sure you followed the list below:
 - Ensure that your code adheres to standard conventions, as used in the rest of the project.
 - Ensure that your changes are well tested.
 
+#### Development
+
+The action is written in TypeScript and bundled into `dist/index.js`, which must be committed together with the source changes.
+
+```sh
+npm ci
+npm run typecheck   # type-check the sources and tests
+npm test            # run the unit tests
+npm run build       # bundle src/ into dist/index.js
+```
+
 > **Note**
 > This project uses the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) specification for commit messages and PR titles.
