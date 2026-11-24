@@ -29,6 +29,7 @@ export async function run(): Promise<void> {
   const inputs = readInputs();
   if (inputs.token) core.setSecret(inputs.token);
   if (inputs.gpgPassphrase) core.setSecret(inputs.gpgPassphrase);
+  if (inputs.npmRegistryToken) core.setSecret(inputs.npmRegistryToken);
 
   core.info('STARTING CROWDIN ACTION');
 
@@ -38,6 +39,7 @@ export async function run(): Promise<void> {
   const crowdin = await installCli({
     version: inputs.cliVersion,
     registryUrl: inputs.npmRegistryUrl,
+    registryToken: inputs.npmRegistryToken,
     useInstalled: inputs.useInstalledCli,
   });
 

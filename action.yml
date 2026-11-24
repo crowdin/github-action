@@ -153,6 +153,10 @@ inputs:
     description: 'npm registry used to download the Crowdin CLI native binary packages (e.g. an internal mirror)'
     default: 'https://registry.npmjs.org'
     required: false
+  npm_registry_token:
+    description: 'Token sent as a Bearer `Authorization` header to `npm_registry_url` (and tarballs on the same origin), for registries that require authentication'
+    default: ''
+    required: false
 
   # GitHub (Enterprise) configuration
   github_base_url:
