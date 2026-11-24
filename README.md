@@ -207,6 +207,22 @@ The action downloads the native [Crowdin CLI](https://crowdin.github.io/crowdin-
 | `cli_version`       | Crowdin CLI version or npm dist-tag to install                                                       | `5.5.0` (default), `latest`                  |
 | `use_installed_cli` | Use the `crowdin` executable already available on `PATH` instead of downloading it                   | `false` (default)                            |
 | `npm_registry_url`  | npm registry to download the CLI from, e.g. an internal mirror for restricted networks               | `https://registry.npmjs.org` (default)       |
+| `npm_registry_token` | Bearer token for an authenticated `npm_registry_url`; only sent to the registry's own origin        | `${{ secrets.NPM_REGISTRY_TOKEN }}`          |
+
+For an authenticated mirror, set `npm_registry_url` to the HTTPS registry endpoint (including any path prefix) and pass `npm_registry_token` from a GitHub Actions secret. The token is masked in logs and used for package metadata and same-origin tarball downloads. Tarballs hosted on a different origin are downloaded without this token. Only Bearer-token authentication is supported, not Basic authentication. Using HTTP exposes the token in plaintext.
+
+To let [Renovate](https://docs.renovatebot.com/) keep the CLI version up to date, pin it in an annotated environment variable and enable the [`customManagers:githubActionsVersions`](https://docs.renovatebot.com/presets-customManagers/#custommanagersgithubactionsversions) preset:
+
+```yaml
+env:
+  # renovate: datasource=npm depName=@crowdin/cli-linux-x64
+  CROWDIN_CLI_VERSION: '5.5.0'
+
+steps:
+  - uses: crowdin/github-action@v4
+    with:
+      cli_version: ${{ env.CROWDIN_CLI_VERSION }}
+```
 
 ### GitHub (Enterprise) configuration
 

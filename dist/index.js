@@ -6867,7 +6867,7 @@ var require_client_h2 = __commonJS({
     "use strict";
     var assert = __require("node:assert");
     var { errorMonitor } = __require("node:events");
-    var { pipeline: pipeline2 } = __require("node:stream");
+    var { pipeline: pipeline3 } = __require("node:stream");
     var util2 = require_util();
     var {
       RequestContentLengthMismatchError,
@@ -7346,7 +7346,7 @@ var require_client_h2 = __commonJS({
     }
     function writeStream(abort, socket, expectsPayload, h2stream, body, client, request2, contentLength) {
       assert(contentLength !== 0 || client[kRunning] === 0, "stream body cannot be pipelined");
-      const pipe = pipeline2(
+      const pipe = pipeline3(
         body,
         h2stream,
         (err) => {
@@ -10391,7 +10391,7 @@ var require_api_pipeline = __commonJS({
         util2.destroy(ret, err);
       }
     };
-    function pipeline2(opts, handler2) {
+    function pipeline3(opts, handler2) {
       try {
         const pipelineHandler = new PipelineHandler(opts, handler2);
         this.dispatch({ ...opts, body: pipelineHandler.req }, pipelineHandler);
@@ -10400,7 +10400,7 @@ var require_api_pipeline = __commonJS({
         return new PassThrough().destroy(err);
       }
     }
-    module.exports = pipeline2;
+    module.exports = pipeline3;
   }
 });
 
@@ -13565,7 +13565,7 @@ var require_fetch = __commonJS({
       subresourceSet
     } = require_constants3();
     var EE = __require("node:events");
-    var { Readable, pipeline: pipeline2, finished } = __require("node:stream");
+    var { Readable, pipeline: pipeline3, finished } = __require("node:stream");
     var { addAbortListener, isErrored, isReadable, bufferToLowerCasedHeaderName } = require_util();
     var { dataURLProcessor, serializeAMimeType, minimizeSupportedMimeType } = require_data_url();
     var { getGlobalDispatcher } = require_global2();
@@ -14510,7 +14510,7 @@ var require_fetch = __commonJS({
                 status,
                 statusText,
                 headersList,
-                body: decoders.length ? pipeline2(this.body, ...decoders, (err) => {
+                body: decoders.length ? pipeline3(this.body, ...decoders, (err) => {
                   if (err) {
                     this.onError(err);
                   }
@@ -18711,7 +18711,7 @@ ${value}`;
 var require_eventsource = __commonJS({
   "node_modules/undici/lib/web/eventsource/eventsource.js"(exports, module) {
     "use strict";
-    var { pipeline: pipeline2 } = __require("node:stream");
+    var { pipeline: pipeline3 } = __require("node:stream");
     var { fetching } = require_fetch();
     var { makeRequest } = require_request2();
     var { webidl } = require_webidl();
@@ -18871,7 +18871,7 @@ var require_eventsource = __commonJS({
               ));
             }
           });
-          pipeline2(
+          pipeline3(
             response.body.stream,
             eventSourceStream,
             (error2) => {
@@ -24187,12 +24187,12 @@ function downloadToolAttempt(url, dest, auth2, headers) {
       debug(`Failed to download from "${url}". Code(${response.message.statusCode}) Message(${response.message.statusMessage})`);
       throw err;
     }
-    const pipeline2 = util.promisify(stream.pipeline);
+    const pipeline3 = util.promisify(stream.pipeline);
     const responseMessageFactory = _getGlobal("TEST_DOWNLOAD_TOOL_RESPONSE_MESSAGE_FACTORY", () => response.message);
     const readStream = responseMessageFactory();
     let succeeded = false;
     try {
-      yield pipeline2(readStream, fs3.createWriteStream(dest));
+      yield pipeline3(readStream, fs3.createWriteStream(dest));
       debug("download complete");
       succeeded = true;
       return dest;
@@ -24387,10 +24387,13 @@ function _getGlobal(key, defaultValue) {
 
 // src/cli.ts
 import { createHash } from "node:crypto";
-import { createReadStream, existsSync as existsSync3 } from "node:fs";
-import { chmod as chmod2 } from "node:fs/promises";
+import { createReadStream, createWriteStream as createWriteStream2, existsSync as existsSync3 } from "node:fs";
+import { chmod as chmod2, mkdtemp, rm as rm2 } from "node:fs/promises";
+import { tmpdir } from "node:os";
 import path6 from "node:path";
+import { pipeline as pipeline2 } from "node:stream/promises";
 var TOOL_NAME = "crowdin-cli";
+var REDIRECT_STATUS_CODES = /* @__PURE__ */ new Set([301, 302, 303, 307, 308]);
 var SUPPORTED_PLATFORMS = /* @__PURE__ */ new Set([
   "linux-x64",
   "linux-arm64",
@@ -24400,6 +24403,10 @@ var SUPPORTED_PLATFORMS = /* @__PURE__ */ new Set([
   "darwin-arm64",
   "win32-x64"
 ]);
+function registryAuthorization(url, registryUrl, token) {
+  if (!token) return void 0;
+  return new URL(url).origin === new URL(registryUrl).origin ? `Bearer ${token}` : void 0;
+}
 function isMusl(platform2 = process.platform) {
   if (platform2 !== "linux") return false;
   try {
@@ -24431,9 +24438,12 @@ function resolveVersion(packument, spec) {
   }
   return pkg;
 }
-async function fetchPackument(registryUrl, packageName) {
+async function fetchPackument(registryUrl, packageName, token) {
   const url = `${registryUrl.replace(/\/+$/, "")}/${packageName.replace("/", "%2F")}`;
-  const response = await fetch(url, { headers: { accept: "application/json" } });
+  const headers = { accept: "application/json" };
+  const authorization = registryAuthorization(url, registryUrl, token);
+  if (authorization) headers.authorization = authorization;
+  const response = await fetch(url, { headers });
   if (!response.ok) {
     throw new Error(`Failed to fetch ${url}: HTTP ${response.status} ${response.statusText}`);
   }
@@ -24463,6 +24473,59 @@ async function verifyIntegrity(file, dist) {
     throw new Error(`Integrity check failed for ${dist.tarball}: expected ${expected}, got ${actual}`);
   }
 }
+var DownloadError = class extends Error {
+  constructor(message, retryable = false) {
+    super(message);
+    this.retryable = retryable;
+  }
+  retryable;
+};
+async function downloadAuthenticatedAttempt(url, authorization, destination) {
+  let current = new URL(url);
+  let currentAuthorization = authorization;
+  for (let redirects = 0; redirects <= 20; redirects++) {
+    const client = new HttpClient("crowdin-action", [], { allowRedirects: false });
+    const headers = currentAuthorization ? { authorization: currentAuthorization } : {};
+    const response = await client.get(current.href, headers);
+    const status = response.message.statusCode ?? 0;
+    const location = response.message.headers.location;
+    if (REDIRECT_STATUS_CODES.has(status) && location) {
+      response.message.destroy();
+      if (redirects === 20) throw new DownloadError(`Too many redirects while downloading ${url}`);
+      const next = new URL(location, current);
+      if (next.protocol !== "https:" && next.protocol !== "http:") {
+        throw new DownloadError(`Unsupported redirect protocol ${next.protocol} while downloading ${url}`);
+      }
+      if (current.protocol === "https:" && next.protocol === "http:") {
+        throw new DownloadError(`Refusing HTTPS-to-HTTP redirect while downloading ${url}`);
+      }
+      if (next.origin !== current.origin) currentAuthorization = void 0;
+      current = next;
+      continue;
+    }
+    if (status !== 200) {
+      response.message.destroy();
+      throw new DownloadError(
+        `Failed to download ${current.href}: HTTP ${status} ${response.message.statusMessage ?? ""}`.trim(),
+        status === 408 || status === 429 || status >= 500
+      );
+    }
+    await pipeline2(response.message, createWriteStream2(destination));
+    return;
+  }
+}
+async function downloadAuthenticated(url, authorization, destination) {
+  for (let attempt = 1; ; attempt++) {
+    try {
+      await downloadAuthenticatedAttempt(url, authorization, destination);
+      return;
+    } catch (error2) {
+      if (attempt === 3 || error2 instanceof DownloadError && !error2.retryable) throw error2;
+      info(`Crowdin CLI download failed (attempt ${attempt}/3); retrying in ${attempt} seconds`);
+      await new Promise((resolve2) => setTimeout(resolve2, attempt * 1e3));
+    }
+  }
+}
 async function installCli(options) {
   if (options.useInstalled) {
     const existing = await which("crowdin", true);
@@ -24481,7 +24544,10 @@ async function installCli(options) {
     }
   }
   const packageName = `@crowdin/cli-${suffix}`;
-  const pkg = resolveVersion(await fetchPackument(options.registryUrl, packageName), options.version);
+  const pkg = resolveVersion(
+    await fetchPackument(options.registryUrl, packageName, options.registryToken),
+    options.version
+  );
   const cached = find(TOOL_NAME, pkg.version, arch3);
   if (cached) {
     info(`Using cached Crowdin CLI ${pkg.version} (${suffix})`);
@@ -24489,22 +24555,35 @@ async function installCli(options) {
     return path6.join(cached, exe);
   }
   info(`Downloading Crowdin CLI ${pkg.version} from ${pkg.dist.tarball}`);
-  const tarball = await downloadTool(pkg.dist.tarball);
-  await verifyIntegrity(tarball, pkg.dist);
-  const extracted = await extractTar(tarball);
-  const binDir = path6.join(extracted, "package", "bin");
-  const binary = path6.join(binDir, exe);
-  if (!existsSync3(binary)) {
-    throw new Error(`The ${packageName}@${pkg.version} package does not contain bin/${exe}`);
+  const authorization = registryAuthorization(pkg.dist.tarball, options.registryUrl, options.registryToken);
+  let downloadDir;
+  try {
+    let tarball;
+    if (authorization) {
+      downloadDir = await mkdtemp(path6.join(process.env.RUNNER_TEMP || tmpdir(), "crowdin-cli-"));
+      tarball = path6.join(downloadDir, "cli.tgz");
+      await downloadAuthenticated(pkg.dist.tarball, authorization, tarball);
+    } else {
+      tarball = await downloadTool(pkg.dist.tarball);
+    }
+    await verifyIntegrity(tarball, pkg.dist);
+    const extracted = await extractTar(tarball);
+    const binDir = path6.join(extracted, "package", "bin");
+    const binary = path6.join(binDir, exe);
+    if (!existsSync3(binary)) {
+      throw new Error(`The ${packageName}@${pkg.version} package does not contain bin/${exe}`);
+    }
+    if (process.platform !== "win32") await chmod2(binary, 493);
+    const toolDir = await cacheDir(binDir, TOOL_NAME, pkg.version, arch3);
+    addPath(toolDir);
+    return path6.join(toolDir, exe);
+  } finally {
+    if (downloadDir) await rm2(downloadDir, { recursive: true, force: true });
   }
-  if (process.platform !== "win32") await chmod2(binary, 493);
-  const toolDir = await cacheDir(binDir, TOOL_NAME, pkg.version, arch3);
-  addPath(toolDir);
-  return path6.join(toolDir, exe);
 }
 
 // src/git.ts
-import { mkdtemp, rm as rm2, writeFile as writeFile2 } from "node:fs/promises";
+import { mkdtemp as mkdtemp2, rm as rm3, writeFile as writeFile2 } from "node:fs/promises";
 import os7 from "node:os";
 import path7 from "node:path";
 
@@ -28769,17 +28848,17 @@ function stringEnv(extra = {}) {
 async function setupCommitSigning(inputs) {
   info("FOUND PRIVATE KEY, WILL SETUP GPG KEYSTORE");
   const tempRoot = process.env.RUNNER_TEMP || os7.tmpdir();
-  const home = await mkdtemp(path7.join(tempRoot, "crowdin-gpg-"));
+  const home = await mkdtemp2(path7.join(tempRoot, "crowdin-gpg-"));
   const env = stringEnv({ GNUPGHOME: home });
   const keyFile = path7.join(home, "private.key");
   const cleanup = async () => {
     await exec("gpgconf", ["--kill", "gpg-agent"], { env, ignoreReturnCode: true, silent: true }).catch(() => 0);
-    await rm2(home, { recursive: true, force: true });
+    await rm3(home, { recursive: true, force: true });
   };
   try {
     await writeFile2(keyFile, inputs.gpgPrivateKey, { mode: 384 });
     await exec("gpg", ["--batch", "--import", keyFile], { env });
-    await rm2(keyFile, { force: true });
+    await rm3(keyFile, { force: true });
     const { stdout } = await getExecOutput("gpg", ["--batch", "--with-colons", "--list-secret-keys"], {
       env,
       silent: true
@@ -28884,6 +28963,8 @@ var DEFAULT_CLI_VERSION = "5.5.0";
 var str = (name, fallback = "") => getInput(name) || fallback;
 var bool = (name) => getInput(name).trim().toLowerCase() === "true";
 function readInputs() {
+  const npmRegistryToken = str("npm_registry_token").trim();
+  delete process.env.INPUT_NPM_REGISTRY_TOKEN;
   return {
     uploadSources: bool("upload_sources"),
     uploadSourcesArgs: str("upload_sources_args"),
@@ -28935,6 +29016,7 @@ function readInputs() {
     cliVersion: str("cli_version", DEFAULT_CLI_VERSION).trim(),
     useInstalledCli: bool("use_installed_cli"),
     npmRegistryUrl: str("npm_registry_url", "https://registry.npmjs.org").trim(),
+    npmRegistryToken,
     debugMode: bool("debug_mode") || Boolean(process.env.RUNNER_DEBUG)
   };
 }
@@ -28954,12 +29036,14 @@ async function run() {
   const inputs = readInputs();
   if (inputs.token) setSecret(inputs.token);
   if (inputs.gpgPassphrase) setSecret(inputs.gpgPassphrase);
+  if (inputs.npmRegistryToken) setSecret(inputs.npmRegistryToken);
   info("STARTING CROWDIN ACTION");
   const workspace = process.env.GITHUB_WORKSPACE;
   if (workspace) process.chdir(workspace);
   const crowdin = await installCli({
     version: inputs.cliVersion,
     registryUrl: inputs.npmRegistryUrl,
+    registryToken: inputs.npmRegistryToken,
     useInstalled: inputs.useInstalledCli
   });
   if (inputs.command) {

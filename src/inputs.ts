@@ -63,6 +63,7 @@ export interface Inputs {
   cliVersion: string;
   useInstalledCli: boolean;
   npmRegistryUrl: string;
+  npmRegistryToken: string;
 
   debugMode: boolean;
 }
@@ -71,6 +72,10 @@ const str = (name: string, fallback = ''): string => core.getInput(name) || fall
 const bool = (name: string): boolean => core.getInput(name).trim().toLowerCase() === 'true';
 
 export function readInputs(): Inputs {
+  const npmRegistryToken = str('npm_registry_token').trim();
+  // Avoid passing the registry credential to the CLI and other subprocesses.
+  delete process.env.INPUT_NPM_REGISTRY_TOKEN;
+
   return {
     uploadSources: bool('upload_sources'),
     uploadSourcesArgs: str('upload_sources_args'),
@@ -130,6 +135,7 @@ export function readInputs(): Inputs {
     cliVersion: str('cli_version', DEFAULT_CLI_VERSION).trim(),
     useInstalledCli: bool('use_installed_cli'),
     npmRegistryUrl: str('npm_registry_url', 'https://registry.npmjs.org').trim(),
+    npmRegistryToken,
 
     debugMode: bool('debug_mode') || Boolean(process.env.RUNNER_DEBUG),
   };
