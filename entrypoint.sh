@@ -149,15 +149,13 @@ create_pull_request() {
   else
     echo "CREATE PULL REQUEST"
 
-    if [ -n "$INPUT_PULL_REQUEST_BODY" ]; then
-      BODY=",\"body\":\"${INPUT_PULL_REQUEST_BODY//$'\n'/\\n}\""
-    fi
-
+    # The body is passed as data, never as part of the jq program. A literal "\n" still means a new line
     PULL_RESPONSE_DATA=$(jq -n --arg pr_title "${INPUT_PULL_REQUEST_TITLE}" \
                                 --arg base_branch "${BASE_BRANCH}" \
                                 --arg branch "${BRANCH}" \
-                                --arg body "${BODY}" \
-                                "{title: \$pr_title, base: \$base_branch, head: \$branch ${BODY}}")
+                                --arg body "${INPUT_PULL_REQUEST_BODY}" \
+                                '{title: $pr_title, base: $base_branch, head: $branch}
+                                 + if $body == "" then {} else {body: ($body | split("\\n") | join("\n"))} end')
     # create pull request
     PULL_RESPONSE=$(curl -sSL -H "${AUTH_HEADER}" -H "${HEADER}" -X POST --data "${PULL_RESPONSE_DATA}" "${PULLS_URL}")
 
